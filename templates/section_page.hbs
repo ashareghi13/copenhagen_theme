@@ -1,68 +1,766 @@
 <div class="container-divider"></div>
 <div class="container">
-  <div class="sub-nav">
+  <nav class="sub-nav custom-page-search-mini">
     {{breadcrumbs}}
-    <div class="search-container">
-      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" focusable="false" viewBox="0 0 12 12" class="search-icon" aria-hidden="true">
-        <circle cx="4.5" cy="4.5" r="4" fill="none" stroke="currentColor"/>
-        <path stroke="currentColor" stroke-linecap="round" d="M11 11L7.5 7.5"/>
-      </svg>
-      {{search scoped=settings.scoped_kb_search submit=false}}
+    {{search scoped=true submit=false placeholder=(dc 'search_placeholder')}}
+  </nav>
+
+  <header class="page-header">
+    <h1>
+      {{section.name}}
+    </h1>
+    {{#if settings.show_follow_section}}
+    {{subscribe}}
+    {{/if}}
+    {{#if section.description}}
+    <p class="page-header-description">{{section.description}}</p>
+    {{/if}}
+  </header>
+
+  {{#if section.sections}}
+  <section class="custom-card-container">
+    {{#each section.sections}}
+    <div class="custom-card small-card">
+      <a href="{{url}}" class="custom-card-link">
+        <div class="custom-card-logo-container">
+          {{#is id 4412856613015}} {{!-- CET / Releases / Release Highlights --}}
+          <i class="material-icons black-icon">star</i>
+          {{else}}
+          {{#is id 360006783753}} {{!-- CET / Releases / Release Notes --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'post_add.svg'}}" />
+          {{else}}
+          {{#is id 1500001825982}} {{!-- CET / Releases / Extension Release Dates --}}
+          <i class="material-icons black-icon">event</i>
+          {{else}}
+          {{#is id 32448605594519}} {{!-- CET / Releases / Known Issues --}}
+          <i class="material-icons black-icon">error</i>
+          {{else}}
+          {{#is id 360005929493}} {{!-- CET / CET Essential Functions / Getting Started and Navigating CET Designer --}}
+          <i class="material-icons black-icon">explore</i>
+          {{else}}
+          {{#is id 4411880405399}} {{!-- CET / CET Essential Functions / 2D/3D View, Zoom --}}
+          <i class="material-icons black-icon">view_in_ar</i>
+          {{else}}
+          {{#is id 4411839628439}} {{!-- CET / CET Essential Functions / Components --}}
+          <i class="material-icons black-icon">chair</i>
+          {{else}}
+          {{#is id 4411839638935}} {{!-- CET / CET Essential Functions / Placing Components --}}
+          <i class="material-icons black-icon">pan_tool</i>
+          {{else}}
+          {{#is id 4411855478807}} {{!-- CET / CET Essential Functions / Selection --}}
+          <i class="material-icons black-icon">highlight_alt</i>
+          {{else}}
+          {{#is id 4411855481751}} {{!-- CET / CET Essential Functions / Copy, Replicate, Mirror --}}
+          <i class="material-icons black-icon">copy_all</i>
+          {{else}}
+          {{#is id 360005931333}} {{!-- CET / CET Essential Functions / Calculation --}}
+          <i class="material-icons black-icon">calculate</i>
+          {{else}}
+          {{#is id 360008515974}} {{!-- CET / CET Essential Functions / Schemes and Finishes --}}
+          <i class="material-icons black-icon">palette</i>
+          {{else}}
+          {{#is id 4411839654295}} {{!-- CET / CET Essential Functions / Part Tagging --}}
+          <i class="material-icons black-icon">local_offer</i>
+          {{else}}
+          {{#is id 4411855503639}} {{!-- CET / CET Essential Functions / Visibility and Filters --}}
+          <i class="material-icons black-icon">filter</i>
+          {{else}}
+          {{#is id 4411855514519}} {{!-- CET / CET Essential Functions / Favourites --}}
+          <i class="material-icons black-icon">folder_special</i>
+          {{else}}
+          {{#is id 4411839685143}} {{!-- CET / CET Essential Functions / Alternatives --}}
+          <i class="material-icons black-icon">compare</i>
+          {{else}}
+          {{#is id 360006650913}} {{!-- CET / CET Essential Functions / Blocks --}}
+          <i class="material-icons black-icon">view_quilt</i>
+          {{else}}
+          {{#is id 4411855573271}} {{!-- CET / CET Essential Functions / Keyboard Shortcuts --}}
+          <i class="material-icons black-icon">shortcut</i>
+          {{else}}
+          {{#is id 4411839752727}} {{!-- CET / CET Essential Functions / Miscellaneous --}}
+          <i class="material-icons black-icon">more_horiz</i>
+          {{else}}
+          {{#is id 4411855620119}} {{!-- CET / Extensions / Managing Extensions --}}
+          <i class="material-icons black-icon">list</i>
+          {{else}}
+          {{#is id 360005926133}} {{!-- CET / Extensions / Core Extensions --}}
+          <i class="material-icons black-icon">filter_tilt_shift</i>
+          {{else}}
+          {{#is id 360005928753}} {{!-- CET / Extensions / Core Extensions / Wall Drawing --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'wall_drawing.svg'}}" />
+          {{else}}
+          {{#is id 360005902534}} {{!-- CET / Extensions / Core Extensions / Architectural --}}
+          <i class="material-icons black-icon">house_siding</i>
+          {{else}}
+          {{#is id 360005902654}} {{!-- CET / Extensions / Core Extensions / 3D --}}
+          <i class="material-icons black-icon">weekend</i>
+          {{else}}
+          {{#is id 360005928833}} {{!-- CET / Extensions / Core Extensions / 3D / Select Material Dialog --}}
+          <i class="material-icons black-icon">wysiwyg</i>
+          {{else}}
+          {{#is id 360005902554}} {{!-- CET / Extensions / Core Extensions / 3D / Material Explorer --}}
+          <i class="material-icons black-icon">style</i>
+          {{else}}
+          {{#is id 360005902634}} {{!-- CET / Extensions / Core Extensions / 3D / Material Lab --}}
+          <i class="material-icons black-icon">home_repair_service</i>
+          {{else}}
+          {{#is id 1500000587621}} {{!-- CET / Extensions / Core Extensions / 3D / Lights --}}
+          <i class="material-icons black-icon">lightbulb</i>
+          {{else}}
+          {{#is id 360005928773}} {{!-- CET / Extensions / Core Extensions / Tools --}}
+          <i class="material-icons black-icon">construction</i>
+          {{else}}
+          {{#is id 1500000587481}} {{!-- CET / Extensions / Core Extensions / Tools / Styles --}}
+          <i class="material-icons black-icon">style</i>
+          {{else}}
+          {{#is id 360011663154}} {{!-- CET / Extensions / Core Extensions / Tools / Dimensions --}}
+          <i class="material-icons black-icon">square_foot</i>
+          {{else}}
+          {{#is id 360011663194}} {{!-- CET / Extensions / Core Extensions / Tools / CAD Tools --}}
+          <i class="material-icons black-icon">architecture</i>
+          {{else}}
+          {{#is id 1500000587581}} {{!-- CET / Extensions / Core Extensions / Tools / Image and Text --}}
+          <i class="material-icons black-icon">text_snippet</i>
+          {{else}}
+          {{#is id 1500000612962}} {{!-- CET / Extensions / Core Extensions / Tools / Lines and Shape --}}
+          <i class="material-icons black-icon">category</i>
+          {{else}}
+          {{#is id 1500000587601}} {{!-- CET / Extensions / Core Extensions / Tools / Replicate Tools --}}
+          <i class="material-icons black-icon">copy_all</i>
+          {{else}}
+          {{#is id 360011663174}} {{!-- CET / Extensions / Core Extensions / Tools / Miscellaneous --}}
+          <i class="material-icons black-icon">more_horiz</i>
+          {{else}}
+          {{#is id 4411875719319}} {{!-- CET / Extensions / Core Extensions / Search --}}
+          <i class="material-icons black-icon">search</i>
+          {{else}}
+          {{#is id 13630492329495}} {{!-- CET / Extensions / Essential Extensions --}}
+          <i class="material-icons black-icon">favorite</i>
+          {{else}}
+          {{#is id 10910602779159}} {{!-- CET / Extensions / Essential Extensions / Essential Pallet Racking--}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'essential_pallet_racking.svg'}}" />
+          {{else}}
+          {{#is id 13569116545431}} {{!-- CET / Extensions / Essential Extensions / Essential Deep Racking --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'essential_deep_racking.svg'}}" />
+          {{else}}
+          {{#is id 13569116617879}} {{!-- CET / Extensions / Essential Extensions / Essential Guarding --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'essential_guarding.svg'}}" />
+          {{else}}
+          {{#is id 4412987408663}} {{!-- CET / Extensions / Essential Extensions / Flooring --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'flooring.svg'}}" />
+          {{else}}
+          {{#is id 10211833650839}} {{!-- CET / Extensions / Essential Extensions / Essential Kitchen EU--}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'essential_kitchen_eu.svg'}}" />
+          {{else}}
+          {{#is id 26512069725079}} {{!-- CET / Extensions / Material Handling Library (MHL) --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'commercial_interior_black.svg'}}" />
+          {{else}}
+          {{#is id 5883076759191}} {{!-- CET / Extensions / Commercial Interiors Library (ProjectSymbols for CET) --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'commercial_interior_black.svg'}}" />
+          {{else}}
+          {{#is id 4669832328727}} {{!-- CET / Extensions / Commercial Interiors Library (ProjectSymbols for CET) / Release Notes --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'post_add.svg'}}" />
+          {{else}}
+          {{#is id 5883154516631}} {{!-- CET / Extensions / Commercial Interiors Library (ProjectSymbols for CET) / How To--}}
+          <i class="material-icons black-icon">quiz</i>
+          {{else}}
+          {{#is id 5883154272151}} {{!-- CET / Extensions / Commercial Interiors Library (ProjectSymbols for CET) / Tips and Tricks --}}
+          <i class="material-icons black-icon">tips_and_updates</i>
+          {{else}}
+          {{#is id 5883131287063}} {{!-- CET / Extensions / Commercial Interiors Library (ProjectSymbols for CET) / Video Tutorials --}}
+          <i class="material-icons black-icon">ondemand_video</i>
+          {{else}}
+          {{#is id 4625319778839}} {{!-- CET / Extensions / Commercial Interiors Library (ProjectSymbols for CET) / Troubleshooting --}}
+          <i class="material-icons black-icon">bug_report</i>
+          {{else}}
+          {{#is id 4411855622295}} {{!-- CET / Extensions / Miscellaneous Extensions --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'abstract_implementations.svg'}}" />
+          {{else}}
+          {{#is id 4411882074775}} {{!-- CET / Extensions / Miscellaneous Extensions / Accessories --}}
+          <i class="material-icons black-icon">auto_awesome</i>
+          {{else}}
+          {{#is id 4411889082647}} {{!-- CET / Extensions / Miscellaneous Extensions / Building --}}
+          <i class="material-icons black-icon">roofing</i>
+          {{else}}
+          {{#is id 4411889087511}} {{!-- CET / Extensions / Miscellaneous Extensions / Presentation --}}
+          <i class="material-icons black-icon">co_present</i>
+          {{else}}
+          {{#is id 360005902474}} {{!-- CET / Extensions / Miscellaneous Extensions / Presentation / Movie Studio --}}
+          <i class="material-icons black-icon">movie</i>
+          {{else}}
+          {{#is id 360005928713}} {{!-- CET / Extensions / Miscellaneous Extensions / Presentation / Virtual Viewer --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'virtual_viewer.svg'}}" />
+          {{else}}
+          {{#is id 360005928633}} {{!-- CET / Extensions / Miscellaneous Extensions / Tools --}}
+          <i class="material-icons black-icon">build</i>
+          {{else}}
+          {{#is id 10079821939863}} {{!-- CET / Extensions / Miscellaneous Extensions / Tools / CollabPro --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'collabpro.png'}}" />
+          {{else}}
+          {{#is id 360009365694}} {{!-- CET / Extensions / Miscellaneous Extensions / Tools / Collaboration Lite --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'collabLite_logo.svg'}}" />
+          {{else}}
+          {{#is id 360005929513}} {{!-- CET / Extensions / Miscellaneous Extensions / Tools / Catalogue Browser --}}
+          <i class="material-icons black-icon">menu_book</i>
+          {{else}}
+          {{#is id 360005928493}} {{!-- CET / Extensions / Miscellaneous Extensions / Tools / CRM Connect --}}
+          <i class="material-icons black-icon">link</i>
+          {{else}}
+          {{#is id 360005928513}} {{!-- CET / Extensions / Miscellaneous Extensions / Tools / Edit Graphics --}}
+          <i class="material-icons black-icon">edit</i>
+          {{else}}
+          {{#is id 360005902354}} {{!-- CET / Extensions / Miscellaneous Extensions / Tools / Reconfiguration Tool --}}
+          <i class="material-icons black-icon">build_circle</i>
+          {{else}}
+          {{#is id 360005928573}} {{!-- CET / Extensions / Miscellaneous Extensions / Tools / Render Accelerator --}}
+          <i class="material-icons black-icon">speed</i>
+          {{else}}
+          {{#is id 360005902414}} {{!-- CET / Extensions / Miscellaneous Extensions / Tools / SketchUp --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'sketchup.svg'}}" />
+          {{else}}
+          {{#is id 4411868479255}} {{!-- CET / Save and Load, Import and Export / AutoCAD --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'autoCAD.svg'}}" />
+          {{else}}
+          {{#is id 360005928413}} {{!-- CET / Save and Load, Import and Export / IFC --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'ifc.svg'}}" />
+          {{else}}
+          {{#is id 360005902374}} {{!-- CET / Save and Load, Import and Export / Revlink --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'revit.svg'}}" />
+          {{else}}
+          {{#is id 12116734412439}} {{!-- CET / Save and Load, Import and Export / InstantPlanner --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'instantplanner_logo.svg'}}" />
+          {{else}}
+          {{#is id 4411868478231}} {{!-- CET / Save and Load, Import and Export / PDF --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'pdf.svg'}}" />
+          {{else}}
+          {{#is id 10000091981207}} {{!-- CET / Save and Load, Import and Export / Templates --}}
+          <i class="material-icons black-icon">feed</i>
+          {{else}}
+          {{#is id 360005929753}} {{!-- CET / Paper View / Installation Documents --}}
+          <i class="material-icons black-icon">article</i>
+          {{else}}
+          {{#is id 360005903314}} {{!-- CET / Paper View / Titleblocks --}}
+          <i class="material-icons black-icon">title</i>
+          {{else}}
+          {{#is id 360006412354}} {{!-- CET / Paper View / Printing --}}
+          <i class="material-icons black-icon">print</i>
+          {{else}}
+          {{#is id 4415775866903}} {{!-- CET / Photo Lab / How to Render like a Pro --}}
+          <i class="material-icons black-icon">thumb_up</i>
+          {{else}}
+          {{#is id 4419064952215}} {{!-- CET / Photo Lab / How to Render like a Pro / Simple--}}
+          <i class="material-icons black-icon">photo_camera</i>
+          {{else}}
+          {{#is id 4419086295959}} {{!-- CET / Photo Lab / How to Render like a Pro / Advanced--}}
+          <i class="material-icons black-icon">camera_enhance</i>
+          {{else}}
+          {{#is id 360005929813}} {{!-- CET / Photo Lab / Navigating Photo Lab - Basics --}}
+          <i class="material-icons black-icon">wysiwyg</i>
+          {{else}}
+          {{#is id 360005929833}} {{!-- CET / Photo Lab / Photograph Setup - Advanced --}}
+          <i class="material-icons black-icon">camera_indoor</i>
+          {{else}}
+          {{#is id 360005903454}} {{!-- CET / Photo Lab / Post Processing - Advanced --}}
+          <i class="material-icons black-icon">auto_awesome</i>
+          {{else}}
+          {{#is id 4414379596823}} {{!-- CET / Photo Lab / Miscellaneous Guides to Rendering --}}
+          <i class="material-icons black-icon">more_horiz</i>
+          {{else}}
+          {{#is id 360011991593}} {{!-- CET / System Administration / System Requirements and Recommendations --}}
+          <i class="material-icons black-icon">memory</i>
+          {{else}}
+          {{#is id 360005929333}} {{!-- CET / System Administration / Installing and Updating CET --}}
+          <i class="material-icons black-icon">install_desktop</i>
+          {{else}}
+          {{#is id 360005929473}} {{!-- CET / System Administration / Control Panel --}}
+          <i class="material-icons black-icon">tune</i>
+          {{else}}
+          {{#is id 360006801074}} {{!-- CET / Troubleshooting / Common Issues & Questions --}}
+          <i class="material-icons black-icon">question_answer</i>
+          {{else}}
+          {{#is id 360005929033}} {{!-- CET / Troubleshooting / Error Messages and Crashes --}}
+          <i class="material-icons black-icon">announcement</i>
+          {{else}}          
+          {{#is id 360005928953}} {{!-- CET / Troubleshooting / Getting Help --}}
+          <i class="material-icons black-icon">support_agent</i>
+          {{else}}
+          {{#is id 360006717734}} {{!-- CET / Video Tutorials / Basic Drawing --}}
+          <i class="material-icons black-icon">mode_edit</i>
+          {{else}}
+          {{#is id 360006717774}} {{!-- CET / Video Tutorials / AutoCAD Drawings --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'autoCAD.svg'}}" />
+          {{else}}
+          {{#is id 360006744493}} {{!-- CET / Video Tutorials / Architectural Components --}}
+          <i class="material-icons black-icon">house_siding</i>
+          {{else}}
+          {{#is id 4407634525719}} {{!-- CET / Video Tutorials / Rendering --}}
+          <i class="material-icons black-icon">image</i>
+          {{else}}
+          {{#is id 360006744573}} {{!-- CET / Video Tutorials / Reconfiguration Tool --}}
+          <i class="material-icons black-icon">compare_arrows</i>
+          {{else}}
+          {{#is id 360006744473}} {{!-- CET / Video Tutorials / Revlink --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'revit.svg'}}" />
+          {{else}}
+          {{#is id 360006744513}} {{!-- CET / Video Tutorials / MyConfigura --}}
+          <i class="material-icons black-icon">public</i>
+          {{else}}
+          {{#is id 4669096983447}} {{!-- CET / Video Tutorials / ProjectSymbols --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'projectSymbols.svg'}}" />
+          {{else}}
+          {{#is id 4669186275735}} {{!-- CET / Video Tutorials / ProjectSymbols / ProjectSymbols for CET--}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'projectSymbols.svg'}}" />
+          {{else}}
+          {{#is id 4414471413143}} {{!-- Catalogue / Basics / Getting Started --}}
+          <i class="material-icons black-icon">power_settings_new</i>
+          {{else}}
+          {{#is id 360006370833}} {{!-- Catalogue / Basics / Toolbar --}}
+          <i class="material-icons black-icon">featured_play_list</i>
+          {{else}}
+          {{#is id 360006341834}} {{!-- Catalogue / Basics / Project --}}
+          <i class="material-icons black-icon">assignment</i>
+          {{else}}
+          {{#is id 360006367813}} {{!-- Catalogue / Basics / Product Catalogues --}}
+          <i class="material-icons black-icon">menu_book</i>
+          {{else}}
+          {{#is id 360006893833}} {{!--  Catalogue / Basics / Product Catalogues / Component Tab Creator  --}}
+          <i class="material-icons black-icon">view_sidebar</i>
+          {{else}}
+          {{#is id 360006341474}} {{!-- Catalogue / Basics / Products --}}
+          <i class="material-icons black-icon">chair</i>
+          {{else}}
+          {{#is id 360006341494}} {{!-- Catalogue / Basics / Features --}}
+          <i class="material-icons black-icon">app_registration</i>
+          {{else}}
+          {{#is id 360006369353}} {{!-- Catalogue / Basics / Materials --}}
+          <i class="material-icons black-icon">style</i>
+          {{else}}
+          {{#is id 360006367793}} {{!-- Catalogue / Basics / Geometry --}}
+          <i class="material-icons black-icon">change_history</i>
+          {{else}}
+          {{#is id 360006367853}} {{!-- Catalogue / Basics / Validation --}}
+          <i class="material-icons black-icon">fact_check</i>
+          {{else}}
+          {{#is id 360009464453}} {{!-- Catalogue / Basics / Scheme Builder --}}
+          <i class="material-icons black-icon">view_quilt</i>
+          {{else}}
+          {{#is id 360006341054}} {{!-- Catalogue / Basics / Data Import --}}
+          <i class="material-icons black-icon">arrow_downward</i>
+          {{else}}
+          {{#is id 360006340154}} {{!-- Catalogue / Basics / Utilities --}}
+          <i class="material-icons black-icon">home_repair_service</i>
+          {{else}}
+          {{#is id 360006364813}} {{!-- Catalogue / Basics / Publish --}}
+          <i class="material-icons black-icon">cloud_upload</i>
+          {{else}}
+          {{#is id 360006367833}} {{!-- Catalogue / Basics / Publish / Publish (Legacy)--}}
+          <i class="material-icons black-icon">cloud_upload</i>
+          {{else}}
+          {{#is id 4417309029527}} {{!-- Catalogue / Basics / Troubleshooting --}}
+          <i class="material-icons black-icon">bug_report</i>
+          {{else}}
+          {{#is id 360006369293}} {{!-- Catalogue / Advanced / Keyboard Shortcuts --}}
+          <i class="material-icons black-icon">keyboard</i>
+          {{else}}
+          {{#is id 360009205154}} {{!-- Catalogue / Advanced / Parametric Model Stretch --}}
+          <i class="material-icons black-icon">open_in_full</i>
+          {{else}}
+          {{#is id 360006338034}} {{!-- Catalogue / Advanced / Control Panel --}}
+          <i class="material-icons black-icon">tune</i>
+          {{else}}
+          {{#is id 360009733874}} {{!-- CET Developer / CM Language / Statements... --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'rule.svg'}}" />
+          {{else}}
+          {{#is id 1500000316382}} {{!-- CET Developer / CM Language / Statements... / Operators --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'calculate.svg'}}" />
+          {{else}}
+          {{#is id 360010838733}} {{!-- CET Developer / CM Language / Data Types --}}
+          <i class="material-icons black-icon">storage</i>
+          {{else}}
+          {{#is id 1500000223241}} {{!-- CET Developer / CM Language / Data Types / Collections --}}
+          <i class="material-icons black-icon">group_work</i>
+          {{else}}
+          {{#is id 360009734414}} {{!-- CET Developer / CM Language / Code Blocks --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'text_snippet.svg'}}" />
+          {{else}}
+          {{#is id 360009734354}} {{!-- CET Developer / CM Language / Control Flow --}}
+          <i class="material-icons black-icon">low_priority</i>
+          {{else}}
+          {{#is id 360009734434}} {{!-- CET Developer / CM Language / PropObj --}}
+          <i class="material-icons black-icon">settings_system_daydream</i>
+          {{else}}
+          {{#is id 360010838813}} {{!-- CET Developer / CM Language / Custom Syntaxes --}}
+          <i class="material-icons black-icon">developer_mode</i>
+          {{else}}
+          {{#is id 360010838853}} {{!-- CET Developer / CM Language / Windows Programming --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'api.svg'}}" />
+          {{else}}
+          {{#is id 360010838833}} {{!-- CET Developer / CM Language / Good Practices --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'grading.svg'}}" />
+          {{else}}
+          {{#is id 360010839453}} {{!-- CET Developer / CM Language / Miscellaneous --}}
+          <i class="material-icons black-icon">more_horiz</i>
+          {{else}}
+          {{#is id 360009735574}} {{!-- CET Developer / Core Implementations / Core Structure --}}
+          <i class="material-icons black-icon">filter_tilt_shift</i>
+          {{else}}
+          {{#is id 360010839793}} {{!-- CET Developer / Core Implementations / Snappers --}}
+          <i class="material-icons black-icon">event_seat</i>
+          {{else}}
+          {{#is id 360010840153}} {{!-- CET Developer / Core Implementations / Connectors --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'close_fullscreen.svg'}}" />
+          {{else}}
+          {{#is id 360010840253}} {{!-- CET Developer / Core Implementations / Components and Vessels --}}
+          <i class="material-icons black-icon">settings_input_component</i>
+          {{else}}
+          {{#is id 360009735934}} {{!-- CET Developer / Core Implementations / Parts --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'category.svg'}}" />
+          {{else}}
+          {{#is id 360009735954}} {{!-- CET Developer / Core Implementations / ItemTags --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'list_alt.svg'}}" />
+          {{else}}
+          {{#is id 10210878440471}} {{!-- CET Developer / Core Implementations / Tasks --}}
+          <i class="material-icons black-icon">task</i>
+          {{else}}
+          {{#is id 360009735974}} {{!-- CET Developer / Core Implementations / Graphics --}}
+          <i class="material-icons black-icon">filter_hdr</i>
+          {{else}}
+          {{#is id 360008788273}} {{!-- CET Developer / Core Implementations / Extensions --}}
+          <i class="material-icons black-icon">extension</i>
+          {{else}}
+          {{#is id 360010840273}} {{!-- CET Developer / Core Implementations / Undo --}}
+          <i class="material-icons black-icon">undo</i>
+          {{else}}
+          {{#is id 360010840333}} {{!-- CET Developer / Core Implementations / Windows (UI) --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'wysiwyg.svg'}}" />
+          {{else}}
+          {{#is id 360010840353}} {{!-- CET Developer / Core Implementations / Lights --}}
+          <i class="material-icons black-icon">wb_incandescent</i>
+          {{else}}
+          {{#is id 360009736014}} {{!-- CET Developer / Core Implementations / Web Related --}}
+          <i class="material-icons black-icon">cloud</i>
+          {{else}}
+          {{#is id 13602129147671}} {{!-- CET Developer / Core Implementations / Collaboration G3 --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'collabPro_logo.svg'}}" />
+          {{else}}
+          {{#is id 360009736034}} {{!-- CET Developer / Core Implementations / Miscellaneous --}}
+          <i class="material-icons black-icon">more_horiz</i>
+          {{else}}
+          {{#is id 360010974833}} {{!-- CET Developer / Abstract Implementations / Office --}}
+          <i class="material-icons black-icon">weekend</i>
+          {{else}}
+          {{#is id 4407247265559}} {{!-- CET Developer / Abstract Implementations / Material Handling --}}
+          <i class="material-icons black-icon">precision_manufacturing</i>
+          {{else}}
+          {{#is id 360009868254}} {{!-- CET Developer / Abstract Implementations / IFC --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'hvac.svg'}}" />
+          {{else}}
+          {{#is id 360009868274}} {{!-- CET Developer / Abstract Implementations / Revit --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'revit.svg'}}" />
+          {{else}}
+          {{#is id 360010974853}} {{!-- CET Developer / Abstract Implementations / Miscellaneous --}}
+          <i class="material-icons black-icon">more_horiz</i>
+          {{else}}
+          {{#is id 360009074194}} {{!-- CET Developer / Development Tools / CET Developer/Operator --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'cet_developer_small.svg'}}" />
+          {{else}}
+          {{#is id 1500000231321}} {{!-- CET Developer / Development Tools / CET Developer/Operator / CET Developer Releases--}}
+          <i class="material-icons black-icon">description</i>
+          {{else}}
+          {{#is id 360009074174}} {{!-- CET Developer / Development Tools / Emacs --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'emacs.svg'}}" />
+          {{else}}
+          {{#is id 360009193473}} {{!-- CET Developer / Development Tools / Tools in CET Designer --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'cet_designer_small.svg'}}" />
+          {{else}}
+          {{#is id 360009868314}} {{!-- CET Developer / Development Tools / Logging --}}
+          <i class="material-icons black-icon">assignment</i>
+          {{else}}
+          {{#is id 360011362774}} {{!-- CET Developer / Development Tools / Miscellaneous --}}
+          <i class="material-icons black-icon">more_horiz</i>
+          {{else}}
+          {{#is id 4408051380503}} {{!-- CET Developer / Version control / Branches --}}
+          <i class="material-icons black-icon">call_split</i>
+          {{else}}
+          {{#is id 1500000538981}} {{!-- CET Developer / Builds and Releases / Release Timelines --}}
+          <i class="material-icons black-icon">date_range</i>
+          {{else}}
+          {{#is id 9287370040215}} {{!-- CET Developer / Builds and Releases / Developer Tools Release Notes --}}
+          <i class="material-icons black-icon">description</i>
+          {{else}}
+          {{#is id 4550333813271}} {{!-- CET Developer / Builds and Releases / Performing Migration --}}
+          <i class="material-icons black-icon">near_me</i>
+          {{else}}
+          {{#is id 1500000193521}} {{!-- CET Developer / Builds and Releases / Performing Migration / Migration: A Complete Guide --}}
+          <i class="material-icons black-icon">explore</i>
+          {{else}}
+          {{#is id 1500000238861}} {{!-- CET Developer / Builds and Releases / Build Central --}}
+          <i class="material-icons black-icon">build</i>
+          {{else}}
+          {{#is id 1500000259922}} {{!-- CET Developer / Builds and Releases / GitLab CI/CD --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'gitlab_ci_cd.svg'}}" />
+          {{else}}
+          {{#is id 360011380954}} {{!-- CET Developer / Builds and Releases / Miscellaneous --}}
+          <i class="material-icons black-icon">more_horiz</i>
+          {{else}}
+          {{#is id 1500000170842}} {{!-- CET Developer / Quality Assurance / Migration Testing Guides --}}
+          <i class="material-icons black-icon">explore</i>
+          {{else}}
+          {{#is id 1500000177062}} {{!-- CET Developer / Quality Assurance / QA Testing Tools --}}
+          <i class="material-icons black-icon">build</i>
+          {{else}}
+          {{#is id 360005516633}} {{!-- MyConfigura / Projects.. / Extension Management --}}
+          <i class="material-icons black-icon">extension</i>
+          {{else}}
+          {{#is id 360009059553}} {{!-- MyConfigura / Projects.. / Releasing Extensions & Sign-off --}}
+          <i class="material-icons black-icon">assignment_turned_in</i>
+          {{else}}
+		  {{#is id 4669433439639}} {{!-- Spec / Video Tutorials / Tips and Tricks --}}
+		  <i class="material-icons black-icon">tips_and_updates</i>
+		  {{else}}
+		  {{#is id 4669502752791}} {{!-- Spec / Video Tutorials / Print Templates --}}
+		  <i class="material-icons black-icon">print</i>
+		  {{else}}
+      {{#is id 32448672781591}} {{!-- Spec / Releases / Release Notes--}}
+		  <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'post_add.svg'}}" />
+		  {{else}}
+      {{#is id 32448686481431}} {{!-- Spec / Releases / Known Issues --}}
+      <i class="material-icons black-icon">error</i>
+      {{else}}
+		  {{#is id 15910932005271}} {{!-- Industry Library Content / CIL Catalogues / Creating a Catalogue --}}
+		  <i class="material-icons black-icon">storage</i>
+		  {{else}}
+		  {{#is id 15910985411351}} {{!-- Industry Library Content / CIL Catalogues / 2D/3D DWG Files --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'autoCAD.svg'}}" />
+		  {{else}}
+		  {{#is id 15910994162711}} {{!-- Industry Library Content / CIL Catalogues / Material Mapping --}}
+		  <i class="material-icons black-icon">map</i>
+		  {{else}}
+		  {{#is id 15911084564887}} {{!-- Industry Library Content / CIL Catalogues / Multigraphics --}}
+		  <i class="material-icons black-icon">filter</i>
+		  {{else}}
+		  {{#is id 15911088237335}} {{!-- Industry Library Content / CIL Catalogues / Reference Pages --}}
+		  <i class="material-icons black-icon">info</i>
+		  {{else}}
+          		  {{#is id 26511425103895}} {{!-- Industry Library Content / MHL Catalogues / Creating a Catalogue --}}
+		  <i class="material-icons black-icon">storage</i>
+		  {{else}}
+		  {{#is id 26511857388439}} {{!-- Industry Library Content / MHL Catalogues / 2D/3D DWG Files --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'autoCAD.svg'}}" />
+		  {{else}}
+		  {{#is id 26511936921623}} {{!-- Industry Library Content / MHL Catalogues / Reference Pages --}}
+		  <i class="material-icons black-icon">info</i>
+		  {{else}}
+          {{#is id 360010744314}} {{!-- Internal Knowledge Base / Support / CET Designer Support --}}
+          <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'cet_designer_small.svg'}}" />
+          {{else}}
+          {{#is id 360011878333}} {{!-- Internal Knowledge Base / Support / CET Designer Support / Workflow--}}
+          <i class="material-icons black-icon">account_tree</i>
+          {{else}}
+          <i class="material-icons black-icon">camera</i>
+		  {{/is}}
+		  {{/is}}
+		  {{/is}}
+		  {{/is}}
+		  {{/is}}
+		  {{/is}}
+		  {{/is}}
+		  {{/is}}
+		  {{/is}}
+		  {{/is}}
+		  {{/is}}
+		  {{/is}}
+		  {{/is}}
+		  {{/is}}
+		  {{/is}}
+		  {{/is}}
+		  {{/is}}
+		  {{/is}}
+		  {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}					
+          {{/is}}
+          {{/is}}
+          {{/is}}	
+          {{/is}}	
+          {{/is}}
+          {{/is}}	
+        </div>
+        <h3 class="custom-card-title">
+          {{name}}
+        </h3>
+      </a>
     </div>
-  </div>
+    {{/each}}
+  </section>
+  {{else}}
+  {{/if}}
 
-  <div class="section-container">
-    <section id="main-content" class="section-content">
-      <header class="page-header">
-        <h1>{{section.name}}</h1>
-        {{#if settings.show_follow_section}}
-          <div class="section-subscribe">{{subscribe}}</div>
-        {{/if}}
-        {{#if section.description}}
-          <p class="page-header-description">{{section.description}}</p>
-        {{/if}}
-      </header>
-
-      {{#if section.sections}}
-        <ul class="section-list">
-          {{#each section.sections}}
-          <li class="section-list-item">
-              <a href="{{url}}">
-                <span>{{name}}</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" focusable="false" viewBox="0 0 16 16" aria-hidden="true">
-                  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 14.5l6.1-6.1c.2-.2.2-.5 0-.7L5 1.5"/>
-                </svg>
-              </a>
-            </li>
-          {{/each}}
-        </ul>
+  {{#if section.articles}}
+  <ul class="article-list">
+    {{#each section.articles}}
+    <li class="article-list-item {{#if promoted}} article-promoted{{/if}}">
+      {{#if promoted}}
+      <span data-title="{{t 'promoted'}}" class="icon-star"></span>
       {{/if}}
-
-      {{pagination "section.sections"}}
-
-      {{#if section.articles}}
-        <ul class="article-list">
-          {{#each section.articles}}
-            <li class="article-list-item {{#if promoted}} article-promoted{{/if}}">
-              {{#if promoted}}
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" focusable="false" viewBox="0 0 12 12" class="icon-star" title="{{t 'promoted'}}">
-                  <path fill="currentColor" d="M2.88 11.73c-.19 0-.39-.06-.55-.18a.938.938 0 01-.37-1.01l.8-3L.35 5.57a.938.938 0 01-.3-1.03c.12-.37.45-.63.85-.65L4 3.73 5.12.83c.14-.37.49-.61.88-.61s.74.24.88.6L8 3.73l3.11.17a.946.946 0 01.55 1.68L9.24 7.53l.8 3a.95.95 0 01-1.43 1.04L6 9.88l-2.61 1.69c-.16.1-.34.16-.51.16z"/>
-                </svg>
-              {{/if}}
-              <a href="{{url}}" class="article-list-link">{{title}}</a>
-              {{#if internal}}
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" focusable="false" viewBox="0 0 16 16" class="icon-lock" title="{{t 'internal'}}">
-                  <rect width="12" height="9" x="2" y="7" fill="currentColor" rx="1" ry="1"/>
-                  <path fill="none" stroke="currentColor" d="M4.5 7.5V4a3.5 3.5 0 017 0v3.5"/>
-                </svg>
-              {{/if}}
-            </li>
-          {{/each}}
-        </ul>
+      <a href="{{url}}" class="article-list-link">{{title}}</a>
+      {{#if internal}}
+      <span class="icon-lock" title="{{t 'internal'}}"></span>
       {{/if}}
+    </li>
+    {{/each}}
+  </ul>
+  {{/if}}
 
-      {{pagination "section.articles"}}
-
-    </section>
-  </div>
 </div>

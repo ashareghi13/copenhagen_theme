@@ -1,11 +1,327 @@
+<nav class="my-activities-nav collapsible-nav">
+  <ul class="collapsible-nav-list container">
+    <li aria-selected=true>{{dc 'ticket_portal_menu_option'}}</li>
+    <li>{{link 'contributions'}}</li>
+    <li>{{link 'subscriptions'}}</li>
+  </ul>
+</nav>
+
 <div class="container">
-  <div class="request-breadcrumbs">{{breadcrumbs}}</div>
+  <nav class="custom-breadcrumbs" aria-label="Breadcrumb">
+    <ol class="breadcrumbs-list">
+      <li class="crumb">
+        <a class="crumb-link" href="/hc/{{help_center.locale}}/requests">
+          {{dc 'ticket_portal_menu_option'}}
+        </a>
+      </li>
 
-  <h1 class="request-title">{{request.subject}}</h1>
+      <li class="crumb-sep" aria-hidden="true">›</li>
 
-  <div id="main-content" class="request-container">
-    <section class="request-main">
-      {{satisfaction}}
+      <li class="crumb crumb-current" aria-current="page">
+        <span class="crumb-current-text">{{request.subject}}</span>
+      </li>
+    </ol>
+  </nav>
+
+  <h2 class="request-title">{{request.subject}}</h2>
+
+{{!-- =========================================================
+  PORTAL UI TYPE SWITCH
+  Field title: Ticket Portal UI Type
+  Values:
+  - Default Support UI
+  - Feature Request UI
+  - Chat/Call UI
+  - Developer Support Transfer UI
+========================================================= --}}
+
+{{#each custom_fields}}
+  {{#is title "Ticket Portal UI Type"}}
+
+    {{!-- FEATURE REQUEST UI --}}
+    {{#is value "Feature Request UI"}}
+      <div class="feature-request-card">
+        <div class="feature-request-header">
+          <div class="feature-request-kicker">{{dc 'feature_request_header'}}</div>
+          <div class="feature-request-title">{{dc 'feature_request_thanks'}}</div>
+        </div>
+
+        <div class="feature-request-body">  
+        <div class="feature-request-next">
+          <strong>{{dc 'feature_request_next_header'}}</strong>
+          </div>
+
+ <ul class="feature-request-bullets">
+    <li>{{dc 'feature_request_bullet_1'}}</li>
+    <li>{{dc 'feature_request_bullet_2'}}</li>
+    <li>{{dc 'feature_request_bullet_3'}}</li>
+  </ul>
+          
+          <div class="feature-request-no-action">
+    {{dc 'feature_request_action'}}
+  </div>
+
+          <div class="feature-request-roadmap">
+            <a class="feature-request-roadmap-link"
+               href="https://www.configura.com/roadmap"
+               target="_blank" rel="noopener">
+              {{dc 'feature_request_roadmap'}}
+            </a>
+          </div>
+        </div>
+      </div>
+    {{/is}}
+
+    {{!-- CHAT / CALL UI --}}
+    {{#is value "Chat/Call UI"}}
+  <div class="quick-question-card">
+    <div class="quick-question-header">
+      <div class="quick-question-kicker">
+        <span class="quick-question-kicker-icon" aria-hidden="true">💬</span>
+        {{dc 'quick_question_header'}}
+      </div>
+
+      <div class="quick-question-title">
+        {{dc 'quick_question_title'}}
+      </div>
+    </div>
+
+    <div class="quick-question-body">
+      <p class="quick-question-text">
+        {{dc 'quick_question_text'}}
+      </p>
+
+      <div class="quick-question-actions" role="group" aria-label="Chat and call actions">
+<a class="quick-question-primary js-open-messaging"
+   href="#"
+   aria-label="Start a new chat with support">
+  {{dc 'quick_question_primary_cta'}}
+</a>
+
+
+        <a class="quick-question-secondary"
+           href="https://support.configura.com/hc/en-us/articles/360041358813-Call"
+           target="_blank" rel="noopener"
+           aria-label="Call support">
+          {{dc 'quick_question_secondary_cta'}}
+        </a>
+      </div>
+
+      <div class="quick-question-subtext">
+        {{dc 'quick_question_subtext'}}
+      </div>
+    </div>
+  </div>
+{{/is}}
+  
+{{!-- MANUFACTURER UI --}}
+{{#is value "Manufacturer UI"}}
+  <div class="manufacturer-card">
+    <div class="manufacturer-header">
+      <div class="manufacturer-kicker">
+        <span class="manufacturer-kicker-icon" aria-hidden="true"></span>
+        {{dc 'manufacturer_header'}}
+      </div>
+    </div>
+
+    <div class="manufacturer-body">
+      <p class="manufacturer-text">
+        {{dc 'manufacturer_text_1'}}
+      </p>
+<p class="manufacturer-text">
+        {{dc 'manufacturer_text_2'}}
+      </p>
+      <p class="manufacturer-text">
+        {{dc 'manufacturer_text_3'}}
+      </p>
+
+      {{!-- Display partner name (context only, no contact info) --}}
+      {{#each ../custom_fields}}
+        {{#is title "Manufacturer"}}
+          {{#if value}}
+            <div class="manufacturer-partner">
+              <strong>{{dc 'manufacturer_partner'}}</strong> {{value}}
+            </div>
+          {{/if}}
+        {{/is}}
+      {{/each}}
+    </div>
+  </div>
+{{/is}}
+
+{{!-- DEVELOPER SUPPORT TRANSFER UI --}}
+{{#is value "Developer Support Transfer UI"}}
+  <div class="developer-support-card">
+    <div class="developer-support-header">
+      <div class="developer-support-kicker">
+        <span class="developer-support-kicker-icon" aria-hidden="true">🧑‍💻</span>
+        {{dc 'developer_support_header'}}
+      </div>
+    </div>
+
+    <div class="developer-support-body">
+      <p class="developer-support-text">
+        {{dc 'developer_support_text_1'}}
+      </p>
+
+      <p class="developer-support-text">
+        {{dc 'developer_support_text_2'}}
+      </p>
+
+      <div class="developer-support-link-wrap">
+        <a class="developer-support-link"
+           href="https://configura.atlassian.net/servicedesk/customer/user/requests?reporter=all&statuses=open"
+           target="_blank"
+           rel="noopener">
+          {{dc 'developer_support_link'}}
+        </a>
+      </div>
+      
+    </div>
+  </div>
+{{/is}}
+
+    {{!-- DEFAULT SUPPORT UI --}}
+    {{#is value "Default Support UI"}}
+
+      {{!-- Find Support Ticket Status (go up 1 level) --}}
+      {{#each ../custom_fields}}
+        {{#is title "Customer Support Status"}}
+          {{#if value}}
+
+            <div class="ticket-status-card ticket-status-layout">
+
+              <div class="ticket-status-header ticket-status-layout__header">
+                <div class="ticket-status-kicker">{{dc 'ticket_status_header'}}</div>
+
+                <div class="ticket-status-grid">
+                  <div class="ticket-status-col">
+                    <div class="ticket-status-label">{{dc 'ticket_status_label_1'}}</div>
+
+<div class="customer-status-badge
+  {{#is value "Received"}} status-received{{/is}}
+  {{#is value "We're working on it"}} status-working{{/is}}
+  {{#is value "Waiting for your reply"}} status-waiting{{/is}}
+  {{#is value "Escalated"}} status-escalated{{/is}}
+  {{#is value "Resolved"}} status-resolved{{/is}}
+">
+  {{#is value "Received"}}{{dc 'status_received'}}{{/is}}
+  {{#is value "We're working on it"}}{{dc 'status_working'}}{{/is}}
+  {{#is value "Waiting for your reply"}}{{dc 'status_waiting_reply'}}{{/is}}
+  {{#is value "Escalated"}}{{dc 'status_escalated'}}{{/is}}
+  {{#is value "Resolved"}}{{dc 'status_resolved'}}{{/is}}
+</div>
+                  </div>
+
+                  <div class="ticket-status-col">
+                    <div class="ticket-status-label">{{dc 'ticket_status_label_2'}}</div>
+                    <div class="ticket-status-description">
+                      {{#is value "Received"}}{{dc 'status_received_description'}}{{/is}}
+                      {{#is value "We're working on it"}}{{dc 'status_working_description'}}{{/is}}
+                      {{#is value "Waiting for your reply"}}{{dc 'status_waiting_description'}}{{/is}}
+                      {{#is value "Escalated"}}{{dc 'status_escalated_description'}}{{/is}}
+                      {{#is value "Resolved"}}{{dc 'status_resolved_description'}}{{/is}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {{!-- Only show Developer progress if Support Ticket Status == Escalated --}}
+              {{#is value "Escalated"}}
+
+                {{!-- Find Developer Ticket Status (go up 2 levels) --}}
+                {{#each ../../custom_fields}}
+                  {{#is title "Developer Ticket Status"}}
+                    {{#if value}}
+
+                      {{!-- Hide progress panel when Released --}}
+                      {{#is value "Released"}}
+                        {{!-- intentionally hidden --}}
+                      {{/is}}
+
+                      {{!-- Show progress panel for any non-Released status --}}
+                      {{#is value "Released"}}
+                        {{!-- do nothing --}}
+                      {{else}}
+                        <div class="ticket-status-progress-panel ticket-status-layout__progress">
+                          <div class="ticket-status-label ticket-status-progress-label">
+                            {{dc 'developer_ticket_status_header'}}
+                          </div>
+
+                          <div class="status-progress" role="list" aria-label="Ticket progress">
+                            <div class="status-step
+                              {{#is value "Received"}} is-active{{/is}}
+                              {{#is value "Investigating"}} is-complete{{/is}}
+                              {{#is value "Fix in progress"}} is-complete{{/is}}
+                              {{#is value "Validating Fix"}} is-complete{{/is}}
+                              {{#is value "Released"}} is-complete{{/is}}
+                            " role="listitem">{{dc 'status_received'}}</div>
+
+                            <div class="status-step
+                              {{#is value "Investigating"}} is-active{{/is}}
+                              {{#is value "Fix in progress"}} is-complete{{/is}}
+                              {{#is value "Validating Fix"}} is-complete{{/is}}
+                              {{#is value "Released"}} is-complete{{/is}}
+                            " role="listitem">{{dc 'status_investigating'}}</div>
+
+                            <div class="status-step
+                              {{#is value "Fix in progress"}} is-active{{/is}}
+                              {{#is value "Validating Fix"}} is-complete{{/is}}
+                              {{#is value "Released"}} is-complete{{/is}}
+                            " role="listitem">{{dc 'status_in_progress'}}</div>
+
+                            <div class="status-step
+                              {{#is value "Validating Fix"}} is-active{{/is}}
+                              {{#is value "Released"}} is-complete{{/is}}
+                            " role="listitem">{{dc 'status_validating_fix'}}</div>
+
+                            <div class="status-step
+                              {{#is value "Released"}} is-active is-complete{{/is}}
+                            " role="listitem">{{dc 'status_released'}}</div>
+                          </div>
+                        </div>
+                      {{/is}}
+
+                    {{/if}}
+                  {{/is}}
+                {{/each}}
+
+              {{/is}}
+
+            </div>
+
+          {{/if}}
+        {{/is}}
+      {{/each}}
+
+    {{/is}}
+
+  {{/is}}
+{{/each}}
+
+<!-- Page-level headers row: keeps both headers aligned in one grid -->
+<div class="page-headers-grid container">
+  <div class="page-headers-left">
+    <div class="ticket-activity-header">
+      <h3 class="ticket-activity-title">{{dc 'ticket_activity_header'}}</h3>
+    </div>
+  </div>
+
+  <div class="page-headers-right">
+    <div class="ticket-details-page-header">
+      <h3 class="ticket-details-page-title">{{dc 'ticket_details_header'}}</h3>
+    </div>
+  </div>
+</div>
+
+<!-- Main two-column content: left = main, right = sidebar -->
+<div class="request-container grid-two-col container">
+
+  <!-- LEFT COLUMN -->
+  <section class="request-main">
+    {{satisfaction}}
+
+    <div class="ticket-activity-container">
       <ul class="comment-list">
         {{#each comments}}
           <li id="{{anchor}}" class="comment">
@@ -14,45 +330,40 @@
                 <div class="comment-author">
                   <div class="avatar comment-avatar">
                     {{#if author.agent}}
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" focusable="false" aria-hidden="true" viewBox="0 0 12 12" class="icon-agent" aria-label="{{t 'team_member' name=author.name}}">
-                        <path fill="currentColor" d="M6 0C2.7 0 0 2.7 0 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm2.3 7H3.7c-.3 0-.4-.3-.3-.5C3.9 7.6 4.9 7 6 7s2.1.6 2.6 1.5c.1.2 0 .5-.3.5z"/>
-                      </svg>
+                      <span class="icon-agent"></span>
                     {{/if}}
                     <img src="{{author.avatar_url}}" alt="" class="user-avatar"/>
                   </div>
-
-                  <div class="comment-meta">
-                    <span title="{{author.name}}">
-                      {{#link 'user_profile' id=author.id}}
-                        {{author.name}}
-                      {{/link}}
-                    </span>
-
-                    <div class="meta-group">
-                      <span class="meta-data">{{date created_at timeago=true}}</span>
-                    </div>
-                  </div>
                 </div>
 
-                <section class="comment-body">{{body}}</section>
+                <div class="comment-meta">
+                  <span title="{{author.name}}">
+                    {{#link 'user_profile' id=author.id}}
+                      {{author.name}}
+                    {{/link}}
+                  </span>
 
-                {{#if attachments}}
-                  <ul class="attachments">
-                    {{#each attachments}}
-                      <li class="attachment-item">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" focusable="false" viewBox="0 0 16 16" class="attachment-icon">
-                          <path fill="none" stroke="currentColor" stroke-linecap="round" d="M9.5 4v7.7c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5V3C6.5 1.6 7.6.5 9 .5s2.5 1.1 2.5 2.5v9c0 1.9-1.6 3.5-3.5 3.5S4.5 13.9 4.5 12V4"/>
-                        </svg>
-                        <a href="{{url}}" target="_blank">{{name}}</a>
-                        <div class="attachment-meta meta-group">
-                          <span class="attachment-meta-item meta-data">{{size}}</span>
-                          <a href="{{url}}" target="_blank" class="attachment-meta-item meta-data">{{t 'download'}}</a>
-                        </div>
-                      </li>
-                    {{/each}}
+                  <ul class="meta-group">
+                    <li class="meta-data">{{date created_at timeago=true}}</li>
                   </ul>
-                {{/if}}
+                </div>
               </div>
+
+              <section class="comment-body">{{body}}</section>
+
+              {{#if attachments}}
+                <ul class="attachments">
+                  {{#each attachments}}
+                    <li class="attachment-item">
+                      <a href="{{url}}" target="_blank">{{name}}</a>
+                      <div class="attachment-meta meta-group">
+                        <span class="attachment-meta-item meta-data">{{size}}</span>
+                        <a href="{{url}}" target="_blank" class="attachment-meta-item meta-data">{{t 'download'}}</a>
+                      </div>
+                    </li>
+                  {{/each}}
+                </ul>
+              {{/if}}
             </div>
           </li>
         {{/each}}
@@ -60,32 +371,57 @@
 
       {{pagination}}
 
-      <div class="request-follow-up">
-        {{comment_callout}}
-      </div>
+      {{#if comment_callout}}
+				<div id="default-comment-callout">
+				  {{comment_callout}}
+				</div>
 
-      {{#form 'comment' class='comment-form hbs-form'}}
+				{{#each custom_fields}}
+			  	{{#is title "Follow-up Ticket"}}
+			    	{{#if value}}
+			      	<a href="{{value}}" class="button button-large" id="follow-up-ticket-link">
+			        	{{dc 'follow-up_ticket_link'}}
+			      	</a>
+
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          var callout = document.getElementById("default-comment-callout");
+          if (callout) callout.style.display = "none";
+        });
+      </script>
+			    	{{/if}}
+			 		{{/is}}
+				{{/each}}
+      {{/if}}
+
+      {{#form 'comment' class='comment-form'}}
         <div class="avatar comment-avatar">
           {{user_avatar class='user-avatar'}}
         </div>
 
         <div class="comment-container">
+          <div class="reply-helper-text">
+            {{dc 'reply_helper'}}
+          </div>
+
           <button type="button" class="comment-show-container {{#validate 'body'}}hidden{{/validate}}">
-            {{t 'add_to_conversation'}}
+            {{dc 'add_to_conversation_override'}}
           </button>
 
           <div class="comment-fields {{#validate 'body'}}shown{{/validate}}">
             {{#if help_center.request_ccs_enabled}}
               <div class="comment-ccs form-field">
-               {{token_field 'ccs' class='ccs-input'}}
+                {{token_field 'ccs' class='ccs-input'}}
               </div>
             {{/if}}
 
-            {{wysiwyg 'body' rows='7'}}
+            {{textarea 'body' rows='7'}}
 
-            <div class="comment-attachments">
-              {{upload}}
-            </div>
+            {{#if upload}}
+              <div class="comment-attachments">
+                {{upload}}
+              </div>
+            {{/if}}
           </div>
 
           <div class="comment-form-controls">
@@ -100,26 +436,21 @@
             {{/if}}
 
             <span class="request-submit-comment {{#validate 'body'}}shown{{/validate}}">
-              {{input type='submit' class="button button-large"}}
+              {{input type='submit'}}
             </span>
           </div>
         </div>
       {{/form}}
-    </section>
+    </div>
+  </section>
 
-    <section class="request-sidebar collapsible-sidebar">
-      <h2 id="request-sidebar-title" class="collapsible-sidebar-title">
-        {{t 'ticket_details'}}
-      </h2>
-      <button type="button" class="collapsible-sidebar-toggle" aria-labelledby="request-sidebar-title" aria-expanded="false">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" focusable="false" viewBox="0 0 12 12" aria-hidden="true" class="collapsible-sidebar-toggle-icon chevron-icon">
-          <path fill="none" stroke="currentColor" stroke-linecap="round" d="M3 4.5l2.6 2.6c.2.2.5.2.7 0L9 4.5"/>
-        </svg>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" focusable="false" viewBox="0 0 12 12" aria-hidden="true" class="collapsible-sidebar-toggle-icon x-icon">
-          <path stroke="currentColor" stroke-linecap="round" d="M3 9l6-6m0 6L3 3"/>
-        </svg>
-      </button>
-      <div class="collapsible-sidebar-body">
+  <!-- RIGHT COLUMN -->
+  <section class="request-sidebar collapsible-sidebar">
+    <div class="request-details">
+
+      <div class="request-details-group">
+        <div class="request-details-group-title">{{dc 'request_details'}}</div>
+
         {{#if request.followup_source_id}}
           <dl class="request-details">
             <dt>{{t 'followup'}}</dt>
@@ -127,43 +458,20 @@
           </dl>
         {{/if}}
 
-        {{#with satisfaction_response}}
-          {{#with rating}}
-            <dl class="request-details">
-              <dt>{{t 'rating'}}</dt>
-              <dd>
-                <div>
-                  {{#is scale_type 'numeric'}}
-                    {{t 'numerical_rating' value=value max_value=max_value}}
-                  {{else}}
-                    {{scale_value}}
-                  {{/is}}
-                </div>
-
-                {{#link 'survey_response' id=../id}}
-                  {{#if ../editable}}
-                    {{t 'edit_feedback'}}
-                  {{else}}
-                    {{t 'view_feedback'}}
-                  {{/if}}
-                {{/link}}
-              </dd>
-            </dl>
-          {{else}}
-            {{#if editable}}
-              <dl class="request-details">
-                <dt>{{t 'rating'}}</dt>
-                <dd>
-                  {{#link 'survey_response' id=id}}
-                    {{t 'add_feedback'}}
-                  {{/link}}
-                </dd>
-              </dl>
-            {{/if}}
-          {{/with}}
-        {{/with}}
-
         <dl class="request-details">
+                    {{!-- Follow-up Ticket link --}}
+{{#each custom_fields}}
+  {{#is title "Follow-up Ticket"}}
+    {{#if value}}
+      <dt>{{dc 'follow-up_ticket_header'}}</dt>
+      <dd>
+        <a href="{{value}}" target="_blank" rel="noopener">
+          {{dc 'follow-up_ticket_link'}}
+        </a>
+      </dd>
+    {{/if}}
+  {{/is}}
+{{/each}}
           <dt>{{t 'requester'}}</dt>
           <dd>{{request.requester.name}}</dd>
 
@@ -184,39 +492,27 @@
             </dd>
           {{/if}}
         </dl>
+      </div>
+
+      <div class="request-details-group">
+        <div class="request-details-group-title">{{dc 'support_details_header'}}</div>
 
         <dl class="request-details">
           {{#if assignee}}
             <dt>{{t 'assignee'}}</dt>
-            <dd>
-              {{assignee.name}}
-            </dd>
+            <dd>{{assignee.name}}</dd>
           {{/if}}
-
-          <dt>{{t 'id'}}</dt>
-          <dd>#{{request.id}}</dd>
-
-          {{#form 'organization' id='request-organization' class='hbs-form'}}
-            <dt>{{t 'organization'}}</dt>
-            <dd>{{select 'organization'}}</dd>
-          {{/form}}
 
           {{#if group}}
             <dt>{{t 'group'}}</dt>
-            <dd>
-              {{group.name}}
-            </dd>
+            <dd>{{group.name}}</dd>
           {{/if}}
 
-          <dt>{{t 'status'}}</dt>
-          <dd>
-            <span class="status-label status-label-request status-label-{{request.status}}" title="{{request.status_description}}">
-              {{request.status_name}}
-            </span>
-          </dd>
+          <dt>{{dc 'ticket_number'}}</dt>
+          <dd>#{{request.id}}</dd>
 
           {{#if request.type}}
-            <dt>{{request.type_title}}</dt>
+            <dt>{{t 'type'}}</dt>
             <dd>
               {{request.type_name}}
               {{#is request.type 'task'}}
@@ -224,32 +520,23 @@
               {{/is}}
             </dd>
           {{/if}}
-
-          {{#if request.priority}}
-            <dt>{{request.priority_title}}</dt>
-            <dd>
-              {{request.priority_name}}
-            </dd>
-          {{/if}}
-
-          {{#each custom_fields}}
-            <dt>{{title}}</dt>
-            <dd>
-              {{value}}
-            </dd>
-          {{/each}}
+          {{#form 'organization' id='request-organization'}}
+            <dt>{{t 'organization'}}</dt>
+            <dd>{{select 'organization'}}</dd>
+          {{/form}}
         </dl>
+      </div>
+      
+      {{#if attachments}}
+        <div class="request-details-group">
+          <div class="request-details-group-title">{{dc 'request_attachments_header'}}</div>
 
-        {{#if attachments}}
           <dl class="request-details request-attachments">
             <dt>{{t 'attachments_heading'}}</dt>
             <dd>
               <ul class="attachments">
                 {{#each attachments}}
                   <li class="attachment-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" focusable="false" viewBox="0 0 16 16" class="attachment-icon">
-                      <path fill="none" stroke="currentColor" stroke-linecap="round" d="M9.5 4v7.7c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5V3C6.5 1.6 7.6.5 9 .5s2.5 1.1 2.5 2.5v9c0 1.9-1.6 3.5-3.5 3.5S4.5 13.9 4.5 12V4"/>
-                    </svg>
                     <a href="{{url}}" target="_blank">{{name}}</a>
                     <div class="attachment-meta meta-group">
                       <span class="attachment-meta-item meta-data">{{size}}</span>
@@ -260,8 +547,10 @@
               </ul>
             </dd>
           </dl>
-        {{/if}}
-      </div>
-    </section>
-  </div>
+        </div>
+      {{/if}}
+  
+    </div>
+  </section>
+
 </div>

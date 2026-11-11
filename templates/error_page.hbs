@@ -1,21 +1,101 @@
 <div class="container-divider"></div>
-<div id="main-content" class="error-page">
-  <h1>{{t 'oops'}}</h1>
+<div class="error-page" style="padding:5rem;">
+  <h1 style="display:none;">{{t 'oops'}}</h1>
 
   {{#is error 'unauthorized'}}
-    <h2>{{link 'sign_in'}}</h2>
+    <h2 style="display:none;">{{link 'sign_in'}}</h2>
   {{/is}}
 
   {{#is error 'forbidden'}}
-    <h2>{{t 'not_authorized'}}</h2>
+    <h2 style="display:none;">{{t 'not_authorized'}}</h2>
   {{/is}}
 
   {{#is error 'not_found'}}
-    <h2>{{t 'nonexistent_page'}}</h2>
-    <p>{{t 'mistyped_address_or_moved_page'}}</p>
+    <h2 style="display:none;">{{t 'nonexistent_page'}}</h2>
+    <p style="display:none;">{{t 'mistyped_address_or_moved_page'}}</p>
   {{/is}}
 
-  {{#link 'help_center'}}
-    {{t 'back_to_homepage'}}
-  {{/link}}
+  <a style="display:none;" href="{{page_path 'help_center'}}">{{t 'back_to_homepage'}}</a>
 </div>
+
+
+<script>
+	/**
+	 * Show special "translation not available" error if the translation is not available but the english page is valid.
+	 */
+	var notDefaultLanguage = window.location.href.indexOf("/en-us/") == -1;
+	var isArticle = window.location.href.indexOf("/articles/") > -1;
+  var isSection = window.location.href.indexOf("/sections/") > -1;
+  var isCategory = window.location.href.indexOf("/categories/") > -1;
+	var isErrorPage = $(".error-page").length > 0;
+
+	if ((isArticle || isSection || isCategory) && notDefaultLanguage && isErrorPage) {
+    var hasEnglishArticle;
+    var engURL = window.location.href.replace(
+			/(.*\/hc\/)([\w-]+)(\/.*)/,
+			"$1en-us$3"
+		);
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", engURL);
+    xhr.timeout = 2000;
+    xhr.send();
+    
+    xhr.onload = function() { 
+      if (xhr.status == 200) {
+        $(".error-page").children("a").attr('href', engURL);
+        let pText;
+
+        switch (getPageLang().toUpperCase()) {
+          case "ZH-CN":
+            $(".error-page").children("h1").html("此页面尚未翻译。");
+            $(".error-page").children("h2").html("对于给您带来的不便，我们深表歉意。请您使用英文页面。");
+            $(".error-page").children("a").html("返回英文页面");
+            pText = "如果您使用Chrome作为浏览器，则可以通过在屏幕上单击鼠标右键来使用中文翻译。";
+            break;
+          case "DE":
+            $(".error-page").children("h1").html("Diese Seite wurde noch nicht ins deutsche übersetzt.");
+            $(".error-page").children("h2").html("Deswegen wird Ihnen hier die englische Orginalseite angezeigt.");
+            $(".error-page").children("a").html("Zurück zur englischen Seite");
+            pText = "Sie können jedoch mit einem Rechtsklick auf den Webseitenhintergund die Option \"Ins Deutsche übersetzen\" (orginal: Translate to Deutsch)  auswählen, um die automatische Übersetzung zu aktivieren.";
+           break;
+          case "JA":
+            $(".error-page").children("h1").html("このコンテンツは翻訳されていません。");
+            $(".error-page").children("h2").html("お手数をおかけしますが、英語のコンテンツをご利用ください。");
+            $(".error-page").children("a").html("英語のページへ戻る");
+            pText = "ブラウザにChromeを使用すると、画面上でマウスを右クリックすることで日本語への翻訳が利用できます。"
+            break;
+          case "ES":
+            $(".error-page").children("h1").html("Esta página aún no ha sido traducida.");
+            $(".error-page").children("h2").html("Por favor, consulta la página en inglés por ahora.");
+            $(".error-page").children("a").html("Volver a la página en inglés.");
+            pText = "Si estás utilizando Chrome como tu navegador, puedes habilitar la traducción al español haciendo clic derecho en la pantalla. Lamentamos las molestias.";
+            break;
+          case "SV":
+            $(".error-page").children("h1").html("Denna sida har inte översatts ännu och vi hänvisar därför till den engelska sidan.");
+            $(".error-page").children("h2").html("Om du använder Chrome som webbläsare kan du aktivera svensk översättning genom att högerklicka på sidan.");
+            $(".error-page").children("a").html("Gå tillbaka till den engelska sidan");
+            pText = "Vi ber om ursäkt för besväret.";
+            break;
+        }
+
+        if ($(".error-page").children("p") !== null) $("<p>" + pText + "</p>").insertAfter(".error-page > h2");
+        else $(".error-page").children("p").html(pText);
+      } 
+
+      showErrorMessages();
+    };
+    
+
+    xhr.onerror = function() { showErrorMessages(); };
+    xhr.ontimeout = function() { showErrorMessages(); };
+	} else {
+    showErrorMessages();
+  }
+
+  function showErrorMessages() {
+    $(".error-page").children("h1").css('display', 'block');
+    $(".error-page").children("h2").css('display', 'block');
+    $(".error-page").children("p").css('display', 'block');
+    $(".error-page").children("a").css('display', 'block');
+  }
+</script>

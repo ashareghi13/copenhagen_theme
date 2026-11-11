@@ -1,17 +1,11 @@
 <div class="container-divider"></div>
 <div class="container">
-  <div class="sub-nav">
+  <nav class="sub-nav custom-page-search-mini">
     {{breadcrumbs}}
-    <div class="search-container">
-      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" focusable="false" viewBox="0 0 12 12" class="search-icon" aria-hidden="true">
-        <circle cx="4.5" cy="4.5" r="4" fill="none" stroke="currentColor"/>
-        <path stroke="currentColor" stroke-linecap="round" d="M11 11L7.5 7.5"/>
-      </svg>
-      {{search scoped=settings.scoped_kb_search submit=false}}
-    </div>
-  </div>
+    {{search scoped=true submit=false placeholder='Search for help articles, videos and more'}}
+  </nav>
 
-  <div class="category-container">
+  <div class="category-container custom-category-container">
     <div class="category-content">
       <header class="page-header">
         <h1>{{category.name}}</h1>
@@ -20,40 +14,268 @@
         {{/if}}
       </header>
 
-      <div id="main-content" class="section-tree">
+      <div class="custom-card-container custom-card-container--category">
         {{#each sections}}
-          <section class="section">
-            <h2 class="section-tree-title">
-              <a href="{{url}}">{{name}}</a>
-            </h2>
-            {{#if articles}}
-              <ul class="article-list">
-                {{#each articles}}
-                  <li class="article-list-item{{#if promoted}} article-promoted{{/if}}">
-                    {{#if promoted}}
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" focusable="false" viewBox="0 0 12 12" class="icon-star" title="{{t 'promoted'}}">
-                        <path fill="currentColor" d="M2.88 11.73c-.19 0-.39-.06-.55-.18a.938.938 0 01-.37-1.01l.8-3L.35 5.57a.938.938 0 01-.3-1.03c.12-.37.45-.63.85-.65L4 3.73 5.12.83c.14-.37.49-.61.88-.61s.74.24.88.6L8 3.73l3.11.17a.946.946 0 01.55 1.68L9.24 7.53l.8 3a.95.95 0 01-1.43 1.04L6 9.88l-2.61 1.69c-.16.1-.34.16-.51.16z"/>
-                      </svg>
-                    {{/if}}
-                    <a href="{{url}}" class="article-list-link">{{title}}</a>
-                    {{#if internal}}
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" focusable="false" viewBox="0 0 16 16" class="icon-lock" title="{{t 'internal'}}">
-                        <rect width="12" height="9" x="2" y="7" fill="currentColor" rx="1" ry="1"/>
-                        <path fill="none" stroke="currentColor" d="M4.5 7.5V4a3.5 3.5 0 017 0v3.5"/>
-                      </svg>
-                    {{/if}}
-                  </li>
-                {{/each}}
-              </ul>
-              {{#if more_articles}}
-                <a href="{{url}}" class="see-all-articles">
-                  {{t 'show_all_articles' count=article_count}}
-                </a>
-              {{/if}}
-            {{/if}}
+          <section class="custom-card small-card">
+            <a href="{{url}}" class="custom-card-link">
+              <div class="custom-card-logo-container">
+                {{#is id 360011495034}}
+                  <i class="material-icons black-icon">announcement</i>
+                {{else}}
+                {{#is id 360011996013}}
+                  <i class="material-icons black-icon">rocket_launch</i>
+                {{else}}
+                {{#is id 4411855438103}}
+                  <i class="material-icons black-icon">favorite</i>
+                {{else}}
+                {{#is id 4411855615255}}
+                  <i class="material-icons black-icon">extension</i>
+                {{else}}
+                {{#is id 4411868290967}}
+                  <i class="material-icons black-icon">import_export</i>
+                {{else}}
+                {{#is id 360005926153}}
+                  <i class="material-icons black-icon">feed</i>
+                {{else}}
+                {{#is id 360005926173}}
+                  <i class="material-icons black-icon">photo_camera</i>
+                {{else}}
+                {{#is id 4411868507671}}
+                  <i class="material-icons black-icon">engineering</i>
+                {{else}}
+                {{#is id 4411875075479}}
+                  <i class="material-icons black-icon">bug_report</i>
+                {{else}}
+                {{#is id 1500001826241}}
+                  <i class="material-icons black-icon">factory</i>
+                {{else}}
+                {{#is id 4406419333911}}
+                  <i class="material-icons black-icon">speed</i>
+                {{else}}
+                {{#is id 360006621153}}
+                  <i class="material-icons black-icon">ondemand_video</i>
+                {{else}}
+                {{#is id 360009600793}}
+                  <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'post_add.svg'}}" />
+                {{else}}
+                {{#is id 360006367773}}
+                  <i class="material-icons black-icon">view_in_ar</i>
+                {{else}}
+                {{#is id 4414463066903}}
+                  <i class="material-icons black-icon">foundation</i>
+                {{else}}
+                {{#is id 4414463139735}}
+                  <i class="material-icons black-icon">cottage</i>
+                {{else}}
+                {{#is id 360006340134}}
+                  <i class="material-icons black-icon">invert_colors</i>
+                {{else}}
+                {{#is id 360006845493}}
+                  <i class="material-icons black-icon">power_settings_new</i>
+                {{else}}
+                {{#is id 360011620754}}
+                  <i class="material-icons black-icon">assignment</i>
+                {{else}}
+                {{#is id 360010906314}}
+                  <i class="material-icons black-icon">build</i>
+                {{else}}
+                {{#is id 360005905054}}
+                  <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'how_to_reg.svg'}}" />
+                {{else}}
+                {{#is id 4611037570583}}
+                  <i class="material-icons black-icon">speed</i>
+                {{else}}
+                {{#is id 360008682434}}
+                  <i class="material-icons black-icon">code</i>
+                {{else}}
+                {{#is id 360008788253}}
+                  <i class="material-icons black-icon">filter_tilt_shift</i>
+                {{else}}
+                {{#is id 360009868114}}
+                  <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'abstract_implementations.svg'}}" />
+                {{else}}
+                {{#is id 360010974793}}
+                  <i class="material-icons black-icon">menu_book</i>
+                {{else}}
+                {{#is id 360008682454}}
+                  <i class="material-icons black-icon">handyman</i>
+                {{else}}
+                {{#is id 360009074214}}
+                  <i class="material-icons black-icon">schema</i>
+                {{else}}
+                {{#is id 360009868154}}
+                  <i class="material-icons black-icon">publish</i>
+                {{else}}
+                {{#is id 360009868174}}
+                  <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'quality_assurance.svg'}}" />
+                {{else}}
+                {{#is id 4539684625943}}
+                  <i class="material-icons black-icon">auto_awesome</i>
+                {{else}}
+                {{#is id 13125286321815}}
+                  <i class="material-icons black-icon">menu_book</i>
+                {{else}}
+                {{#is id 18513023515799}}
+                  <i class="material-icons black-icon">menu_book</i>
+                {{else}}
+                {{#is id 5883179933207}}
+                  <i class="material-icons black-icon">quiz</i>
+                {{else}}
+                {{#is id 5883179610135}}
+                  <i class="material-icons black-icon">tips_and_updates</i>
+                {{else}}
+                {{#is id 5883193515031}}
+                  <i class="material-icons black-icon">bug_report</i>
+                {{else}}
+                {{#is id 5883200072343}}
+                  <i class="material-icons black-icon">ondemand_video</i>
+                {{else}}
+                {{#is id 11969975997335}}
+                  <i class="material-icons black-icon">description</i>
+                {{else}}
+                {{#is id 5883130223639}}
+                  <i class="material-icons black-icon">quiz</i>
+                {{else}}
+                {{#is id 5883114399383}}
+                  <i class="material-icons black-icon">bug_report</i>
+                {{else}}
+                {{#is id 4669190206743}}
+                  <i class="material-icons black-icon">ondemand_video</i>
+                {{else}}
+                {{#is id 32640504541463}}
+                  <i class="material-icons black-icon">engineering</i>
+                {{else}}
+                {{#is id 11970050683799}}
+                  <i class="material-icons black-icon">description</i>
+                {{else}}
+                {{#is id 5883177754135}}
+                  <i class="material-icons black-icon">quiz</i>
+                {{else}}
+                {{#is id 5883191051159}}
+                  <i class="material-icons black-icon">bug_report</i>
+                {{else}}
+                {{#is id 4669453375383}}
+                  <i class="material-icons black-icon">ondemand_video</i>
+                {{else}}
+                {{#is id 20872418936855}}
+                  <i class="material-icons black-icon">engineering</i>
+                {{else}}
+                {{#is id 5883112471063}}
+                  <i class="material-icons black-icon">quiz</i>
+                {{else}}
+                {{#is id 4669440204055}}
+                  <i class="material-icons black-icon">tips_and_updates</i>
+                {{else}}
+                {{#is id 4403226487191}}
+                  <i class="material-icons black-icon">account_circle</i>
+                {{else}}
+                {{#is id 1500000946601}}
+                  <i class="material-icons black-icon">date_range</i>
+                {{else}}
+                {{#is id 39456799016471}}
+                  <i class="material-icons black-icon">beach_access</i>
+                {{else}}          
+                {{#is id 39456803784343}}
+                  <i class="material-icons black-icon">error</i>
+                {{else}}   
+                {{#is id 360012773673}}
+                  <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'quality_assurance.svg'}}" />
+                {{else}}
+                {{#is id 360011878313}}
+                  <i class="material-icons black-icon">support_agent</i>
+                {{else}}
+                {{#is id 360011139234}}
+                  <img class="material-icons almost-black-img resize-svg-icon" src="{{asset 'zendesk_logo.svg'}}" />
+                {{else}}
+                  <i class="material-icons black-icon">camera</i>
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+                {{/is}}
+              </div>
+
+              <h3 class="custom-card-title">{{name}}</h3>
+            </a>
           </section>
         {{/each}}
+
+        {{#is category.id 360003927054}}
+         <div class="custom-card-wrapper custom-card-wrapper--large">
+  <section class="custom-card small-card large-card">
+    <a href="https://dev-docs.configura.com/" class="custom-card-link">
+      <div class="custom-card-logo-container">
+        <i class="material-icons black-icon">star</i>
       </div>
+
+      <div class="large-card-text">
+        <h3 class="custom-card-title">Developer Documentation</h3>
+        <p class="custom-card-description">
+          Developer documentation has moved! Click here to visit our new Developer Documentation website.
+        </p>
+      </div>
+    </a>
+  </section>
+</div>
+        {{/is}}
+      </div>
+
+      <section class="custom-activity section activity">
+        {{#if settings.show_recent_activity}}
+          {{recent_activity scope='category'}}
+        {{/if}}
+      </section>
     </div>
   </div>
 </div>
