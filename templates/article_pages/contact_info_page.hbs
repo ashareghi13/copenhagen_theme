@@ -1,0 +1,68 @@
+<!-- CUSTOM SIDEBAR -->
+
+<div id="sidebar" class="sidebar-panel">
+  <ul class="sidebar">
+    <li class="sidebar-item sidebar-home open material-icons-big">
+      <a href="https://www.configura.com/academy/cet-designer" class="custom-sidebar-item-title">
+        <i class="material-icons custom-icon-margin-right blue-icon">school</i>
+         Academy and training
+      </a>
+    </li>
+    <li class="sidebar-item sidebar-home open material-icons-big">
+      <a href="https://www.configura.com/products/system-recommendations/cet-designer" class="custom-sidebar-item-title">
+        <i class="material-icons custom-icon-margin-right blue-icon">computer</i>
+         System recommendations
+      </a>
+    </li>
+    <li class="sidebar-item sidebar-home open material-icons-big">
+      <a href="https://support.configura.com/hc/{{dc 'locale'}}/sections/360006783753-Release-Notes" class="custom-sidebar-item-title">
+        <i class="material-icons custom-icon-margin-right blue-icon">import_contacts</i>
+         Release notes
+      </a>
+    </li>
+    <li class="sidebar-item sidebar-home open custom-margin-bottom material-icons-big">
+      <a href=" https://www.configura.com/my/forum" class="custom-sidebar-item-title">
+        <i class="material-icons custom-icon-margin-right blue-icon">forum</i>
+         Forums
+      </a>
+    </li>
+    <li :class="['sidebar-item', isOpen(category.id)]" v-if="category.id !== 360002370413" v-for='category in categories' :data-id='category.id'>
+      <h4 class="sidebar-item-title" @click='setActiveSection(category.id)' v-cloak>{[{category.name}]}</h4>
+      <ul v-if='category.id === activeSection'>
+        <li :class="['sidebar-item', isCurrent(section.id)]" v-for='section in category.sections'>
+          <a :href='section.html_url' class="sidebar-item-link">
+            {[{section.name}]}
+          </a>
+        </li>
+      </ul>
+    </li>
+  	</ul>
+	</div>
+<!-- END CUSTOM SIDEBAR -->
+
+<div class="container-divider"></div>
+<div class="container">
+    <nav class="sub-nav custom-page-search-mini">
+      {{breadcrumbs}}
+      {{search scoped=true submit=false placeholder='Search for help articles, videos and more'}}
+    </nav>
+  <div class="category-container custom-category-container">
+    <article class="category-content">
+      <header class="page-header">
+        <h1>
+          {{article.title}}
+          {{#if article.internal}}
+            <span class="icon-lock" title="{{t 'internal'}}"></span>
+          {{/if}}
+        </h1>
+      </header>
+
+      <section class="article-info">
+        <div class="article-content">
+          <div class="article-body">{{article.body}}</div>
+        </div>
+      </section>
+    </article>
+  </div>
+</div>
+<script>sidebar.$mount("main");</script>
