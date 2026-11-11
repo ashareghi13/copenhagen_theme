@@ -1,0 +1,100 @@
+<div class="container-divider"></div>
+<div class="container">
+    <nav class="sub-nav custom-page-search-mini">
+        {{breadcrumbs}}
+        {{search scoped=true submit=false placeholder='Search for help articles, videos and more'}}
+    </nav>
+    <header class="page-header">
+        <span>
+            <h1>{{section.name}}</h1>
+            <p class="custom-contact-header-additional-desc">
+                <b>{{section.description}}</b>
+            </p>
+            <h2>{{dc 'contact_us'}}</h2>
+        </span>
+    </header>
+      <!-- SUPPORT CONTACT CARDS -->
+    <div class="custom-card-container">
+      {{#each (slice section.sections 0 3)}} <!-- startIndex = 0, number of elements = 3; -->
+      <div class="custom-contact-card-wrapper">
+            <section class="custom-card small-card">
+                {{!-- QA Support Section --}}
+
+                {{#is id 1500002507302}} {{!-- QA Email --}}
+                    <a href="mailto:qasupport@configura" class="custom-card-link">
+                        <div class="custom-card-logo-container">
+                            <i class="material-icons black-icon">email</i>
+                        </div>
+                        <h3 class="custom-card-title">
+                            {{name}}
+                        </h3>
+                    </a>
+                {{/is}}
+                {{#is id 1500002507322}} {{!-- QA Community --}}
+                    <a href="https://my.configura.com/index.pl?page=forum&section=support&subsection=qa" target="_blank" rel="noopener noreferrer" class="custom-card-link">
+                        <div class="custom-card-logo-container">
+                            <i class="material-icons black-icon">people</i>
+                        </div>
+                        <h3 class="custom-card-title">
+                            {{name}}
+                        </h3>
+                    </a>
+                {{/is}}
+                {{#is id 1500002535581}} {{!-- QA Global Support Availability --}}
+                    <a href="https://support.configura.com/hc/{{dc 'locale'}}/articles/360056184914" class="custom-card-link">
+                        <div class="custom-card-logo-container">
+                            <i class="material-icons black-icon">access_time</i>
+                        </div>
+                        <h3 class="custom-card-title">
+                            {{name}}
+                        </h3>
+                    </a>
+                {{/is}}
+            </section>
+            <p>{{description}}</p>
+        </div>
+    {{/each}}
+    </div>
+
+     <!-- QUICK LINKS CARDS -->
+    <h2>Quick Links</h2>
+    <div class="custom-card-container">
+      {{#each (slice section.sections 3 section.sections.length "-" 3)}} <!-- startIndex = 3, number of elements = section.sections.length - 3; -->
+        <div class="custom-contact-card-wrapper">
+            <section class="custom-card small-card">
+              {{!-- QA Support Quick Links --}}
+                {{#is id 1500002507382}} {{!-- QA FAQs --}}
+                    <a href="https://support.configura.com/hc/{{dc 'locale'}}/sections/360003354354-FAQ" class="custom-card-link">
+                        <div class="custom-card-logo-container">
+                            <i class="material-icons black-icon">access_time</i>
+                        </div>
+                        <h3 class="custom-card-title">
+                            {{name}}
+                        </h3>
+                    </a>
+                {{/is}}
+                {{#is id 1500002535641 }} {{!-- QA Migration Guide --}}
+                    <a href="https://support.configura.com/hc/{{dc 'locale'}}/sections/1500000170842-Migration-Testing-Guides" class="custom-card-link">
+                        <div class="custom-card-logo-container">
+                            <i class="material-icons black-icon">next_week</i>
+                        </div>
+                        <h3 class="custom-card-title">
+                            {{name}}
+                        </h3>
+                    </a>
+                {{/is}}
+                {{#is id 1500002508222 }} {{!-- QA Release Timeline --}}
+                    <a href="https://support.configura.com/hc/{{dc 'locale'}}/sections/1500000538981-Release-Timelines" class="custom-card-link">
+                        <div class="custom-card-logo-container">
+                            <i class="material-icons black-icon">format_list_numbered</i>
+                        </div>
+                        <h3 class="custom-card-title">
+                            {{name}}
+                        </h3>
+                    </a>
+                {{/is}}
+        </section>
+        <p>{{description}}</p>
+    </div>
+    {{/each}}
+</div>

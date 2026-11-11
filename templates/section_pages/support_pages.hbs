@@ -1,0 +1,350 @@
+<div class="container-divider"></div>
+<div class="container">
+    <nav class="sub-nav custom-page-search-mini">
+        {{breadcrumbs}}
+        {{search scoped=true submit=false placeholder='Search for help articles, videos and more'}}
+    </nav>
+    <header class="page-header">
+        <span>
+            <h1>{{section.name}}</h1>
+            <p class="custom-contact-header-additional-desc">
+                <b>{{section.description}}</b>
+            </p>
+            <h2>{{dc 'contact_us'}}</h2>
+        </span>
+    </header>
+      <!-- SUPPORT CONTACT CARDS -->
+    <div class="custom-card-container">
+    {{#each section.sections}}
+        {{!!-- Hides Quick Link Cards --}}
+        {{#isnt id 1500002293961}}
+        {{#isnt id 1500002273282}}
+        {{#isnt id 1500002506502}}
+        {{#isnt id 1500002506522}}
+        {{#isnt id 1500002534741}}
+        {{#isnt id 1500002507382}}
+        {{#isnt id 1500002535641}}
+        {{#isnt id 1500002508222}}
+        {{#isnt id 6894444797975}}
+        <div class="custom-contact-card-wrapper">
+            <section class="custom-card small-card">
+                    {{!-- User Support Section --}}
+
+                    {{#is id 1500002293041}} {{!-- User Email --}}
+                        <a href="mailto:cetsupport@configura.com" class="custom-card-link">
+                            <div class="custom-card-logo-container">
+                                <i class="material-icons black-icon">email</i>
+                            </div>
+                            <h3 class="custom-card-title">
+                                {{name}}
+                            </h3>
+                        </a>
+                    {{/is}}
+                    {{#is id 1500002293841}} {{!-- Chat --}}
+                        <a href="https://support.configura.com/hc/{{dc 'locale'}}/articles/22022147205655" class="custom-card-link">
+                            <div class="custom-card-logo-container">
+                                <i class="material-icons black-icon">textsms</i>
+                            </div>
+                            <h3 class="custom-card-title">
+                                {{name}}
+                            </h3>
+                        </a>
+                    {{/is}}
+                    {{#is id 1500002293861}} {{!-- Call --}}
+                        <a href="https://support.configura.com/hc/{{dc 'locale'}}/articles/360041358813" class="custom-card-link">
+                            <div class="custom-card-logo-container">
+                                <i class="material-icons black-icon">call</i>
+                            </div>
+                            <h3 class="custom-card-title">
+                                {{name}}
+                            </h3>
+                        </a>
+                    {{/is}}
+                    {{#is id 1500002273242}} {{!-- User Forums --}}
+                        <a href="https://www.configura.com/my/forum" target="_blank" rel="noopener noreferrer" class="custom-card-link">
+                            <div class="custom-card-logo-container">
+                                <i class="material-icons black-icon">people</i>
+                            </div>
+                            <h3 class="custom-card-title">
+                                {{name}}
+                            </h3>
+                        </a>
+                    {{/is}}
+                    {{#is id 1500002293921}} {{!-- User Global Support Availability --}}
+                        <a href="https://support.configura.com/hc/{{dc 'locale'}}/articles/360056184914" class="custom-card-link">
+                            <div class="custom-card-logo-container">
+                                <i class="material-icons black-icon">access_time</i>
+                            </div>
+                            <h3 class="custom-card-title">
+                                {{name}}
+                            </h3>
+                        </a>
+                    {{/is}} 
+                    {{#is id 1500002912642 }} {{!-- Academy --}}
+                        <a href="https://www.configura.com/academy/cet" target="_blank" rel="noopener noreferrer" class="custom-card-link">
+                            <div class="custom-card-logo-container">
+                                <i class="material-icons black-icon">school</i>
+                            </div>
+                            <h3 class="custom-card-title">
+                                {{name}}
+                            </h3>
+                        </a>
+                    {{/is}}
+                    {{#is id 1500002912602 }} {{!-- CET Experience --}}
+                        <a href="https://www.cetexperience.com/" target="_blank" rel="noopener noreferrer" class="custom-card-link">
+                            <div class="custom-card-logo-container">
+                                <i class="material-icons black-icon">business</i>
+                            </div>
+                            <h3 class="custom-card-title">
+                                {{name}}
+                            </h3>
+                        </a>
+                    {{/is}}
+
+                    {{!-- Dev Support Section --}}
+
+                    {{#is id 1500002506442}} {{!-- Dev Contact Support --}}
+                        <a href="https://configura.atlassian.net/servicedesk/customer/portal/3/group/13" target="_blank" rel="noopener noreferrer" class="custom-card-link">
+                            <div class="custom-card-logo-container">
+                                <i class="material-icons black-icon">desktop_windows</i>
+                            </div>
+                            <h3 class="custom-card-title">
+                                {{name}}
+                            </h3>
+                        </a>
+                    {{/is}}
+                    {{#is id 1500002506482}} {{!-- Dev Community --}}
+                        <a href="https://my.configura.com/index.pl?page=forum&section=developer&subsection=devs" target="_blank" rel="noopener noreferrer" class="custom-card-link">
+                            <div class="custom-card-logo-container">
+                                <i class="material-icons black-icon">people</i>
+                            </div>
+                            <h3 class="custom-card-title">
+                                {{name}}
+                            </h3>
+                        </a>
+                    {{/is}}
+                    {{#is id 1500002611922}} {{!-- Open Office --}}
+                        <a href="https://dev-academy.configura.com/course/developer-open-office-hours" target="_blank" rel="noopener noreferrer" class="custom-card-link">
+                            <div class="custom-card-logo-container">
+                                <i class="material-icons black-icon">event</i>
+                            </div>
+                            <h3 class="custom-card-title">
+                                {{name}}
+                            </h3>
+                        </a>
+                    {{/is}}
+
+                    {{!-- QA Support Section --}}
+
+                    {{#is id 1500002507302}} {{!-- QA Email --}}
+                        <a href="mailto:qasupport@configura" class="custom-card-link">
+                            <div class="custom-card-logo-container">
+                                <i class="material-icons black-icon">email</i>
+                            </div>
+                            <h3 class="custom-card-title">
+                                {{name}}
+                            </h3>
+                        </a>
+                    {{/is}}
+                    {{#is id 1500002507322}} {{!-- QA Community --}}
+                        <a href="https://my.configura.com/index.pl?page=forum&section=support&subsection=qa" target="_blank" rel="noopener noreferrer" class="custom-card-link">
+                            <div class="custom-card-logo-container">
+                                <i class="material-icons black-icon">people</i>
+                            </div>
+                            <h3 class="custom-card-title">
+                                {{name}}
+                            </h3>
+                        </a>
+                    {{/is}}
+                    {{#is id 1500002535581}} {{!-- QA Global Support Availability --}}
+                        <a href="https://support.configura.com/hc/{{dc 'locale'}}/articles/360056184914" class="custom-card-link">
+                            <div class="custom-card-logo-container">
+                                <i class="material-icons black-icon">access_time</i>
+                            </div>
+                            <h3 class="custom-card-title">
+                                {{name}}
+                            </h3>
+                        </a>
+                    {{/is}}
+
+                    {{!-- Stage Support Section --}}
+
+                    {{#is id 6842552462999}} {{!-- Stage Contact Support --}}
+                        <a href="https://configura.atlassian.net/servicedesk/customer/portal/3/group/12" target="_blank" rel="noopener noreferrer" class="custom-card-link">
+                            <div class="custom-card-logo-container">
+                                <i class="material-icons black-icon">desktop_windows</i>
+                            </div>
+                            <h3 class="custom-card-title">
+                                {{name}}
+                            </h3>
+                        </a>
+                    {{/is}}
+            </section>
+            {{#is id 1500002293041}} {{!-- Email --}}
+                <p>Email us at <a href="mailto:cetsupport@configura.com">cetsupport@configura.com</a> to report an issue or to get help. We will respond to all enquiries within 16 hours.</p>
+            {{/is}}
+            {{#is id 1500002506442}} {{!-- Dev Support Email --}}
+                <p>Please contact us via the CET Developer Support portal. Alternatively, you may email us at <a href="mailto:devsupport@configura.com">devsupport@configura.com</a>. We will respond to all enquiries within 16 hours.</p>
+            {{/is}}
+            {{#is id 1500002507302}} {{!-- QA Support Email --}}
+                <p>Email us at <a href="mailto:qasupport@configura.com">qasupport@configura.com</a> to report an issue or to get help. We will get back to you as quickly as possible.</p>
+            {{/is}}
+                <p>{{description}}</p>
+        </div>
+        {{/isnt}}
+        {{/isnt}}
+        {{/isnt}}
+        {{/isnt}}
+        {{/isnt}}
+        {{/isnt}}
+        {{/isnt}}
+        {{/isnt}}
+        {{/isnt}}
+    {{/each}}
+    </div>
+
+     <!-- QUICK LINKS CARDS -->
+    <h2>Quick Links</h2>
+    <div class="custom-card-container">
+    {{#each section.sections}}
+        {{!-- Hides Support Contact Cards --}}
+        {{#isnt id 1500002293041}}
+        {{#isnt id 1500002293841}}
+        {{#isnt id 1500002293861}}
+        {{#isnt id 1500002273242}}
+        {{#isnt id 1500002293921}}
+        {{#isnt id 1500002293941}}
+        {{#isnt id 1500002506442}}
+        {{#isnt id 1500002506482}}
+        {{#isnt id 1500002534721}}
+        {{#isnt id 1500002507302}}
+        {{#isnt id 1500002507322}}
+        {{#isnt id 1500002535581}}
+        {{#isnt id 1500002611922}}
+        {{#isnt id 1500002912642}}
+        {{#isnt id 1500002912602}}
+        {{#isnt id 6842552462999}}
+        <div class="custom-contact-card-wrapper">
+            <section class="custom-card small-card">
+
+                 {{!-- User Support Quick Links --}}
+
+                {{#is id 1500002293961}} {{!-- User FAQs --}}
+                    <a href="https://support.configura.com/hc/{{dc 'locale'}}/sections/360003354354-FAQ" class="custom-card-link">
+                        <div class="custom-card-logo-container">
+                            <i class="material-icons black-icon">help_outline</i>
+                        </div>
+                        <h3 class="custom-card-title">
+                            {{name}}
+                        </h3>
+                    </a>
+                {{/is}}
+                {{#is id 1500002273282}} {{!-- User Migration Guide --}}
+                    <a href="https://support.configura.com/hc/{{dc 'locale'}}/sections/1500000170842-Migration-Testing-Guides" target="_blank" rel="noopener noreferrer" class="custom-card-link">
+                        <div class="custom-card-logo-container">
+                            <i class="material-icons black-icon">access_time</i>
+                        </div>
+                        <h3 class="custom-card-title">
+                            {{name}}
+                        </h3>
+                    </a>
+                {{/is}}
+
+                {{!-- Dev Support Quick Links --}}
+
+                {{#is id 1500002506502}} {{!-- Dev Help Center --}}
+                    <a href="https://support.configura.com/hc/{{dc 'locale'}}/categories/360003927054-CET-Developer" target="_blank" rel="noopener noreferrer" class="custom-card-link">
+                        <div class="custom-card-logo-container">
+                            <i class="material-icons black-icon">help_outline</i>
+                        </div>
+                        <h3 class="custom-card-title">
+                            {{name}}
+                        </h3>
+                    </a>
+                {{/is}}
+                {{#is id 1500002506522}} {{!-- Dev Migration Guide --}}
+                    <a href="https://www.configura.com/wiki/index.php/Migration_Guides" target="_blank" rel="noopener noreferrer" class="custom-card-link">
+                        <div class="custom-card-logo-container">
+                            <i class="material-icons black-icon">next_week</i>
+                        </div>
+                        <h3 class="custom-card-title">
+                            {{name}}
+                        </h3>
+                    </a>
+                {{/is}}
+                {{#is id 1500002534741}} {{!-- Dev Release Timeline --}}
+                    <a href="https://support.configura.com/hc/{{dc 'locale'}}/sections/1500000538981-Release-Timelines" target="_blank" rel="noopener noreferrer" class="custom-card-link">
+                        <div class="custom-card-logo-container">
+                            <i class="material-icons black-icon">format_list_numbered</i>
+                        </div>
+                        <h3 class="custom-card-title">
+                            {{name}}
+                        </h3>
+                    </a>
+                {{/is}}
+
+                {{!-- QA Support Quick Links --}}
+
+                {{#is id 1500002507382}} {{!-- QA FAQs --}}
+                    <a href="https://support.configura.com/hc/{{dc 'locale'}}/sections/360003354354-FAQ" class="custom-card-link">
+                        <div class="custom-card-logo-container">
+                            <i class="material-icons black-icon">access_time</i>
+                        </div>
+                        <h3 class="custom-card-title">
+                            {{name}}
+                        </h3>
+                    </a>
+                {{/is}}
+                {{#is id 1500002535641 }} {{!-- QA Migration Guide --}}
+                    <a href="https://support.configura.com/hc/{{dc 'locale'}}/sections/1500000170842-Migration-Testing-Guides" class="custom-card-link">
+                        <div class="custom-card-logo-container">
+                            <i class="material-icons black-icon">next_week</i>
+                        </div>
+                        <h3 class="custom-card-title">
+                            {{name}}
+                        </h3>
+                    </a>
+                {{/is}}
+                {{#is id 1500002508222 }} {{!-- QA Release Timeline --}}
+                    <a href="https://support.configura.com/hc/{{dc 'locale'}}/sections/1500000538981-Release-Timelines" class="custom-card-link">
+                        <div class="custom-card-logo-container">
+                            <i class="material-icons black-icon">format_list_numbered</i>
+                        </div>
+                        <h3 class="custom-card-title">
+                            {{name}}
+                        </h3>
+                    </a>
+                {{/is}}
+
+                {{!-- Stage Support Quick Links --}}
+                {{#is id 6894444797975}} {{!-- Stage Documentation --}}
+                    <a href="https://docs.configuracloud.com/" target="_blank" rel="noopener noreferrer" class="custom-card-link">
+                        <div class="custom-card-logo-container">
+                            <i class="material-icons black-icon">code</i>
+                        </div>
+                        <h3 class="custom-card-title">
+                            {{name}}
+                        </h3>
+                    </a>
+                {{/is}}
+        </section>
+        <p>{{description}}</p>
+    </div>
+    {{/isnt}}
+    {{/isnt}}
+    {{/isnt}}
+    {{/isnt}}
+    {{/isnt}}
+    {{/isnt}}
+    {{/isnt}}
+    {{/isnt}}
+    {{/isnt}}
+    {{/isnt}}
+    {{/isnt}}
+    {{/isnt}}
+    {{/isnt}}
+    {{/isnt}}
+    {{/isnt}}
+    {{/isnt}}
+    {{/each}}
+</div>

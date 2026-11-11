@@ -1,0 +1,58 @@
+<div class="container-divider"></div>
+<div class="container">
+    <nav class="sub-nav custom-page-search-mini">
+        {{breadcrumbs}}
+        {{search scoped=true submit=false placeholder='Search for help articles, videos and more'}}
+    </nav>
+    <header class="page-header">
+        <span>
+            <h1>{{section.name}}</h1>
+            <p class="custom-contact-header-additional-desc">
+                <b>{{section.description}}</b>
+            </p>
+            <h2>{{dc 'contact_us'}}</h2>
+        </span>
+    </header>
+
+    <!-- CONTACT CARDS -->
+    <div class="custom-card-container">
+      {{#each (slice section.sections 0 1)}} <!-- startIndex = 0, number of elements = 1; -->
+        <div class="custom-contact-card-wrapper">
+            <section class="custom-card small-card">
+                    {{#is id 7936577306391}} {{!-- Catalogue Contact Support --}}
+                        <a href="https://configura.atlassian.net/servicedesk/customer/portal/3/group/11" target="_blank" rel="noopener noreferrer" class="custom-card-link">
+                            <div class="custom-card-logo-container">
+                                <i class="material-icons black-icon">desktop_windows</i>
+                            </div>
+                            <h3 class="custom-card-title">
+                                {{name}}
+                            </h3>
+                        </a>
+                    {{/is}}
+                  </section>
+            <p>{{description}}</p>
+        </div>
+    {{/each}}
+    </div>
+
+    <!-- QUICK LINKS CARDS -->
+    <h2>Quick Links</h2>
+    <div class="custom-card-container">
+      {{#each (slice section.sections 1 section.sections.length "-" 1)}} <!-- startIndex = 3, number of elements = section.sections.length - 3; -->
+        <div class="custom-contact-card-wrapper">
+            <section class="custom-card small-card">
+                {{#is id 7936593219735}} {{!-- Catalogue Help Center --}}
+                    <a href="https://support.configura.com/hc/{{dc 'locale'}}/categories/360001609774" target="_blank" rel="noopener noreferrer" class="custom-card-link">
+                        <div class="custom-card-logo-container">
+                            <i class="material-icons black-icon">help_outline</i>
+                        </div>
+                        <h3 class="custom-card-title">
+                            {{name}}
+                        </h3>
+                    </a>
+                {{/is}}
+        </section>
+        <p>{{description}}</p>
+    </div>
+    {{/each}}
+</div>

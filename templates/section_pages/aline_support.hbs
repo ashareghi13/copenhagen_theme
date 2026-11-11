@@ -1,0 +1,102 @@
+<div class="container-divider"></div>
+<div class="container">
+    <nav class="sub-nav custom-page-search-mini">
+        {{breadcrumbs}}
+        {{search scoped=true submit=false placeholder='Search for help articles, videos and more'}}
+    </nav>
+    <header class="page-header">
+        <span>
+            <h1>{{section.name}}</h1>
+            <p class="custom-contact-header-additional-desc">
+                <b>{{section.description}}</b>
+            </p>
+            <h2>{{dc 'contact_us'}}</h2>
+        </span>
+    </header>
+	
+<!-- CONTACT CARDS -->
+    <div class="custom-card-container">
+    {{#each (slice section.sections 0 5)}} <!-- startIndex = 0, number of elements = 5; -->
+        {{#is id 39612232896279}} {{!-- Aline Email --}}
+            <div class="custom-contact-card-wrapper">
+                <section class="custom-card small-card">
+                    <a href="mailto:support@configura.com" class="custom-card-link">
+                        <div class="custom-card-logo-container">
+                            <i class="material-icons black-icon">email</i>
+                        </div>
+                        <h3 class="custom-card-title">
+                            {{name}}
+                        </h3>
+                    </a>
+                </section>
+                <p>{{description}}</p>
+            </div>
+        {{/is}}
+        {{#is id 39612187297047}} {{!-- Aline Chat --}}
+            <div class="custom-contact-card-wrapper">
+    <section class="custom-card small-card">
+      <a href="#"
+         class="custom-card-link js-open-messaging"
+         aria-label="Start a new chat with support">
+
+        <div class="custom-card-logo-container">
+          <i class="material-icons black-icon">textsms</i>
+        </div>
+
+        <h3 class="custom-card-title">
+          {{name}}
+        </h3>
+      </a>
+    </section>
+
+    <p>{{description}}</p>
+  </div>
+        {{/is}}
+        {{#is id 39612197248279}} {{!-- Aline Call --}}
+            <div class="custom-contact-card-wrapper">
+                <section class="custom-card small-card">
+                    <a href="https://support.configura.com/hc/{{dc 'locale'}}/articles/9468779214231" class="custom-card-link">
+                        <div class="custom-card-logo-container">
+                            <i class="material-icons black-icon">call</i>
+                        </div>
+                        <h3 class="custom-card-title">
+                            {{name}}
+                        </h3>
+                    </a>
+                </section>
+                <p>{{description}}</p>
+            </div>
+        {{/is}}
+        {{#is id 39612244300311}} {{!-- User Global Support Availability --}}
+            <div class="custom-contact-card-wrapper">
+                <section class="custom-card small-card">
+                    <a href="https://support.configura.com/hc/p/GlobalSupportAvailability" target="_blank" rel="noopener noreferrer" class="custom-card-link">
+                        <div class="custom-card-logo-container">
+                            <i class="material-icons black-icon">access_time</i>
+                        </div>
+                        <h3 class="custom-card-title">
+                            {{name}}
+                        </h3>
+                    </a>
+                </section>
+                <p>{{description}}</p>
+            </div>
+        {{/is}}
+        {{#is id 39612237586839 }} {{!-- Academy --}}
+            <div class="custom-contact-card-wrapper">
+                <section class="custom-card small-card">
+                    <a href="https://academy.configura.com/home" target="_blank" rel="noopener noreferrer" class="custom-card-link">
+                        <div class="custom-card-logo-container">
+                            <i class="material-icons black-icon">school</i>
+                        </div>
+                        <h3 class="custom-card-title">
+                            {{name}}
+                        </h3>
+                    </a>
+                </section>
+                <p>{{description}}</p>
+            </div>
+        {{/is}}
+          {{/each}}
+    </div>
+  
