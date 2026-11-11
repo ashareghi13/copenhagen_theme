@@ -1,47 +1,9 @@
-<nav class="my-activities-nav collapsible-nav">
-  <ul class="collapsible-nav-list container">
-    <li aria-selected=true>{{dc 'ticket_portal_menu_option'}}</li>
-    <li>{{link 'contributions'}}</li>
-    <li>{{link 'subscriptions'}}</li>
-  </ul>
-</nav>
-
-  <div class="container">
+<div class="container">
   <header class="my-activities-header">
-    <h1>{{dc 'ticket_portal_menu_option'}}</h1>
-    <nav class="my-activities-sub-nav collapsible-nav">
-      <ul class="collapsible-nav-list">
-{{#each filters}}
-  {{#if selected}}
-    <li aria-selected="true">
-      {{#is identifier "my"}}{{dc 'requests_tab_my'}}{{else}}
-        {{#is identifier "ccd"}}{{dc 'requests_tab_ccd'}}{{else}}
-          {{#is identifier "organization"}}{{dc 'requests_tab_org'}}{{else}}
-            {{name}}
-          {{/is}}
-        {{/is}}
-      {{/is}}
-    </li>
-  {{else}}
-    <li>
-      <a href="{{url}}">
-        {{#is identifier "my"}}{{dc 'requests_tab_my'}}{{else}}
-          {{#is identifier "ccd"}}{{dc 'requests_tab_ccd'}}{{else}}
-            {{#is identifier "organization"}}{{dc 'requests_tab_org'}}{{else}}
-              {{name}}
-            {{/is}}
-          {{/is}}
-        {{/is}}
-      </a>
-    </li>
-  {{/if}}
-{{/each}}
-
-      </ul>
-    </nav>
+    <h1>{{t "requests"}}</h1>
   </header>
 
-   <div id="main-content">
+  <div id="main-content">
   </div>
 </div>
 
