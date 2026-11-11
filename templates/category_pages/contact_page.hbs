@@ -1,0 +1,83 @@
+<div class="container-divider"></div>
+<div class="container">
+  <nav class="sub-nav custom-page-search-mini">
+    {{breadcrumbs}}
+    {{search scoped=true submit=false placeholder='Search for help articles, videos and more'}}
+  </nav>
+  <div class="category-container custom-category-container">
+    <div class="category-content">
+      <header class="page-header">
+        <h1>{{category.name}}</h1>
+        {{#if category.description}}
+        <p class="custom-contact-header-desc">{{category.description}}</p>
+        {{/if}}
+        <b class="custom-contact-header-additional-desc">You can always send an email to <a
+            href="mailto:cetsupport@configura.com">cetsupport@configura.com</a></b>
+      </header>
+      <!-- CUSTOM CARDS -->
+      <div class="custom-card-container">
+        {{#each sections}}
+        <div class="custom-contact-card-wrapper">
+          <section class="custom-card small-card">
+          {{#is id 360006761373}} {{!-- Forum --}}
+            <a href="https://www.configura.com/my/forum" class="custom-card-link">
+          {{else}}
+          {{#is id 360006761393}} {{!-- FAQ --}}
+            <a href="https://support.configura.com/hc/{{dc 'locale'}}/sections/360006761393" class="custom-card-link">
+          {{else}}
+          {{#is id 360006730714}} {{!-- Call --}}
+            <a href="https://support.configura.com/hc/{{dc 'locale'}}/articles/360041358813" class="custom-card-link">
+          {{else}}
+          {{#is id 360006753914}} {{!-- Chat --}}
+            <a href="https://support.configura.com/hc/{{dc 'locale'}}/articles/22022147205655" class="custom-card-link">
+          {{else}}
+          {{#is id 360010596194}} {{!-- Global Support Availability --}}
+            <a href="https://support.configura.com/hc/{{dc 'locale'}}/articles/360056184914" class="custom-card-link">
+          {{else}}
+            <a href="{{url}}" class="custom-card-link">
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+          {{/is}}
+              <div class="custom-card-logo-container">
+              {{#is id 360006761373}} {{!-- Forum --}}
+                <i class="material-icons black-icon">forum</i>
+              {{else}}
+              {{#is id 360006761393}} {{!-- FAQ --}}
+                <i class="material-icons black-icon">help</i>
+              {{else}}
+              {{#is id 360006730714}} {{!-- Call --}}
+                <i class="material-icons black-icon">call</i>
+              {{else}}
+              {{#is id 360006753914}} {{!-- Chat --}}
+                <i class="material-icons black-icon">textsms</i>
+              {{else}}
+              {{#is id 360010596194}} {{!-- Global Support Availability --}}
+                <i class="material-icons black-icon">access_time</i>
+              {{else}}
+                <i class="material-icons black-icon">camera</i>
+              {{/is}}
+              {{/is}}
+              {{/is}}
+              {{/is}}
+              {{/is}}
+              </div>
+              <h3 class="custom-card-title">
+                {{name}}
+              </h3>
+            </a>
+          <!-- END CUSTOM CARDS -->
+          </section>
+          {{description}}
+        </div>
+        {{else}}
+        <i class="category-empty">
+          <a href="{{category.url}}">{{t 'empty'}}</a>
+        </i>
+        {{/each}}
+        <div class="contact-empty-div"></div>
+      </div>
+    </div>
+  </div>
+</div>

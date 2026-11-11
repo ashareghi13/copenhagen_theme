@@ -1,0 +1,131 @@
+<div class="container-divider"></div>
+<div class="container">
+    <nav class="sub-nav custom-page-search-mini">
+    {{breadcrumbs}}
+    {{search scoped=true submit=false placeholder='Search for help articles, videos and more'}}
+    </nav>
+    <header class="page-header">
+        <span>
+            <h1>{{category.name}}</h1>
+            <p class="custom-contact-header-additional-desc">
+                <b>{{category.description}}</b>
+            </p>
+        </span>
+    </header>
+
+<!-- User Support Category -->
+<h2>User Support</h2>
+<div class="custom-card-container">
+  {{#each sections}}
+    {{#is id 1500002292901}}
+      <div class="custom-contact-card-wrapper">
+        <section class="custom-card small-card">
+          <a href="https://support.configura.com/hc/{{dc 'locale'}}/sections/{{id}}" class="custom-card-link">
+            <div class="custom-card-logo-container">
+              <i class="material-icons black-icon">person</i>
+            </div>
+            <h3 class="custom-card-title">{{name}}</h3>
+          </a>
+        </section>
+      </div>
+    {{/is}}
+
+    {{#is id 7751179095831}}
+      <div class="custom-contact-card-wrapper">
+        <section class="custom-card small-card">
+          <a href="https://support.configura.com/hc/{{dc 'locale'}}/sections/{{id}}" class="custom-card-link">
+            <div class="custom-card-logo-container">
+              <i class="material-icons black-icon">person</i>
+            </div>
+            <h3 class="custom-card-title">{{name}}</h3>
+          </a>
+        </section>
+      </div>
+    {{/is}}
+
+    {{#is id 39612050780695}}
+      <div class="custom-contact-card-wrapper">
+        <section class="custom-card small-card">
+          <a href="https://support.configura.com/hc/{{dc 'locale'}}/sections/{{id}}" class="custom-card-link">
+            <div class="custom-card-logo-container">
+              <i class="material-icons black-icon">person</i>
+            </div>
+            <h3 class="custom-card-title">{{name}}</h3>
+          </a>
+        </section>
+      </div>
+    {{/is}}
+  {{/each}}
+</div>
+
+<!-- Development Support Category -->
+<h2>Development Support</h2>
+<div class="custom-card-container">
+  {{#each sections}}
+    {{#is id 1500002272662}}
+        <div class="custom-contact-card-wrapper">
+        <section class="custom-card small-card">
+          <a href="https://support.configura.com/hc/{{dc 'locale'}}/sections/{{id}}" class="custom-card-link">
+            <div class="custom-card-logo-container">
+              <i class="material-icons black-icon">code</i>
+            </div>
+            <h3 class="custom-card-title">{{name}}</h3>
+          </a>
+        </section>
+      </div>
+    {{/is}}
+
+    {{#is id 7936590641047}}
+        <div class="custom-contact-card-wrapper">
+        <section class="custom-card small-card">
+          <a href="https://support.configura.com/hc/{{dc 'locale'}}/sections/{{id}}" class="custom-card-link">
+            <div class="custom-card-logo-container">
+              <i class="material-icons black-icon">settings_applications</i>
+            </div>
+            <h3 class="custom-card-title">{{name}}</h3>
+          </a>
+        </section>
+      </div>
+    {{/is}}
+
+    {{#is id 1500002292921}}
+        <div class="custom-contact-card-wrapper">
+        <section class="custom-card small-card">
+          <a href="https://support.configura.com/hc/{{dc 'locale'}}/sections/{{id}}" class="custom-card-link">
+            <div class="custom-card-logo-container">
+              <i class="material-icons black-icon">playlist_add_check</i>
+            </div>
+            <h3 class="custom-card-title">{{name}}</h3>
+          </a>
+        </section>
+      </div>
+    {{/is}}
+
+    {{#is id 6842282355095}}
+        <div class="custom-contact-card-wrapper">
+        <section class="custom-card small-card">
+          <a href="https://support.configura.com/hc/{{dc 'locale'}}/sections/{{id}}" class="custom-card-link">
+            <div class="custom-card-logo-container">
+              <i class="material-icons black-icon">view_in_ar</i>
+            </div>
+            <h3 class="custom-card-title">{{name}}</h3>
+          </a>
+        </section>
+      </div>
+    {{/is}}
+
+    {{#is id 15632238422807}}
+        <div class="custom-contact-card-wrapper">
+        <section class="custom-card small-card">
+          <a href="https://support.configura.com/hc/{{dc 'locale'}}/sections/{{id}}" class="custom-card-link">
+            <div class="custom-card-logo-container">
+              <i class="material-icons black-icon">public</i>
+            </div>
+            <h3 class="custom-card-title">{{name}}</h3>
+          </a>
+        </section>
+      </div>
+    {{/is}}
+  {{/each}}
+</div>
+</div>
