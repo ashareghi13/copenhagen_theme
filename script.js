@@ -1,688 +1,871 @@
+/**** CUSTOM SIDEBAR ****/
+// Custom delimiter for Vue templates
+// Refer to sidebar folder
+/**** END SIDEBAR ****/
+
+function getLangPath(lang) {
+	const pathArr = window.location.pathname.split("/");
+	pathArr.splice(2, 1, lang.toLowerCase());
+	return pathArr.join("/");
+}
+
+function getPageLang() {
+	const pathname = window.location.pathname;
+	return pathname.split("/")[2];
+}
+
+function isCommunity() {
+	const pathname = window.location.pathname;
+	return pathname.split("/")[3] === "community";
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+	function closest(element, selector) {
+		if (Element.prototype.closest) {
+			return element.closest(selector);
+		}
+		do {
+			if (
+				(Element.prototype.matches && element.matches(selector)) ||
+				(Element.prototype.msMatchesSelector &&
+					element.msMatchesSelector(selector)) ||
+				(Element.prototype.webkitMatchesSelector &&
+					element.webkitMatchesSelector(selector))
+			) {
+				return element;
+			}
+			element = element.parentElement || element.parentNode;
+		} while (element !== null && element.nodeType === 1);
+		return null;
+	}
+
+	//** social share popups
+	Array.prototype.forEach.call(
+		document.querySelectorAll(".share a"),
+		function (anchor) {
+			anchor.addEventListener("click", function (e) {
+				e.preventDefault();
+				window.open(this.href, "", "height = 500, width = 500");
+			});
+		}
+	);
+
+	//** show form controls when the textarea receives focus or backbutton is used and value exists
+	var commentContainerTextarea = document.querySelector(
+			".comment-container textarea"
+		),
+		commentContainerFormControls = document.querySelector(
+			".comment-form-controls, .comment-ccs"
+		);
+
+	if (commentContainerTextarea) {
+		commentContainerTextarea.addEventListener(
+			"focus",
+			function focusCommentContainerTextarea() {
+				commentContainerFormControls.style.display = "block";
+				commentContainerTextarea.removeEventListener(
+					"focus",
+					focusCommentContainerTextarea
+				);
+			}
+		);
+
+		if (commentContainerTextarea.value !== "") {
+			commentContainerFormControls.style.display = "block";
+		}
+	}
+
+	//** Expand Request comment form when Add to conversation is clicked
+	var showRequestCommentContainerTrigger = document.querySelector(
+			".request-container .comment-container .comment-show-container"
+		),
+		requestCommentFields = document.querySelectorAll(
+			".request-container .comment-container .comment-fields"
+		),
+		requestCommentSubmit = document.querySelector(
+			".request-container .comment-container .request-submit-comment"
+		);
+
+	if (showRequestCommentContainerTrigger) {
+		showRequestCommentContainerTrigger.addEventListener(
+			"click",
+			function () {
+				showRequestCommentContainerTrigger.style.display = "none";
+				Array.prototype.forEach.call(
+					requestCommentFields,
+					function (e) {
+						e.style.display = "block";
+					}
+				);
+				requestCommentSubmit.style.display = "inline-block";
+
+				if (commentContainerTextarea) {
+					commentContainerTextarea.focus();
+				}
+			}
+		);
+	}
+
+	//** Mark as solved button
+	var requestMarkAsSolvedButton = document.querySelector(
+			".request-container .mark-as-solved:not([data-disabled])"
+		),
+		requestMarkAsSolvedCheckbox = document.querySelector(
+			".request-container .comment-container input[type=checkbox]"
+		),
+		requestCommentSubmitButton = document.querySelector(
+			".request-container .comment-container input[type=submit]"
+		);
+
+	if (requestMarkAsSolvedButton) {
+		requestMarkAsSolvedButton.addEventListener("click", function () {
+			requestMarkAsSolvedCheckbox.setAttribute("checked", true);
+			requestCommentSubmitButton.disabled = true;
+			this.setAttribute("data-disabled", true);
+			// Element.closest is not supported in IE11
+			closest(this, "form").submit();
+		});
+	}
+
+	//** Change Mark as solved text according to whether comment is filled
+	var requestCommentTextarea = document.querySelector(
+		".request-container .comment-container textarea"
+	);
+
+	if (requestCommentTextarea) {
+		requestCommentTextarea.addEventListener("input", function () {
+			if (requestCommentTextarea.value === "") {
+				if (requestMarkAsSolvedButton) {
+					requestMarkAsSolvedButton.innerText =
+						requestMarkAsSolvedButton.getAttribute(
+							"data-solve-translation"
+						);
+				}
+				requestCommentSubmitButton.disabled = true;
+			} else {
+				if (requestMarkAsSolvedButton) {
+					requestMarkAsSolvedButton.innerText =
+						requestMarkAsSolvedButton.getAttribute(
+							"data-solve-and-submit-translation"
+						);
+				}
+				requestCommentSubmitButton.disabled = false;
+			}
+		});
+	}
+
+	//** Disable submit button if textarea is empty
+	if (requestCommentTextarea && requestCommentTextarea.value === "") {
+		requestCommentSubmitButton.disabled = true;
+	}
+
+	//** Submit requests filter form in the request list page
+	Array.prototype.forEach.call(
+		document.querySelectorAll(
+			"#request-status-select, #request-organization-select"
+		),
+		function (el) {
+			el.addEventListener("change", function (e) {
+				e.stopPropagation();
+				closest(this, "form").submit();
+			});
+		}
+	);
+
+
+	//** Submit organization form in the request page
+	var requestOrganisationSelect = document.querySelector(
+		"#request-organization select"
+	);
+
+	if (requestOrganisationSelect) {
+		requestOrganisationSelect.addEventListener("change", function () {
+			closest(this, "form").submit();
+		});
+	}
+
+	//** Toggles expanded aria to collapsible elements
+	Array.prototype.forEach.call(
+		document.querySelectorAll(".collapsible-nav, .collapsible-sidebar"),
+		function (el) {
+			el.addEventListener("click", function (e) {
+				e.stopPropagation();
+				var isExpanded = this.getAttribute("aria-expanded") === "true";
+				this.setAttribute("aria-expanded", !isExpanded);
+			});
+		}
+	);
+
+	//** If a section has more than 6 subsections, we collapse the list, and show a trigger to display them all
+	const seeAllTrigger = document.querySelector("#see-all-sections-trigger");
+	const subsectionsList = document.querySelector(".section-list");
+
+	if (subsectionsList && subsectionsList.children.length > 6) {
+		seeAllTrigger.setAttribute("aria-hidden", false);
+
+		seeAllTrigger.addEventListener("click", function (e) {
+			subsectionsList.classList.remove("section-list--collapsed");
+			seeAllTrigger.parentNode.removeChild(seeAllTrigger);
+		});
+	}
+
+	// Helper to get current help center locale
+	function getLocale() {
+		var links = window.location.href.split("/"),
+			hcIndex = links.indexOf("hc"),
+			links2 = links[hcIndex + 1].split("?"),
+			locale = links2[0];
+
+		return locale;
+	}
+
+//** User Navigation and Locale menu for Template V4
 (function () {
-  'use strict';
+  function initUserMenu() {
+    const toggle = document.getElementById("user-menu-toggle");
+    const menu = document.getElementById("user-menu");
 
-  // Key map
-  const ENTER = 13;
-  const ESCAPE = 27;
+    if (!toggle || !menu) return false;
 
-  function toggleNavigation(toggle, menu) {
-    const isExpanded = menu.getAttribute("aria-expanded") === "true";
-    menu.setAttribute("aria-expanded", !isExpanded);
-    toggle.setAttribute("aria-expanded", !isExpanded);
-  }
+    // Avoid double-binding if script runs twice
+    if (toggle.dataset.bound === "true") return true;
+    toggle.dataset.bound = "true";
 
-  function closeNavigation(toggle, menu) {
-    menu.setAttribute("aria-expanded", false);
-    toggle.setAttribute("aria-expanded", false);
-    toggle.focus();
-  }
-
-  // Collapsible elements track their expanded state on the toggle button only;
-  // aria-expanded is not valid on the wrapping div/nav, so a class is used for styling
-  function toggleCollapsible(toggle, element) {
-    const isExpanded = toggle.getAttribute("aria-expanded") === "true";
-    toggle.setAttribute("aria-expanded", !isExpanded);
-    element.classList.toggle("expanded", !isExpanded);
-  }
-
-  function closeCollapsible(toggle, element) {
-    toggle.setAttribute("aria-expanded", false);
-    element.classList.remove("expanded");
-    toggle.focus();
-  }
-
-  // Navigation
-
-  window.addEventListener("DOMContentLoaded", () => {
-    const menuButton = document.querySelector(".header .menu-button-mobile");
-    const menuList = document.querySelector("#user-nav-mobile");
-
-    menuButton.addEventListener("click", (event) => {
-      event.stopPropagation();
-      toggleNavigation(menuButton, menuList);
-    });
-
-    menuList.addEventListener("keyup", (event) => {
-      if (event.keyCode === ESCAPE) {
-        event.stopPropagation();
-        closeNavigation(menuButton, menuList);
-      }
-    });
-
-    // Toggles expanded aria to collapsible elements
-    const collapsible = document.querySelectorAll(
-      ".collapsible-nav, .collapsible-sidebar"
-    );
-
-    collapsible.forEach((element) => {
-      const toggle = element.querySelector(
-        ".collapsible-nav-toggle, .collapsible-sidebar-toggle"
-      );
-
-      element.addEventListener("click", () => {
-        toggleCollapsible(toggle, element);
-      });
-
-      element.addEventListener("keyup", (event) => {
-        console.log("escape");
-        if (event.keyCode === ESCAPE) {
-          closeCollapsible(toggle, element);
-        }
-      });
-    });
-
-    // If multibrand search has more than 5 help centers or categories collapse the list
-    const multibrandFilterLists = document.querySelectorAll(
-      ".multibrand-filter-list"
-    );
-    multibrandFilterLists.forEach((filter) => {
-      if (filter.children.length > 6) {
-        // Display the show more button
-        const trigger = filter.querySelector(".see-all-filters");
-        trigger.setAttribute("aria-hidden", false);
-
-        // Add event handler for click
-        trigger.addEventListener("click", (event) => {
-          event.stopPropagation();
-          trigger.parentNode.removeChild(trigger);
-          filter.classList.remove("multibrand-filter-list--collapsed");
-        });
-      }
-    });
-  });
-
-  const isPrintableChar = (str) => {
-    return str.length === 1 && str.match(/^\S$/);
-  };
-
-  function Dropdown(toggle, menu) {
-    this.toggle = toggle;
-    this.menu = menu;
-
-    this.menuPlacement = {
-      top: menu.classList.contains("dropdown-menu-top"),
-      end: menu.classList.contains("dropdown-menu-end"),
+    const openMenu = () => {
+      toggle.setAttribute("aria-expanded", "true");
+      menu.hidden = false;
     };
 
-    this.toggle.addEventListener("click", this.clickHandler.bind(this));
-    this.toggle.addEventListener("keydown", this.toggleKeyHandler.bind(this));
-    this.menu.addEventListener("keydown", this.menuKeyHandler.bind(this));
-    document.body.addEventListener("click", this.outsideClickHandler.bind(this));
+    const closeMenu = () => {
+      toggle.setAttribute("aria-expanded", "false");
+      menu.hidden = true;
+    };
 
-    const toggleId = this.toggle.getAttribute("id") || crypto.randomUUID();
-    const menuId = this.menu.getAttribute("id") || crypto.randomUUID();
-
-    this.toggle.setAttribute("id", toggleId);
-    this.menu.setAttribute("id", menuId);
-
-    this.toggle.setAttribute("aria-controls", menuId);
-    this.menu.setAttribute("aria-labelledby", toggleId);
-
-    if (!this.toggle.hasAttribute("aria-haspopup")) {
-      this.toggle.setAttribute("aria-haspopup", "true");
-    }
-
-    if (!this.toggle.hasAttribute("aria-expanded")) {
-      this.toggle.setAttribute("aria-expanded", "false");
-    }
-
-    this.toggleIcon = this.toggle.querySelector(".dropdown-chevron-icon");
-    if (this.toggleIcon) {
-      this.toggleIcon.setAttribute("aria-hidden", "true");
-    }
-
-    this.menu.setAttribute("tabindex", -1);
-    this.menuItems.forEach((menuItem) => {
-      menuItem.tabIndex = -1;
+    toggle.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const expanded = toggle.getAttribute("aria-expanded") === "true";
+      expanded ? closeMenu() : openMenu();
     });
 
-    this.focusedIndex = -1;
+    document.addEventListener("click", (e) => {
+      if (!menu.hidden && !menu.contains(e.target) && !toggle.contains(e.target)) {
+        closeMenu();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeMenu();
+    });
+
+    return true;
   }
 
-  Dropdown.prototype = {
-    get isExpanded() {
-      return this.toggle.getAttribute("aria-expanded") === "true";
-    },
+  // Run now, then retry a few times in case header renders late
+  if (!initUserMenu()) {
+    let tries = 0;
+    const timer = setInterval(() => {
+      tries += 1;
+      if (initUserMenu() || tries >= 20) clearInterval(timer); // ~2s
+    }, 100);
+  }
+})();
 
-    get menuItems() {
-      return Array.prototype.slice.call(
-        this.menu.querySelectorAll("[role='menuitem'], [role='menuitemradio']")
-      );
-    },
+  (function () {
+  function initDropdown(toggleId, menuId) {
+    const toggle = document.getElementById(toggleId);
+    const menu = document.getElementById(menuId);
+    if (!toggle || !menu) return false;
 
-    dismiss: function () {
-      if (!this.isExpanded) return;
+    if (toggle.dataset.bound === "true") return true;
+    toggle.dataset.bound = "true";
 
-      this.toggle.setAttribute("aria-expanded", "false");
-      this.menu.classList.remove("dropdown-menu-end", "dropdown-menu-top");
-      this.focusedIndex = -1;
-    },
+    const open = () => {
+      toggle.setAttribute("aria-expanded", "true");
+      menu.hidden = false;
+    };
 
-    open: function () {
-      if (this.isExpanded) return;
+    const close = () => {
+      toggle.setAttribute("aria-expanded", "false");
+      menu.hidden = true;
+    };
 
-      this.toggle.setAttribute("aria-expanded", "true");
-      this.handleOverflow();
-    },
+    toggle.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggle.getAttribute("aria-expanded") === "true" ? close() : open();
+    });
 
-    handleOverflow: function () {
-      var rect = this.menu.getBoundingClientRect();
-
-      var overflow = {
-        right: rect.left < 0 || rect.left + rect.width > window.innerWidth,
-        bottom: rect.top < 0 || rect.top + rect.height > window.innerHeight,
-      };
-
-      if (overflow.right || this.menuPlacement.end) {
-        this.menu.classList.add("dropdown-menu-end");
+    document.addEventListener("click", (e) => {
+      if (!menu.hidden && !menu.contains(e.target) && !toggle.contains(e.target)) {
+        close();
       }
+    });
 
-      if (overflow.bottom || this.menuPlacement.top) {
-        this.menu.classList.add("dropdown-menu-top");
-      }
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") close();
+    });
 
-      if (this.menu.getBoundingClientRect().top < 0) {
-        this.menu.classList.remove("dropdown-menu-top");
-      }
-    },
+    return true;
+  }
 
-    focusByIndex: function (index) {
-      if (!this.menuItems.length) return;
+  function initAll() {
+    initDropdown("user-menu-toggle", "user-menu");
+    initDropdown("locale-menu-toggle", "locale-menu");
+  }
 
-      this.menuItems.forEach((item, itemIndex) => {
-        if (itemIndex === index) {
-          item.tabIndex = 0;
-          item.focus();
-        } else {
-          item.tabIndex = -1;
-        }
+  if (!initAll()) {
+    let tries = 0;
+    const timer = setInterval(() => {
+      tries++;
+      initAll();
+      if (tries > 20) clearInterval(timer);
+    }, 100);
+  }
+})();
+
+
+	/**** END User Navigation AND Locale menu ****/
+
+	//** Modify behavior of search input
+	var input = document.getElementById("query");
+	if (input) {
+		input.addEventListener("input", function (event) {
+			if (this.value) {
+				input.style.fontStyle = "normal";
+			} else {
+				input.style.fontStyle = "italic";
+			}
+		});
+	}
+
+
+//***Feedback Community Behavior
+  	initCommunityCheck();
+});
+
+const USER_FEEDBACK_COMMUNITY_ID = 1500000140542;
+
+async function getUser() {
+	const userResponse = await fetch("/api/v2/users/me");
+	const userJson = await userResponse.json();
+	return userJson;
+}
+
+async function getTopics() {
+	const topicsResponse = await fetch(`/api/v2/community/topics`);
+	const topicsJson = await topicsResponse.json();
+	return topicsJson;
+}
+
+async function initCommunityCheck() {
+	const { user } = HelpCenter;
+	const { role } = user;
+
+	$(".post-to-community").hide();
+	$(".community-footer").hide();
+	$(".end-user").hide();
+
+	const userData = await getUser();
+	const id = userData?.user?.id;
+
+	if (!id) {
+		if (isCommunity()) location.replace(`/hc/${currPageLang}`);
+		return;
+	}
+
+	const topicsObj = await getTopics();
+	const { topics } = topicsObj;
+
+	if (!topics) {
+		return;
+	}
+
+	const filtered = topics.filter(
+		(topic) => topic.user_segment_id === USER_FEEDBACK_COMMUNITY_ID
+	);
+	const userSegmentExists = filtered.length > 0;
+
+	const currPageLang = getPageLang();
+
+	if (canVisitCommunity(role, userSegmentExists)) {
+		$(".post-to-community").show();
+		$(".community-footer").show();
+		$(".end-user").show();
+	}
+
+	if (isCommunity() && !canVisitCommunity(role, userSegmentExists)) {
+		location.replace(`/hc/${currPageLang}`);
+	}
+
+	return;
+}
+
+function canVisitCommunity(role, userSegmentExists) {
+	if (role === "manager" || role === "agent") {
+		return true;
+	}
+
+	if (userSegmentExists && role === "end_user") {
+		return true;
+	}
+
+	return false;
+}
+
+/**** END Feedback Community Behavior ****/
+
+document.addEventListener("DOMContentLoaded", function () {
+	var acc = document.getElementsByClassName("accordion");
+	var i;
+
+	for (i = 0; i < acc.length; i++) {
+		acc[i].addEventListener("click", function () {
+			this.classList.toggle("active");
+			var panel = this.nextElementSibling;
+			if (panel.style.maxHeight) {
+				panel.style.maxHeight = null;
+				panel.style['-webkit-mask-image'] = 'linear-gradient(black 10%, transparent 80%)';
+			} else {
+				panel.style.maxHeight = panel.scrollHeight + "px";
+				panel.style['-webkit-mask-image'] = 'linear-gradient(black 100%, transparent 80%)';
+			}
+		});
+	}
+});
+
+
+//*** This adds an Chip/Badge to Articles in Announcements
+function announcementTypeMetaFromLabels(article) {
+  const labels = (article.label_names || []).map(l => String(l).toLowerCase());
+
+  if (labels.includes("service-issues") || labels.includes("outage") || labels.includes("outages")) {
+    return { label: "Service issue", className: "home-announcements__tag--issue" };
+  }
+
+  if (labels.includes("holiday") || labels.includes("holidays") || labels.includes("availability")) {
+    return { label: "Holiday", className: "home-announcements__tag--holiday" };
+  }
+
+  if (labels.includes("notice")) {
+    return {
+      label: "Notice",
+      className: "tag-notice"
+    };
+  }
+
+  return null;
+}
+
+
+//*** Announcements Automation
+function initAnnouncements() {
+  const block = document.querySelector(".home-announcements[data-category-id]");
+  const listEl = document.getElementById("home-announcements-list");
+  if (!block || !listEl) return;
+
+  const HIDE_WHEN_EMPTY = true;
+
+  block.style.display = "";
+  block.hidden = false;
+
+  const categoryId = block.getAttribute("data-category-id");
+  const locale = "en-us";
+
+  const LIMIT_SHOW = 4;
+  const LIMIT_FETCH = 50;
+  const MAX_DAYS = 14;
+
+  // Cache-buster helps after unpublish/archive changes
+  const cacheBust = Date.now();
+
+  const url =
+    `/api/v2/help_center/${locale}/categories/${categoryId}/articles.json` +
+    `?per_page=${LIMIT_FETCH}` +
+    `&sort_by=updated_at` +
+    `&sort_order=desc` +
+    `&_=${cacheBust}`;
+
+  fetch(url, {
+    cache: "no-store"
+  })
+    .then((r) => {
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      return r.json();
+    })
+    .then((data) => {
+      const articles = (data && data.articles) || [];
+
+      const now = Date.now();
+      const maxAgeMs = MAX_DAYS * 24 * 60 * 60 * 1000;
+
+      const recent = articles.filter((a) => {
+        const t = Date.parse(a.created_at);
+        const isRecent = Number.isFinite(t) && now - t <= maxAgeMs;
+
+        // Explicitly exclude anything back in draft/unpublished state
+        const isPublished = a.draft !== true;
+
+        // Defensive checks for odd/stale payloads
+        const hasLink = typeof a.html_url === "string" && a.html_url.length > 0;
+        const hasTitle = typeof a.title === "string" && a.title.trim().length > 0;
+
+        return isRecent && isPublished && hasLink && hasTitle;
       });
 
-      this.focusedIndex = index;
-    },
-
-    focusFirstMenuItem: function () {
-      this.focusByIndex(0);
-    },
-
-    focusLastMenuItem: function () {
-      this.focusByIndex(this.menuItems.length - 1);
-    },
-
-    focusNextMenuItem: function (currentItem) {
-      if (!this.menuItems.length) return;
-
-      const currentIndex = this.menuItems.indexOf(currentItem);
-      const nextIndex = (currentIndex + 1) % this.menuItems.length;
-
-      this.focusByIndex(nextIndex);
-    },
-
-    focusPreviousMenuItem: function (currentItem) {
-      if (!this.menuItems.length) return;
-
-      const currentIndex = this.menuItems.indexOf(currentItem);
-      const previousIndex =
-        currentIndex <= 0 ? this.menuItems.length - 1 : currentIndex - 1;
-
-      this.focusByIndex(previousIndex);
-    },
-
-    focusByChar: function (currentItem, char) {
-      char = char.toLowerCase();
-
-      const itemChars = this.menuItems.map((menuItem) =>
-        menuItem.textContent.trim()[0].toLowerCase()
-      );
-
-      const startIndex =
-        (this.menuItems.indexOf(currentItem) + 1) % this.menuItems.length;
-
-      // look up starting from current index
-      let index = itemChars.indexOf(char, startIndex);
-
-      // if not found, start from start
-      if (index === -1) {
-        index = itemChars.indexOf(char, 0);
-      }
-
-      if (index > -1) {
-        this.focusByIndex(index);
-      }
-    },
-
-    outsideClickHandler: function (e) {
-      if (
-        this.isExpanded &&
-        !this.toggle.contains(e.target) &&
-        !e.composedPath().includes(this.menu)
-      ) {
-        this.dismiss();
-        this.toggle.focus();
-      }
-    },
-
-    clickHandler: function (event) {
-      event.stopPropagation();
-      event.preventDefault();
-
-      if (this.isExpanded) {
-        this.dismiss();
-        this.toggle.focus();
-      } else {
-        this.open();
-        this.focusFirstMenuItem();
-      }
-    },
-
-    toggleKeyHandler: function (e) {
-      const key = e.key;
-
-      switch (key) {
-        case "Enter":
-        case " ":
-        case "ArrowDown":
-        case "Down": {
-          e.stopPropagation();
-          e.preventDefault();
-
-          this.open();
-          this.focusFirstMenuItem();
-          break;
+      if (!recent.length) {
+        if (HIDE_WHEN_EMPTY) {
+          try {
+            block.style.display = "none";
+            block.hidden = true;
+            listEl.innerHTML = "";
+            return;
+          } catch (e) {
+            console.warn("[Announcements] hide failed, showing fallback message instead:", e);
+          }
         }
-        case "ArrowUp":
-        case "Up": {
-          e.stopPropagation();
-          e.preventDefault();
 
-          this.open();
-          this.focusLastMenuItem();
-          break;
-        }
-        case "Esc":
-        case "Escape": {
-          e.stopPropagation();
-          e.preventDefault();
-
-          this.dismiss();
-          this.toggle.focus();
-          break;
-        }
-      }
-    },
-
-    menuKeyHandler: function (e) {
-      const key = e.key;
-      const currentElement = this.menuItems[this.focusedIndex];
-
-      if (e.ctrlKey || e.altKey || e.metaKey) {
+        listEl.innerHTML =
+          `<li class="home-announcements__empty">No announcements in the last 14 days.</li>`;
         return;
       }
 
-      switch (key) {
-        case "Esc":
-        case "Escape": {
-          e.stopPropagation();
-          e.preventDefault();
+      listEl.innerHTML = recent
+        .slice(0, LIMIT_SHOW)
+        .map((a, idx) => {
+          const meta = announcementTypeMetaFromLabels(a);
 
-          this.dismiss();
-          this.toggle.focus();
-          break;
-        }
-        case "ArrowDown":
-        case "Down": {
-          e.stopPropagation();
-          e.preventDefault();
+          return `
+            <li class="home-announcements__item ${idx === 0 ? "is-featured" : ""}">
+              <div class="home-announcements__meta-row">
+                <div class="home-announcements__meta">${formatDate(a.created_at)}</div>
+              </div>
+              <a class="home-announcements__link" href="${a.html_url}">
+                ${escapeHtml(a.title)}
+                ${meta ? `<span class="home-announcements__tag ${meta.className}">${meta.label}</span>` : ""}
+              </a>
+            </li>
+          `;
+        })
+        .join("");
+    })
+    .catch((err) => {
+      console.error("[Announcements] error:", err);
+      block.style.display = "";
+      block.hidden = false;
+      listEl.innerHTML = `<li class="home-announcements__empty">Unable to load announcements.</li>`;
+    });
 
-          this.focusNextMenuItem(currentElement);
+  function formatDate(iso) {
+    try {
+      const d = new Date(iso);
+      return d.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    } catch {
+      return "";
+    }
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", initAnnouncements);
+document.addEventListener("turbolinks:load", initAnnouncements);
+window.addEventListener("hashchange", initAnnouncements);
+
+/***From Chat/Call UI - when "Start New Chat" is pressed, it opens chat widget**/
+document.addEventListener("click", function (e) {
+  const btn = e.target.closest(".js-open-messaging");
+  if (!btn) return;
+
+  e.preventDefault();
+
+  // Messaging Web Widget
+  if (typeof window.zE === "function") {
+    try {
+      // If you ever call hide() anywhere, show() first, then open().
+      window.zE("messenger", "show");
+      window.zE("messenger", "open"); // opens the messaging widget :contentReference[oaicite:2]{index=2}
+      return;
+    } catch (err) {
+      // fall through to classic / fallback
+    }
+  }
+
+  // Web Widget (Classic) fallback
+  if (typeof window.zE === "function") {
+    try {
+      window.zE.activate(); // opens Classic widget :contentReference[oaicite:3]{index=3}
+      return;
+    } catch (err) {
+      // ignore
+    }
+  }
+});
+
+// Date and Time Widget
+document.addEventListener('DOMContentLoaded', () => {
+  const HOLIDAY_API = 'https://dd3wp76elyvlxfepnfnetl6y4a0crowa.lambda-url.us-east-2.on.aws/';
+
+  if (typeof luxon === 'undefined') {
+    console.warn('Luxon not loaded; business-hours widget will not render.');
+    return;
+  }
+
+  const { DateTime, Interval } = luxon;
+
+  // Offices & hours (local office time)
+  const OFFICES = [
+    { key: 'US',       name: 'United States', tz: 'America/Detroit',    hours: { mon:'08:00-20:00', tue:'08:00-20:00', wed:'08:00-20:00', thu:'08:00-20:00', fri:'08:00-20:00' } },
+    { key: 'Sweden',   name: 'Sweden',        tz: 'Europe/Stockholm',   hours: { mon:'08:00-17:00', tue:'08:00-17:00', wed:'08:00-17:00', thu:'08:00-17:00', fri:'08:00-17:00' } },
+    { key: 'Malaysia', name: 'Malaysia',      tz: 'Asia/Kuala_Lumpur',  hours: { mon:'06:00-17:00', tue:'06:00-17:00', wed:'06:00-17:00', thu:'06:00-17:00', fri:'06:00-17:00' } },
+    { key: 'Japan',    name: 'Japan',         tz: 'Asia/Tokyo',         hours: { mon:'09:00-18:00', tue:'09:00-18:00', wed:'09:00-18:00', thu:'09:00-18:00', fri:'09:00-18:00' } }
+  ];
+
+  const DAY_KEYS = ['sun','mon','tue','wed','thu','fri','sat'];
+  const WKD = ['mon','tue','wed','thu','fri'];
+  const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+
+  // ---------- Helper Functions ----------
+  async function fetchHolidays() {
+    try {
+      const res = await fetch(HOLIDAY_API, { cache: 'no-store' });
+      if (!res.ok) throw new Error(res.statusText);
+      return await res.json(); // { US:[YYYY-MM-DD,...], Sweden:[...], Malaysia:[...] }
+    } catch (e) {
+      console.warn('Holiday API error:', e);
+      return {};
+    }
+  }
+
+  function spanToInterval(dayKey, span, tz) {
+    const [startHM, endHM] = span.split('-');
+    const [sh, sm] = startHM.split(':').map(Number);
+    const [eh, em] = endHM.split(':').map(Number);
+    const anchor = DateTime.now().setZone(tz);
+    const idx = { mon:0, tue:1, wed:2, thu:3, fri:4 }[dayKey];
+    const base = anchor.startOf('week').plus({ days: idx });
+    const start = base.set({ hour: sh, minute: sm, second:0 });
+    const end   = base.set({ hour: eh, minute: em, second:0 });
+    return Interval.fromDateTimes(start, end);
+  }
+
+function todayHolidayForOffice(office, holidays) {
+  const list = (holidays && holidays[office.key]) || []; // [{date:'YYYY-MM-DD', name:'...'}]
+  if (!list.length) return null;
+  const todayLocal = luxon.DateTime.now().setZone(office.tz).toFormat('yyyy-LL-dd');
+  // If multiple holidays share the same date, keep the first name.
+  return list.find(h => h.date === todayLocal) || null;
+}
+
+  function nextHolidayForOffice(office, holidays) {
+  const list = (holidays && holidays[office.key]) || [];
+  if (!list.length) return null;
+  const nowLocal = luxon.DateTime.now().setZone(office.tz).startOf('day');
+  const upcoming = list
+    .filter(h => luxon.DateTime.fromISO(h.date, { zone: office.tz }).startOf('day') >= nowLocal)
+    .sort((a,b) => a.date.localeCompare(b.date));
+  return upcoming[0] || null;
+}
+  
+function currentStatus(office, holidays) {
+  const { DateTime, Interval } = luxon;
+  const now = DateTime.now().setZone(office.tz);
+  const dayKey = ['sun','mon','tue','wed','thu','fri','sat'][now.weekday % 7];
+
+  // weekend check
+  if (!['mon','tue','wed','thu','fri'].includes(dayKey)) {
+    return { open: false, reason: 'weekend' };
+  }
+
+  // holiday check (with name)
+  const todayHol = todayHolidayForOffice(office, holidays);
+  if (todayHol) {
+    return { open: false, reason: 'holiday', holidayName: todayHol.name };
+  }
+
+  // hours check
+  const span = office.hours[dayKey];
+  if (!span) return { open: false, reason: 'closed' };
+  const [startHM, endHM] = span.split('-');
+  const [sh, sm] = startHM.split(':').map(Number);
+  const [eh, em] = endHM.split(':').map(Number);
+  const base = now.startOf('week').plus({ days: {mon:0,tue:1,wed:2,thu:3,fri:4}[dayKey] });
+  const iv = Interval.fromDateTimes(
+    base.set({ hour: sh, minute: sm, second: 0 }),
+    base.set({ hour: eh, minute: em, second: 0 })
+  );
+  const open = iv.contains(now);
+  return { open, reason: open ? 'open' : 'closed' };
+}
+
+  function formatRepresentativeHoursForUser(office) {
+    const span = office.hours.mon;
+    const iv = spanToInterval('mon', span, office.tz);
+    const s = iv.start.setZone(userTZ);
+    const e = iv.end.setZone(userTZ);
+    return `${s.toFormat('h:mm a')} – ${e.toFormat('h:mm a')} (${s.offsetNameShort})`;
+  }
+
+  // ---------- Main Init ----------
+  (async function init() {
+    const holidays = await fetchHolidays();
+   const detailsBlocks = OFFICES.map(office => {
+  const status   = currentStatus(office, holidays);
+  const nextHol  = nextHolidayForOffice(office, holidays);
+  const hoursUsr = formatRepresentativeHoursForUser(office);
+
+  let icon = '🔴', label = 'Closed now';
+  if (status.reason === 'holiday') {
+    icon = '🔴';
+    label = status.holidayName ? `Closed (holiday) — ${status.holidayName}` : 'Closed (holiday)';
+  } else if (status.reason === 'weekend') {
+    icon = '🔴';
+    label = 'Closed (weekend)';
+  } else if (status.open) {
+    icon = '🟢';
+    label = 'Open now';
+  }
+
+  const nextHolLine = nextHol
+    ? `Next holiday: <strong>${nextHol.name}</strong> on <strong>${luxon.DateTime.fromISO(nextHol.date).setZone(userTZ).toLocaleString({ weekday:'long', month:'long', day:'numeric' })}</strong>`
+    : `Next holiday: <em>None on record</em>`;
+
+  // If you're using collapsible <details>:
+  return `
+    <details class="biz-block" open>
+      <summary class="biz-summary">
+        <span class="biz-caret">▶</span>
+        <span class="biz-icon">${icon}</span>
+        <span class="biz-name">${office.name}</span>
+        <span class="biz-label">${label}</span>
+      </summary>
+      <div class="biz-body">
+        <div class="biz-sub">Today's hours (your time): ${hoursUsr}</div>
+        <div class="biz-sub">${nextHolLine}</div>
+      </div>
+    </details>
+  `;
+}).join('');
+
+    // ---------- Mount Widget Safely ----------
+    try {
+      const host = document.createElement('div');
+      host.className = 'biz-host';
+      const widget = document.createElement('section');
+widget.className = 'biz-hours';
+widget.innerHTML = `
+  <h2 class="biz-title">Support Availability</h2>
+  <div class="biz-tz">Times shown in your timezone: ${userTZ}</div>
+  ${detailsBlocks}
+`;
+      host.appendChild(widget);
+
+      const isInHeader = (el) =>
+        !!el.closest('header, .header, nav, .top-bar, .hero, .hero-container');
+
+      const candidates = [
+        ['main .container', 'afterbegin'],
+        ['main', 'afterbegin'],
+        ['#main-content', 'afterbegin'],
+        ['.container', 'afterbegin'],
+        ['.page-header', 'afterend']
+      ];
+
+      let placed = false;
+      for (const [sel, pos] of candidates) {
+        const el = document.querySelector(sel);
+        if (el && !isInHeader(el)) {
+          el.insertAdjacentElement(pos, host);
+          placed = true;
           break;
-        }
-        case "ArrowUp":
-        case "Up": {
-          e.stopPropagation();
-          e.preventDefault();
-          this.focusPreviousMenuItem(currentElement);
-          break;
-        }
-        case "Home":
-        case "PageUp": {
-          e.stopPropagation();
-          e.preventDefault();
-          this.focusFirstMenuItem();
-          break;
-        }
-        case "End":
-        case "PageDown": {
-          e.stopPropagation();
-          e.preventDefault();
-          this.focusLastMenuItem();
-          break;
-        }
-        case "Tab": {
-          if (e.shiftKey) {
-            e.stopPropagation();
-            e.preventDefault();
-            this.dismiss();
-            this.toggle.focus();
-          } else {
-            this.dismiss();
-          }
-          break;
-        }
-        default: {
-          if (isPrintableChar(key)) {
-            e.stopPropagation();
-            e.preventDefault();
-            this.focusByChar(currentElement, key);
-          }
         }
       }
-    },
-  };
 
-  // Drodowns
-
-  window.addEventListener("DOMContentLoaded", () => {
-    const dropdowns = [];
-    const dropdownToggles = document.querySelectorAll(".dropdown-toggle");
-
-    dropdownToggles.forEach((toggle) => {
-      const menu = toggle.nextElementSibling;
-      if (menu && menu.classList.contains("dropdown-menu")) {
-        dropdowns.push(new Dropdown(toggle, menu));
+      if (!placed) {
+        const main = document.querySelector('main');
+        if (main) main.insertAdjacentElement('afterbegin', host);
+        else document.body.appendChild(host);
       }
-    });
-  });
 
-  // Share
+    } catch (err) {
+      console.error('Mount error:', err);
+    }
+  })();
+});
 
-  window.addEventListener("DOMContentLoaded", () => {
-    const links = document.querySelectorAll(".share a");
-    links.forEach((anchor) => {
-      anchor.addEventListener("click", (event) => {
-        event.preventDefault();
-        window.open(anchor.href, "", "height = 500, width = 500");
+/***Hide Community Column in Search Results if Empty***/
+document.addEventListener("DOMContentLoaded", function () {
+ const searchResultsWrap = document.querySelector(".search-results");
+const communityColumn = document.querySelector(".search-results-column.end-user");
+
+if (communityColumn) {
+  const results = communityColumn.querySelectorAll(".search-result-list-item");
+
+  if (results.length === 0) {
+    communityColumn.remove();
+    searchResultsWrap?.classList.add("no-community");
+  }
+}
+});
+
+/****Locale Menu - Keep on same page, otherwise redirect to home page****/
+  document.addEventListener("DOMContentLoaded", function () {
+    const localeLinks = document.querySelectorAll("#locale-menu a[data-locale]");
+
+    localeLinks.forEach((link) => {
+      link.addEventListener("click", async function (e) {
+        e.preventDefault();
+
+        const targetLocale = this.dataset.locale;
+        const currentUrl = new URL(window.location.href);
+
+        const localizedUrl = buildLocalizedUrl(currentUrl, targetLocale);
+
+        try {
+          // Try the current page first
+          const ok = await urlExists(localizedUrl);
+          window.location.href = ok ? localizedUrl : `/hc/${targetLocale}`;
+        } catch (err) {
+          console.warn("[Locale switch] falling back to homepage:", err);
+          window.location.href = `/hc/${targetLocale}`;
+        }
       });
     });
-  });
 
-  // Vanilla JS debounce function, by Josh W. Comeau:
-  // https://www.joshwcomeau.com/snippets/javascript/debounce/
-  function debounce(callback, wait) {
-    let timeoutId = null;
-    return (...args) => {
-      window.clearTimeout(timeoutId);
-      timeoutId = window.setTimeout(() => {
-        callback.apply(null, args);
-      }, wait);
-    };
-  }
+    function buildLocalizedUrl(currentUrl, targetLocale) {
+      const url = new URL(currentUrl.toString());
+      const parts = url.pathname.split("/");
 
-  // Define variables for search field
-  let searchFormFilledClassName = "search-has-value";
-  let searchFormSelector = "form[role='search']";
-
-  // Clear the search input, and then return focus to it
-  function clearSearchInput(event) {
-    event.target
-      .closest(searchFormSelector)
-      .classList.remove(searchFormFilledClassName);
-
-    let input;
-    if (event.target.tagName === "INPUT") {
-      input = event.target;
-    } else if (event.target.tagName === "BUTTON") {
-      input = event.target.previousElementSibling;
-    } else {
-      input = event.target.closest("button").previousElementSibling;
-    }
-    input.value = "";
-    input.focus();
-  }
-
-  // Have the search input and clear button respond
-  // when someone presses the escape key, per:
-  // https://twitter.com/adambsilver/status/1152452833234554880
-  function clearSearchInputOnKeypress(event) {
-    const searchInputDeleteKeys = ["Delete", "Escape"];
-    if (searchInputDeleteKeys.includes(event.key)) {
-      clearSearchInput(event);
-    }
-  }
-
-  // Create an HTML button that all users -- especially keyboard users --
-  // can interact with, to clear the search input.
-  // To learn more about this, see:
-  // https://adrianroselli.com/2019/07/ignore-typesearch.html#Delete
-  // https://www.scottohara.me/blog/2022/02/19/custom-clear-buttons.html
-  function buildClearSearchButton(inputId) {
-    const button = document.createElement("button");
-    button.setAttribute("type", "button");
-    button.setAttribute("aria-controls", inputId);
-    button.classList.add("clear-button");
-    const buttonLabel = window.searchClearButtonLabelLocalized;
-    const icon = `<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' focusable='false' role='img' viewBox='0 0 12 12' aria-label='${buttonLabel}'><path stroke='currentColor' stroke-linecap='round' stroke-width='2' d='M3 9l6-6m0 6L3 3'/></svg>`;
-    button.innerHTML = icon;
-    button.addEventListener("click", clearSearchInput);
-    button.addEventListener("keyup", clearSearchInputOnKeypress);
-    return button;
-  }
-
-  // Append the clear button to the search form
-  function appendClearSearchButton(input, form) {
-    const searchClearButton = buildClearSearchButton(input.id);
-    form.append(searchClearButton);
-    if (input.value.length > 0) {
-      form.classList.add(searchFormFilledClassName);
-    }
-  }
-
-  // Add a class to the search form when the input has a value;
-  // Remove that class from the search form when the input doesn't have a value.
-  // Do this on a delay, rather than on every keystroke.
-  const toggleClearSearchButtonAvailability = debounce((event) => {
-    const form = event.target.closest(searchFormSelector);
-    form.classList.toggle(
-      searchFormFilledClassName,
-      event.target.value.length > 0
-    );
-  }, 200);
-
-  // Search
-
-  window.addEventListener("DOMContentLoaded", () => {
-    // Set up clear functionality for the search field
-    const searchForms = [...document.querySelectorAll(searchFormSelector)];
-    const searchInputs = searchForms.map((form) =>
-      form.querySelector("input[type='search']")
-    );
-    searchInputs.forEach((input) => {
-      appendClearSearchButton(input, input.closest(searchFormSelector));
-      input.addEventListener("keyup", clearSearchInputOnKeypress);
-      input.addEventListener("keyup", toggleClearSearchButtonAvailability);
-    });
-  });
-
-  const key = "returnFocusTo";
-
-  function saveFocus() {
-    const activeElementId = document.activeElement.getAttribute("id");
-    sessionStorage.setItem(key, "#" + activeElementId);
-  }
-
-  function returnFocus() {
-    const returnFocusTo = sessionStorage.getItem(key);
-    if (returnFocusTo) {
-      sessionStorage.removeItem("returnFocusTo");
-      const returnFocusToEl = document.querySelector(returnFocusTo);
-      returnFocusToEl && returnFocusToEl.focus && returnFocusToEl.focus();
-    }
-  }
-
-  // Forms
-
-  window.addEventListener("DOMContentLoaded", () => {
-    // In some cases we should preserve focus after page reload
-    returnFocus();
-
-    // show form controls when the textarea receives focus or back button is used and value exists
-    const commentContainerTextarea = document.querySelector(
-      ".comment-container textarea"
-    );
-    const commentContainerFormControls = document.querySelector(
-      ".comment-form-controls, .comment-ccs"
-    );
-
-    if (commentContainerTextarea) {
-      commentContainerTextarea.addEventListener(
-        "focus",
-        function focusCommentContainerTextarea() {
-          commentContainerFormControls.style.display = "block";
-          commentContainerTextarea.removeEventListener(
-            "focus",
-            focusCommentContainerTextarea
-          );
-        }
-      );
-
-      if (commentContainerTextarea.value !== "") {
-        commentContainerFormControls.style.display = "block";
+      // Expected Zendesk pattern: /hc/<locale>/...
+      if (parts[1] === "hc" && parts[2]) {
+        parts[2] = targetLocale;
+      } else {
+        // If we cannot detect the locale segment, just go to homepage fallback
+        return `/hc/${targetLocale}`;
       }
+
+      url.pathname = parts.join("/");
+      return url.toString();
     }
 
-    // Expand Request comment form when Add to conversation is clicked
-    const showRequestCommentContainerTrigger = document.querySelector(
-      ".request-container .comment-container .comment-show-container"
-    );
-    const requestCommentFields = document.querySelectorAll(
-      ".request-container .comment-container .comment-fields"
-    );
-    const requestCommentSubmit = document.querySelector(
-      ".request-container .comment-container .request-submit-comment"
-    );
-
-    if (showRequestCommentContainerTrigger) {
-      showRequestCommentContainerTrigger.addEventListener("click", () => {
-        showRequestCommentContainerTrigger.style.display = "none";
-        Array.prototype.forEach.call(requestCommentFields, (element) => {
-          element.style.display = "block";
-        });
-        requestCommentSubmit.style.display = "inline-block";
-
-        if (commentContainerTextarea) {
-          commentContainerTextarea.focus();
-        }
-      });
-    }
-
-    // Mark as solved button
-    const requestMarkAsSolvedButton = document.querySelector(
-      ".request-container .mark-as-solved:not([data-disabled])"
-    );
-    const requestMarkAsSolvedCheckbox = document.querySelector(
-      ".request-container .comment-container input[type=checkbox]"
-    );
-    const requestCommentSubmitButton = document.querySelector(
-      ".request-container .comment-container input[type=submit]"
-    );
-
-    if (requestMarkAsSolvedButton) {
-      requestMarkAsSolvedButton.addEventListener("click", () => {
-        requestMarkAsSolvedCheckbox.setAttribute("checked", true);
-        requestCommentSubmitButton.disabled = true;
-        requestMarkAsSolvedButton.setAttribute("data-disabled", true);
-        requestMarkAsSolvedButton.form.submit();
-      });
-    }
-
-    // Change Mark as solved text according to whether comment is filled
-    const requestCommentTextarea = document.querySelector(
-      ".request-container .comment-container textarea"
-    );
-
-    const usesWysiwyg =
-      requestCommentTextarea &&
-      requestCommentTextarea.dataset.helper === "wysiwyg";
-
-    function isEmptyPlaintext(s) {
-      return s.trim() === "";
-    }
-
-    function isEmptyHtml(xml) {
-      const doc = new DOMParser().parseFromString(`<_>${xml}</_>`, "text/xml");
-      const img = doc.querySelector("img");
-      return img === null && isEmptyPlaintext(doc.children[0].textContent);
-    }
-
-    const isEmpty = usesWysiwyg ? isEmptyHtml : isEmptyPlaintext;
-
-    if (requestCommentTextarea) {
-      requestCommentTextarea.addEventListener("input", () => {
-        if (isEmpty(requestCommentTextarea.value)) {
-          if (requestMarkAsSolvedButton) {
-            requestMarkAsSolvedButton.innerText =
-              requestMarkAsSolvedButton.getAttribute("data-solve-translation");
-          }
-        } else {
-          if (requestMarkAsSolvedButton) {
-            requestMarkAsSolvedButton.innerText =
-              requestMarkAsSolvedButton.getAttribute(
-                "data-solve-and-submit-translation"
-              );
-          }
-        }
-      });
-    }
-
-    const selects = document.querySelectorAll(
-      "#request-status-select, #request-organization-select"
-    );
-
-    selects.forEach((element) => {
-      element.addEventListener("change", (event) => {
-        event.stopPropagation();
-        saveFocus();
-        element.form.submit();
-      });
-    });
-
-    // Submit requests filter form on search in the request list page
-    const quickSearch = document.querySelector("#quick-search");
-    if (quickSearch) {
-      quickSearch.addEventListener("keyup", (event) => {
-        if (event.keyCode === ENTER) {
-          event.stopPropagation();
-          saveFocus();
-          quickSearch.form.submit();
-        }
-      });
-    }
-
-    // Submit organization form in the request page
-    const requestOrganisationSelect = document.querySelector(
-      "#request-organization select"
-    );
-
-    if (requestOrganisationSelect) {
-      requestOrganisationSelect.addEventListener("change", () => {
-        requestOrganisationSelect.form.submit();
+    async function urlExists(testUrl) {
+      // HEAD is light; fallback to GET if your environment blocks HEAD
+      const res = await fetch(testUrl, {
+        method: "GET",
+        credentials: "same-origin"
       });
 
-      requestOrganisationSelect.addEventListener("click", (e) => {
-        // Prevents Ticket details collapsible-sidebar to close on mobile
-        e.stopPropagation();
-      });
-    }
-
-    // If there are any error notifications below an input field, focus that field
-    const notificationElm = document.querySelector(".notification-error");
-    if (
-      notificationElm &&
-      notificationElm.previousElementSibling &&
-      typeof notificationElm.previousElementSibling.focus === "function"
-    ) {
-      notificationElm.previousElementSibling.focus();
+      return res.ok;
     }
   });
-
-})();
