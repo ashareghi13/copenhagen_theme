@@ -1,7 +1,7 @@
 {
-  "name": "Copenhagen",
+  "name": "Configura_v79 (API v4)",
   "author": "Zendesk",
-  "version": "4.54.0",
+  "version": "4.8.5",
   "api_version": 4,
   "default_locale": "en-us",
   "settings": [
@@ -13,7 +13,7 @@
           "type": "color",
           "description": "brand_color_description",
           "label": "brand_color_label",
-          "value": "#17494D"
+          "value": "rgba(0, 106, 179, 1)"
         },
         {
           "identifier": "brand_text_color",
@@ -27,35 +27,21 @@
           "type": "color",
           "description": "text_color_description",
           "label": "text_color_label",
-          "value": "#2F3941"
+          "value": "rgba(66, 66, 66, 1)"
         },
         {
           "identifier": "link_color",
           "type": "color",
           "description": "link_color_description",
           "label": "link_color_label",
-          "value": "#1F73B7"
-        },
-        {
-          "identifier": "hover_link_color",
-          "type": "color",
-          "description": "hover_link_color_description",
-          "label": "hover_link_color_label",
-          "value": "#0F3554"
-        },
-        {
-          "identifier": "visited_link_color",
-          "type": "color",
-          "description": "visited_link_color_description",
-          "label": "visited_link_color_label",
-          "value": "#9358B0"
+          "value": "#0072EF"
         },
         {
           "identifier": "background_color",
           "type": "color",
           "description": "background_color_description",
           "label": "background_color_label",
-          "value": "#FFFFFF"
+          "value": "rgba(255, 255, 255, 1)"
         }
       ]
     },
@@ -67,6 +53,7 @@
           "type": "list",
           "description": "heading_font_description",
           "label": "heading_font_label",
+          "value": "Helvetica, Arial, sans-serif",
           "options": [
             {
               "label": "System",
@@ -86,7 +73,7 @@
             },
             {
               "label": "Century Gothic",
-              "value": "'Century Gothic', sans-serif"
+              "value": "'Century Gothic', AppleGothic, sans-serif"
             },
             {
               "label": "Copperplate Light",
@@ -98,7 +85,7 @@
             },
             {
               "label": "Futura",
-              "value": "Futura, 'Century Gothic', sans-serif"
+              "value": "Futura, 'Century Gothic', AppleGothic, sans-serif"
             },
             {
               "label": "Garamond",
@@ -132,14 +119,14 @@
               "label": "Trebuchet MS",
               "value": "'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif"
             }
-          ],
-          "value": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+          ]
         },
         {
           "identifier": "text_font",
           "type": "list",
           "description": "text_font_description",
           "label": "text_font_label",
+          "value": "Helvetica, Arial, sans-serif",
           "options": [
             {
               "label": "System",
@@ -159,7 +146,7 @@
             },
             {
               "label": "Century Gothic",
-              "value": "'Century Gothic', sans-serif"
+              "value": "'Century Gothic', AppleGothic, sans-serif"
             },
             {
               "label": "Copperplate Light",
@@ -171,7 +158,7 @@
             },
             {
               "label": "Futura",
-              "value": "Futura, 'Century Gothic', sans-serif"
+              "value": "Futura, 'Century Gothic', AppleGothic, sans-serif"
             },
             {
               "label": "Garamond",
@@ -205,8 +192,7 @@
               "label": "Trebuchet MS",
               "value": "'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif"
             }
-          ],
-          "value": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+          ]
         }
       ]
     },
@@ -218,13 +204,6 @@
           "type": "file",
           "description": "logo_description",
           "label": "logo_label"
-        },
-        {
-          "identifier": "show_brand_name",
-          "type": "checkbox",
-          "description": "show_brand_name_description",
-          "label": "show_brand_name_label",
-          "value": true
         },
         {
           "identifier": "favicon",
@@ -254,12 +233,6 @@
           "type": "file",
           "description": "community_image_description",
           "label": "community_image_label"
-        },
-        {
-          "identifier": "service_catalog_hero_image",
-          "type": "file",
-          "description": "service_catalog_hero_image_description",
-          "label": "service_catalog_hero_image_label"
         }
       ]
     },
@@ -277,15 +250,15 @@
           "identifier": "scoped_kb_search",
           "type": "checkbox",
           "description": "scoped_knowledge_base_search_description",
-          "label": "scoped_knowledge_base_search_label_v2",
-          "value": true
+          "label": "scoped_knowledge_base_search_label",
+          "value": false
         },
         {
           "identifier": "scoped_community_search",
           "type": "checkbox",
           "description": "scoped_community_search_description",
           "label": "scoped_community_search_label",
-          "value": true
+          "value": false
         }
       ]
     },
@@ -330,7 +303,7 @@
           "type": "checkbox",
           "description": "follow_article_description",
           "label": "follow_article_label",
-          "value": true
+          "value": false
         },
         {
           "identifier": "show_recently_viewed_articles",
@@ -351,7 +324,7 @@
           "type": "checkbox",
           "description": "article_sharing_description",
           "label": "article_sharing_label",
-          "value": true
+          "value": false
         }
       ]
     },
@@ -382,7 +355,7 @@
           "type": "checkbox",
           "description": "post_sharing_description",
           "label": "post_sharing_label",
-          "value": true
+          "value": false
         }
       ]
     },
@@ -394,30 +367,6 @@
           "type": "checkbox",
           "description": "follow_topic_description",
           "label": "follow_topic_label",
-          "value": true
-        }
-      ]
-    },
-    {
-      "label": "show_suggested_articles_label",
-      "variables": [
-        {
-          "identifier": "show_suggested_articles",
-          "type": "checkbox",
-          "description": "show_suggested_articles_in_new_request_form_description",
-          "label": "show_suggested_articles_label",
-          "value": true
-        }
-      ]
-    },
-    {
-      "label": "request_page_group_label",
-      "variables": [
-        {
-          "identifier": "filter_ticket_fields_by_brand",
-          "type": "checkbox",
-          "description": "filter_ticket_fields_by_brand_description",
-          "label": "filter_ticket_fields_by_brand_label",
           "value": true
         }
       ]
