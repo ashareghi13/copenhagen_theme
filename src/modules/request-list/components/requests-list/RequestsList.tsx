@@ -33,6 +33,7 @@ export function RequestsList({
   customStatusesEnabled,
   viewRequestsAcrossBrandsEnabled,
   filterTicketFieldsByBrand,
+  customTabLabels,
 }: RequestsListProps): JSX.Element {
   const { t } = useTranslation();
 

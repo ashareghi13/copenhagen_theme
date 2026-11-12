@@ -20,6 +20,7 @@ export async function renderRequestList(
     customStatusesEnabled,
     viewRequestsAcrossBrandsEnabled,
     filterTicketFieldsByBrand,
+    customTabLabels, // NEW: Receive custom labels
   } = props;
 
   initI18next(baseLocale);
@@ -42,6 +43,7 @@ export async function renderRequestList(
           customStatusesEnabled={customStatusesEnabled}
           viewRequestsAcrossBrandsEnabled={viewRequestsAcrossBrandsEnabled}
           filterTicketFieldsByBrand={filterTicketFieldsByBrand}
+          customTabLabels={customTabLabels} // NEW: Forward custom labels
         />
       </ErrorBoundary>
     </ThemeProviders>,

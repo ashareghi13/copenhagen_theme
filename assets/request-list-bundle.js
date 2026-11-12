@@ -1,101 +1,1897 @@
-import{r as e,u as t,j as s,F as n,M as r,a4 as a,s as i,b as l,c as o,O as u,E as c,Y as d,z as p,w as h,C as f,A as m,G as j,Q as g,n as x,a5 as b,a6 as v,a7 as q,a8 as y,a9 as S,I as w,aa as _,ab as C,ac as k,U as E,V as F,W as z,R as $,X as I,t as T,S as D,ad as V,ae as O,af as R,i as N,ag as L,ah as A,ai as M,aj as P,ak as B,al as H,am as U,an as X,ao as G,ap as W,Z as Y,_ as Q,a0 as J,a1 as Z,a2 as K,aq as ee,f as te,a3 as se}from"shared";const ne="my-requests",re="ccd-requests",ae="org-requests";var ie={setItem:(e,t)=>window.localStorage.setItem(e,t),getItem:e=>window.localStorage.getItem(e),removeItem(e){window.localStorage.removeItem(e)},clear(){window.localStorage.clear()}};const le="filter_",oe={QUERY:"query",PAGE:"page",SORT_BY:"sort_by",SORT_ORDER:"sort_order",SELECTED_TAB_NAME:"selected_tab_name",ORGANIZATION_ID:"organization_id"};function ue({query:e,page:t,sort:s,selectedTab:n,filters:r}){const a=new URLSearchParams;a.append(oe.QUERY,e),a.append(oe.PAGE,t.toString()),s&&(a.append(oe.SORT_BY,s.by),a.append(oe.SORT_ORDER,s.order)),a.append(oe.SELECTED_TAB_NAME,n.name),n.name===ae&&a.append(oe.ORGANIZATION_ID,n.organizationId.toString());for(const[e,t]of Object.entries(r))for(const s of t)a.append(`${le}${e}`,s);return a}const ce="filter_",de={QUERY:"query",PAGE:"page",SORT_BY:"sort_by",SORT_ORDER:"sort_order",SELECTED_TAB_NAME:"selected_tab_name",ORGANIZATION_ID:"organization_id"},pe="asc",he="desc";function fe(e){const t={},s=e.get(de.QUERY),n=e.get(de.PAGE),r=e.get(de.SORT_BY),a=e.get(de.SORT_ORDER),i=e.get(de.SELECTED_TAB_NAME),l=e.get(de.ORGANIZATION_ID);null!=s&&(t.query=s),null!=n&&(t.page=parseInt(n,10)),null==r||null==a||a!==pe&&a!==he||(t.sort={by:r,order:a}),null!==i&&(i===ae&&null!=l?t.selectedTab={name:ae,organizationId:parseInt(l,10)}:i!==ne&&i!==re||(t.selectedTab={name:i}));const o=function(e){const t={};for(const[s]of e){if(!s.startsWith(ce))continue;const n=s.replace(ce,"");if(null!=t[n])continue;const r=e.getAll(s).filter(je);t[n]=r}return t}(e);return Object.keys(o).length>0&&(t.filters=o),t}const me=Object.values(de);function je(e){return"string"==typeof e&&(e.startsWith(":")||e.startsWith("<")||e.startsWith(">"))}const ge="REQUEST_LIST_FILTERS",xe="v1",be={query:"",page:1,sort:{order:"desc",by:"updated_at"},selectedTab:{name:ne},filters:{}};function ve(e){return"string"==typeof e&&(e.startsWith(":")||e.startsWith("<")||e.startsWith(">"))}function qe(){try{const e=ie.getItem(ge);if(!e)return{};const[t,s]=JSON.parse(e);return t===xe&&function(e){return"object"==typeof e&&null!==e&&!Array.isArray(e)&&Object.values(e).every((e=>Array.isArray(e)&&e.every(ve)))}(s)?s:{}}catch(e){return{}}}function ye(e){try{ie.setItem(ge,JSON.stringify([xe,e]))}catch(e){}}function Se(e,t){const s=`${window.location.pathname}?${e.toString()}${window.location.hash}`;t?window.history.replaceState({},"",s):window.history.pushState({},"",s)}function we(){const e=new URLSearchParams(window.location.search),t=fe(e);if(!function(e){for(const t of e.keys())if(me.includes(t)||t.startsWith(ce))return!0;return!1}(e))return{...be,filters:qe()};const s=t.filters??{};return ye(s),{...be,...t,filters:s}}function _e({query:i,onSearchSubmit:l}){const{t:o}=t(),u=e.useRef(null);return s.jsx("form",{onSubmit:e=>{e.preventDefault(),null!==u.current&&l(u.current.value)},children:s.jsxs(n,{children:[s.jsx(n.Label,{hidden:!0,children:o("guide-requests-app.searchField.Label","Search")}),s.jsx(r,{start:s.jsx(a,{"aria-hidden":"true"}),ref:u,type:"search",defaultValue:i})]})})}const Ce=i(l)`
+import { r as reactExports, b as useTranslation, j as jsxRuntimeExports, c as Field, y as MediaInput, z as SvgSearchStroke, s as styled, F as Field$1, C as Combobox, O as Option, P as Paragraph, w as Alert, M as Modal, E as Checkbox, A as Anchor, B as Button, D as Dots, N as Ne, G as subDays, J as formatISO, L as subMonths, Q as subYears, I as Input, R as DatePickerRange, U as Grid, V as format, H as Header$1, q as Body$2, t as Footer$2, o as FooterItem$2, v as Close$2, T as Tag, S as Span, W as upperFirst, X as isToday, Y as isYesterday, d as Tooltip, Z as Ellipsis, _ as Table, a0 as Item, a1 as Menu, a2 as ItemGroup, a3 as Separator, a4 as SvgChevronDownStroke, a5 as Tabs, a6 as Skeleton, a7 as CursorPagination, x as reactDomExports } from 'shared';
+import { n as notify, i as initI18next, l as loadTranslations, T as ThemeProviders, c as createTheme, a as createTranslationLoader, s as sharedTranslations } from 'index';
+import { u as useModalContainer } from 'useModalContainer';
+import { E as ErrorBoundary } from 'ErrorBoundary';
+
+const MY_REQUESTS_TAB_NAME = "my-requests";
+const CCD_REQUESTS_TAB_NAME = "ccd-requests";
+const ORG_REQUESTS_TAB_NAME = "org-requests";
+
+var localStorage = {
+    setItem(key, value) {
+        return window.localStorage.setItem(key, value);
+    },
+    getItem(key) {
+        return window.localStorage.getItem(key);
+    },
+    removeItem(key) {
+        window.localStorage.removeItem(key);
+    },
+    clear() {
+        window.localStorage.clear();
+    },
+};
+
+const FILTER_PREFIX$1 = "filter_";
+const SERIALIZED_KEYS$1 = {
+    QUERY: "query",
+    PAGE: "page",
+    SORT_BY: "sort_by",
+    SORT_ORDER: "sort_order",
+    SELECTED_TAB_NAME: "selected_tab_name",
+    ORGANIZATION_ID: "organization_id",
+};
+function serializeRequestListParams({ query, page, sort, selectedTab, filters, }) {
+    const res = new URLSearchParams();
+    res.append(SERIALIZED_KEYS$1.QUERY, query);
+    res.append(SERIALIZED_KEYS$1.PAGE, page.toString());
+    if (sort) {
+        res.append(SERIALIZED_KEYS$1.SORT_BY, sort.by);
+        res.append(SERIALIZED_KEYS$1.SORT_ORDER, sort.order);
+    }
+    res.append(SERIALIZED_KEYS$1.SELECTED_TAB_NAME, selectedTab.name);
+    if (selectedTab.name === ORG_REQUESTS_TAB_NAME) {
+        res.append(SERIALIZED_KEYS$1.ORGANIZATION_ID, selectedTab.organizationId.toString());
+    }
+    for (const [field, values] of Object.entries(filters)) {
+        for (const value of values) {
+            res.append(`${FILTER_PREFIX$1}${field}`, value);
+        }
+    }
+    return res;
+}
+
+const FILTER_PREFIX = "filter_";
+const SERIALIZED_KEYS = {
+    QUERY: "query",
+    PAGE: "page",
+    SORT_BY: "sort_by",
+    SORT_ORDER: "sort_order",
+    SELECTED_TAB_NAME: "selected_tab_name",
+    ORGANIZATION_ID: "organization_id",
+};
+const SORT_ORDER_ASC = "asc";
+const SORT_ORDER_DESC = "desc";
+function deserializeRequestListParams(searchParams) {
+    const res = {};
+    const queryParam = searchParams.get(SERIALIZED_KEYS.QUERY);
+    const pageParam = searchParams.get(SERIALIZED_KEYS.PAGE);
+    const sortBy = searchParams.get(SERIALIZED_KEYS.SORT_BY);
+    const sortOrder = searchParams.get(SERIALIZED_KEYS.SORT_ORDER);
+    const selectedTabName = searchParams.get(SERIALIZED_KEYS.SELECTED_TAB_NAME);
+    const organizationId = searchParams.get(SERIALIZED_KEYS.ORGANIZATION_ID);
+    if (queryParam != null) {
+        res.query = queryParam;
+    }
+    if (pageParam != null) {
+        res.page = parseInt(pageParam, 10);
+    }
+    if (sortBy != null &&
+        sortOrder != null &&
+        (sortOrder === SORT_ORDER_ASC || sortOrder === SORT_ORDER_DESC)) {
+        res.sort = { by: sortBy, order: sortOrder };
+    }
+    if (selectedTabName !== null) {
+        if (selectedTabName === ORG_REQUESTS_TAB_NAME && organizationId != null) {
+            res.selectedTab = {
+                name: ORG_REQUESTS_TAB_NAME,
+                organizationId: parseInt(organizationId, 10),
+            };
+        }
+        else if (selectedTabName === MY_REQUESTS_TAB_NAME ||
+            selectedTabName === CCD_REQUESTS_TAB_NAME) {
+            res.selectedTab = { name: selectedTabName };
+        }
+    }
+    const filters = getFiltersFromSearchParams(searchParams);
+    if (Object.keys(filters).length > 0) {
+        res.filters = filters;
+    }
+    return res;
+}
+const RECOGNIZED_KEYS = Object.values(SERIALIZED_KEYS);
+function hasRequestListParams(searchParams) {
+    for (const key of searchParams.keys()) {
+        if (RECOGNIZED_KEYS.includes(key) || key.startsWith(FILTER_PREFIX)) {
+            return true;
+        }
+    }
+    return false;
+}
+function getFiltersFromSearchParams(searchParams) {
+    const res = {};
+    for (const [key] of searchParams) {
+        if (!key.startsWith(FILTER_PREFIX)) {
+            continue;
+        }
+        const field = key.replace(FILTER_PREFIX, "");
+        if (res[field] != null) {
+            continue;
+        }
+        const values = searchParams.getAll(key).filter(isFilterValue$1);
+        res[field] = values;
+    }
+    return res;
+}
+function isFilterValue$1(value) {
+    return (typeof value === "string" &&
+        (value.startsWith(":") || value.startsWith("<") || value.startsWith(">")));
+}
+
+const FILTERS_LOCAL_STORAGE_KEY = "REQUEST_LIST_FILTERS";
+const FILTERS_LOCAL_STORAGE_VERSION = "v1";
+const DEFAULT_REQUEST_LIST_PARAMS = {
+    query: "",
+    page: 1,
+    sort: { order: "desc", by: "updated_at" },
+    selectedTab: { name: MY_REQUESTS_TAB_NAME },
+    filters: {},
+};
+function isFilterValue(value) {
+    return (typeof value === "string" &&
+        (value.startsWith(":") || value.startsWith("<") || value.startsWith(">")));
+}
+function isFilterValuesMap(value) {
+    if (typeof value !== "object" || value === null || Array.isArray(value)) {
+        return false;
+    }
+    return Object.values(value).every((filterValues) => Array.isArray(filterValues) && filterValues.every(isFilterValue));
+}
+function readStoredFilters() {
+    try {
+        const item = localStorage.getItem(FILTERS_LOCAL_STORAGE_KEY);
+        if (!item)
+            return {};
+        const [version, value] = JSON.parse(item);
+        return version === FILTERS_LOCAL_STORAGE_VERSION && isFilterValuesMap(value)
+            ? value
+            : {};
+    }
+    catch (error) {
+        return {};
+    }
+}
+function writeStoredFilters(filters) {
+    try {
+        localStorage.setItem(FILTERS_LOCAL_STORAGE_KEY, JSON.stringify([FILTERS_LOCAL_STORAGE_VERSION, filters]));
+    }
+    catch (error) {
+        // ignore
+    }
+}
+function writeUrl(searchParams, replace) {
+    const url = `${window.location.pathname}?${searchParams.toString()}${window.location.hash}`;
+    if (replace) {
+        window.history.replaceState({}, "", url);
+    }
+    else {
+        window.history.pushState({}, "", url);
+    }
+}
+function resolveParamsFromUrl() {
+    const searchParams = new URLSearchParams(window.location.search);
+    const urlParams = deserializeRequestListParams(searchParams);
+    // When the URL carries recognized params it is authoritative — its filters
+    // win and are persisted. Otherwise the stored filters are the starting point.
+    if (!hasRequestListParams(searchParams)) {
+        return {
+            ...DEFAULT_REQUEST_LIST_PARAMS,
+            filters: readStoredFilters(),
+        };
+    }
+    const filters = urlParams.filters ?? {};
+    writeStoredFilters(filters);
+    return { ...DEFAULT_REQUEST_LIST_PARAMS, ...urlParams, filters };
+}
+/* Manages the request list params, keeping them in sync with the URL while
+   persisting the filters to localStorage so they stick across reloads and tabs.
+   - Params are resolved from the URL on mount and on back/forward navigation
+   - The resolved params are written back to the URL once on mount (replaceState)
+   - Every push updates the URL (pushState) and persists the current filters */
+function useParams() {
+    const [params, setParams] = reactExports.useState(resolveParamsFromUrl);
+    // Mirror the latest params so `push` and the popstate handler can stay stable.
+    const latestParams = reactExports.useRef(params);
+    latestParams.current = params;
+    const push = reactExports.useCallback((newParams) => {
+        const mergedParams = { ...latestParams.current, ...newParams };
+        latestParams.current = mergedParams;
+        setParams(mergedParams);
+        writeUrl(serializeRequestListParams(mergedParams), false);
+        writeStoredFilters(mergedParams.filters);
+    }, []);
+    reactExports.useEffect(() => {
+        writeUrl(serializeRequestListParams(latestParams.current), true);
+        function handlePopState() {
+            const nextParams = resolveParamsFromUrl();
+            latestParams.current = nextParams;
+            setParams(nextParams);
+        }
+        window.addEventListener("popstate", handlePopState);
+        return () => window.removeEventListener("popstate", handlePopState);
+    }, []);
+    return { params, push };
+}
+
+function RequestsSearch({ query, onSearchSubmit, }) {
+    const { t } = useTranslation();
+    const searchInputRef = reactExports.useRef(null);
+    const onSearchChange = (event) => {
+        event.preventDefault();
+        if (searchInputRef.current !== null) {
+            onSearchSubmit(searchInputRef.current.value);
+        }
+    };
+    return (jsxRuntimeExports.jsx("form", { onSubmit: onSearchChange, children: jsxRuntimeExports.jsxs(Field, { children: [jsxRuntimeExports.jsx(Field.Label, { hidden: true, children: t("guide-requests-app.searchField.Label", "Search") }), jsxRuntimeExports.jsx(MediaInput, { start: jsxRuntimeExports.jsx(SvgSearchStroke, { "aria-hidden": "true" }), ref: searchInputRef, type: "search", defaultValue: query })] }) }));
+}
+
+const StyledField$1 = styled(Field$1) `
   width: 200px;
-`;function ke({organizations:n,currentOrganizationId:r,onOrganizationSelected:a}){const{t:i}=t(),[c,d]=e.useState(n),[p,h]=e.useState((()=>{const e=n.find((e=>e.id===r));return e?.name??""})),f=e.useCallback((e=>{const{inputValue:t,selectionValue:s}=e;if(void 0!==t)if(h(t),""===t)d(n);else{const e=n.filter((e=>e.name.trim().toLowerCase().includes(t.trim().toLowerCase())));d(e)}if(null!=s){const e=Array.isArray(s)?s[0]:s;"string"==typeof e&&a(Number(e))}}),[n,a]);return s.jsxs(Ce,{children:[s.jsx(l.Label,{children:i("guide-requests-app.organization","Organization")}),s.jsx(o,{isAutocomplete:!0,selectionValue:String(r),inputValue:p,"data-test-id":"organizations-menu",onChange:f,children:0===c.length?s.jsx(u,{isDisabled:!0,label:i("guide-requests-app.filters-modal.no-matches-found","No matches found"),value:""}):c.map((e=>s.jsx(u,{label:e.name,value:String(e.id),"data-test-id":`organization-${e.id}`},e.id)))})]})}const Ee=20,Fe=10,ze=i(n)`
-  padding-bottom: ${e=>e.theme.space.xs};
-`,$e=i(c)`
-  padding-bottom: ${e=>e.theme.space.sm};
-`,Ie=i(d)`
-  margin-bottom: ${e=>e.theme.space.sm};
-`;function Te(r){const{t:a}=t(),{organizations:i,user:l,onClose:o}=r,[u,c]=e.useState(Ee),[b,v]=e.useState([]),[q,y]=e.useState(!1),S=p(),w=async()=>{const e=b.map((e=>({...e,isError:!1})));if(!e.some((e=>e.subscribed!==e.isChecked)))return void o();y(!0);const t=e.filter((e=>e.subscribed!==e.isChecked)).map((async e=>{let t;try{if(t=e.subscribed?await fetch(`/api/v2/organization_subscriptions/${e.subscriptionId}.json`,{method:"DELETE",headers:{"X-CSRF-Token":l.authenticity_token}}):await fetch("/api/v2/organization_subscriptions.json",{body:JSON.stringify({organization_subscription:{user_id:l.id,organization_id:e.organizationId}}),method:"POST",headers:{"X-CSRF-Token":l.authenticity_token,"Content-Type":"application/json"}}),!t.ok)throw Error(t.statusText);e.subscribed=!e.subscribed,e.isError=!1}catch(t){e.isError=!0}finally{e.isChecked=e.subscribed}}));await Promise.all(t),v(e),y(!1),e.some((e=>e.isError))||(x({type:"success",message:a("guide-requests-app.organizationSubscriptionUpdated","Organization subscription updated")}),o())};e.useEffect((()=>{(async(e,t)=>{let s=[],n=`/api/v2/users/${t}/organization_subscriptions.json?page[size]=100`,r=!0;for(;r;){const e=await fetch(n);if(!e.ok)throw new Error("Failed to fetch organization subscriptions");const{organization_subscriptions:t,meta:{has_more:a},links:{next:i}}=await e.json();r=a,n=i,s=s.concat(t)}const a={};s.forEach((e=>{a[`${e.organization_id}`]=e})),v(e.map((e=>({organizationId:e.id,name:e.name,subscriptionId:a[`${e.id}`]?.id,subscribed:void 0!==a[`${e.id}`],isError:!1,isChecked:void 0!==a[`${e.id}`]}))))})(i,l.id)}),[]);const _=()=>{v(b.map((e=>({...e,isError:!1}))))};return s.jsxs(h,{onClose:o,appendToNode:S,children:[s.jsx(h.Header,{children:a("guide-requests-app.followOrganization","Follow organization")}),s.jsxs(h.Body,{children:[s.jsx($e,{children:a("guide-requests-app.receiveEmailUpdatesOrganizationsTickets","Receive email updates about tickets within these organizations:")}),b.some((e=>e.isError))&&s.jsxs(Ie,{type:"error",children:[s.jsx(d.Title,{children:a("guide-requests-app.organizationSubscriptionCouldNotBeSaved","Organization subscription could not be saved")}),a("guide-requests-app.giveItAMomentAndTryAgain","Give it a moment and try again"),s.jsx(h.Close,{"aria-label":"Close Alert",onClick:e=>{e.preventDefault(),_()}})]}),b.slice(0,u).map((e=>s.jsxs(ze,{children:[s.jsx(f,{"data-test-id":`checkbox_${e.organizationId}`,checked:e.isChecked,onChange:()=>{return t=e.organizationId,void v(b.map((e=>e.organizationId===t?{...e,isChecked:!e.isChecked}:e)));var t},children:s.jsx(n.Label,{children:e.name})}),e.isError&&s.jsx(n.Message,{validation:"error",children:a("guide-requests-app.organizationSubscriptionCouldNotBeSaved","Organization subscription could not be saved")})]},e.organizationId))),i.length>Ee&&u<i.length&&s.jsx(m,{onClick:()=>{c(u+Fe)},children:a("guide-requests-app.showMore","Show more")})]}),s.jsxs(h.Footer,{children:[s.jsx(h.FooterItem,{children:s.jsx(j,{onClick:o,isBasic:!0,children:a("guide-requests-app.cancel","Cancel")})}),s.jsx(h.FooterItem,{children:s.jsx(j,{isPrimary:!0,onClick:()=>{_(),w()},"data-test-id":"saveOrganizationButton",children:q?s.jsx(g,{size:20,delayMS:0}):a("guide-requests-app.save","Save")})})]}),s.jsx(h.Close,{"aria-label":a("guide-requests-app.closeModal","Close modal"),onClick:o})]})}function De({organizations:n,user:r}){const{t:a}=t(),[i,l]=e.useState(!1);return s.jsxs(s.Fragment,{children:[s.jsx(j,{onClick:()=>{l(!0)},"data-test-id":"followOrganizationButton",children:a("guide-requests-app.followOrganization","Follow organization")}),i&&s.jsx(Te,{organizations:n,user:r,onClose:()=>l(!1)})]})}const Ve=768,Oe={mobile:`(max-width: ${Ve}px)`,desktop:`(min-width: ${Ve+1}px)`},Re=e=>b`
-      @media screen and ${Oe.mobile} {
-        ${b(e)}
+`;
+function OrganizationsDropdown({ organizations, currentOrganizationId, onOrganizationSelected, }) {
+    const { t } = useTranslation();
+    const [filteredOrganizations, setFilteredOrganizations] = reactExports.useState(organizations);
+    const [inputValue, setInputValue] = reactExports.useState(() => {
+        const selectedOrganization = organizations.find((organization) => organization.id === currentOrganizationId);
+        return selectedOrganization?.name ?? "";
+    });
+    const handleChange = reactExports.useCallback((changes) => {
+        const { inputValue, selectionValue } = changes;
+        if (inputValue !== undefined) {
+            setInputValue(inputValue);
+            if (inputValue === "") {
+                setFilteredOrganizations(organizations);
+            }
+            else {
+                const matchedOrganizations = organizations.filter((organization) => {
+                    return organization.name
+                        .trim()
+                        .toLowerCase()
+                        .includes(inputValue.trim().toLowerCase());
+                });
+                setFilteredOrganizations(matchedOrganizations);
+            }
+        }
+        if (selectionValue !== undefined && selectionValue !== null) {
+            // Handle both string and string[] types for selectionValue
+            const value = Array.isArray(selectionValue)
+                ? selectionValue[0]
+                : selectionValue;
+            if (typeof value === "string") {
+                onOrganizationSelected(Number(value));
+            }
+        }
+    }, [organizations, onOrganizationSelected]);
+    return (jsxRuntimeExports.jsxs(StyledField$1, { children: [jsxRuntimeExports.jsx(Field$1.Label, { children: t("guide-requests-app.organization", "Organization") }), jsxRuntimeExports.jsx(Combobox, { isAutocomplete: true, selectionValue: String(currentOrganizationId), inputValue: inputValue, "data-test-id": "organizations-menu", onChange: handleChange, children: filteredOrganizations.length === 0 ? (jsxRuntimeExports.jsx(Option, { isDisabled: true, label: t("guide-requests-app.filters-modal.no-matches-found", "No matches found"), value: "" })) : (filteredOrganizations.map((organization) => (jsxRuntimeExports.jsx(Option, { label: organization.name, value: String(organization.id), "data-test-id": `organization-${organization.id}` }, organization.id)))) })] }));
+}
+
+const DEFAULT_SHOWING_AMOUNT = 20;
+const SHOWING_AMOUNT_INCREMENT = 10;
+const StyledField = styled(Field) `
+  padding-bottom: ${(p) => p.theme.space.xs};
+`;
+const StyledParagraph = styled(Paragraph) `
+  padding-bottom: ${(p) => p.theme.space.sm};
+`;
+const StyledAlert = styled(Alert) `
+  margin-bottom: ${(p) => p.theme.space.sm};
+`;
+function FollowOrganizationsModal(props) {
+    const { t } = useTranslation();
+    const { organizations, user, onClose } = props;
+    const [amountShowing, setAmountShowing] = reactExports.useState(DEFAULT_SHOWING_AMOUNT);
+    const [subscriptions, setSubscriptions] = reactExports.useState([]);
+    const [isUpdating, setIsUpdating] = reactExports.useState(false);
+    const modalContainer = useModalContainer();
+    const onSave = () => {
+        resetFailedState();
+        updateSubscriptions();
+    };
+    const onShowMore = () => {
+        setAmountShowing(amountShowing + SHOWING_AMOUNT_INCREMENT);
+    };
+    const fetchSubscriptions = async (organizations, userId) => {
+        let totalSubscriptions = [];
+        let subscriptionUrl = `/api/v2/users/${userId}/organization_subscriptions.json?page[size]=100`;
+        let hasMore = true;
+        while (hasMore) {
+            const response = await fetch(subscriptionUrl);
+            if (!response.ok) {
+                throw new Error("Failed to fetch organization subscriptions");
+            }
+            const { organization_subscriptions, meta: { has_more }, links: { next }, } = await response.json();
+            hasMore = has_more;
+            subscriptionUrl = next;
+            totalSubscriptions = totalSubscriptions.concat(organization_subscriptions);
+        }
+        const lookUpMap = {};
+        totalSubscriptions.forEach((sub) => {
+            lookUpMap[`${sub.organization_id}`] = sub;
+        });
+        setSubscriptions(organizations.map((o) => ({
+            organizationId: o.id,
+            name: o.name,
+            subscriptionId: lookUpMap[`${o.id}`]?.id,
+            subscribed: lookUpMap[`${o.id}`] !== undefined,
+            isError: false,
+            isChecked: lookUpMap[`${o.id}`] !== undefined,
+        })));
+    };
+    const updateSubscriptions = async () => {
+        const updatedOrganizationSubscriptionState = subscriptions.map((subscription) => ({ ...subscription, isError: false }));
+        if (!updatedOrganizationSubscriptionState.some((oss) => oss.subscribed !== oss.isChecked)) {
+            onClose();
+            return;
+        }
+        setIsUpdating(true);
+        const requests = updatedOrganizationSubscriptionState
+            .filter((oss) => oss.subscribed !== oss.isChecked)
+            .map(async (oss) => {
+            let response;
+            try {
+                if (oss.subscribed) {
+                    response = await fetch(`/api/v2/organization_subscriptions/${oss.subscriptionId}.json`, {
+                        method: "DELETE",
+                        headers: {
+                            "X-CSRF-Token": user.authenticity_token,
+                        },
+                    });
+                }
+                else {
+                    response = await fetch(`/api/v2/organization_subscriptions.json`, {
+                        body: JSON.stringify({
+                            organization_subscription: {
+                                user_id: user.id,
+                                organization_id: oss.organizationId,
+                            },
+                        }),
+                        method: "POST",
+                        headers: {
+                            "X-CSRF-Token": user.authenticity_token,
+                            "Content-Type": "application/json",
+                        },
+                    });
+                }
+                if (response.ok) {
+                    oss.subscribed = !oss.subscribed;
+                    oss.isError = false;
+                }
+                else {
+                    throw Error(response.statusText);
+                }
+            }
+            catch (e) {
+                oss.isError = true;
+            }
+            finally {
+                oss.isChecked = oss.subscribed;
+            }
+        });
+        await Promise.all(requests);
+        setSubscriptions(updatedOrganizationSubscriptionState);
+        setIsUpdating(false);
+        if (!updatedOrganizationSubscriptionState.some((oss) => oss.isError)) {
+            notify({
+                type: "success",
+                message: t("guide-requests-app.organizationSubscriptionUpdated", "Organization subscription updated"),
+            });
+            onClose();
+        }
+    };
+    const subscriptionStateChange = (organizationId) => {
+        setSubscriptions(subscriptions.map((subscription) => subscription.organizationId === organizationId
+            ? { ...subscription, isChecked: !subscription.isChecked }
+            : subscription));
+    };
+    reactExports.useEffect(() => {
+        fetchSubscriptions(organizations, user.id);
+    }, []);
+    const onCloseAlert = (e) => {
+        e.preventDefault();
+        resetFailedState();
+    };
+    const resetFailedState = () => {
+        setSubscriptions(subscriptions.map((subscription) => ({
+            ...subscription,
+            isError: false,
+        })));
+    };
+    return (jsxRuntimeExports.jsxs(Modal, { onClose: onClose, appendToNode: modalContainer, children: [jsxRuntimeExports.jsx(Modal.Header, { children: t("guide-requests-app.followOrganization", "Follow organization") }), jsxRuntimeExports.jsxs(Modal.Body, { children: [jsxRuntimeExports.jsx(StyledParagraph, { children: t("guide-requests-app.receiveEmailUpdatesOrganizationsTickets", "Receive email updates about tickets within these organizations:") }), subscriptions.some((o) => o.isError) && (jsxRuntimeExports.jsxs(StyledAlert, { type: "error", children: [jsxRuntimeExports.jsx(Alert.Title, { children: t("guide-requests-app.organizationSubscriptionCouldNotBeSaved", "Organization subscription could not be saved") }), t("guide-requests-app.giveItAMomentAndTryAgain", "Give it a moment and try again"), jsxRuntimeExports.jsx(Modal.Close, { "aria-label": "Close Alert", onClick: onCloseAlert })] })), subscriptions.slice(0, amountShowing).map((o) => (jsxRuntimeExports.jsxs(StyledField, { children: [jsxRuntimeExports.jsx(Checkbox, { "data-test-id": `checkbox_${o.organizationId}`, checked: o.isChecked, onChange: () => subscriptionStateChange(o.organizationId), children: jsxRuntimeExports.jsx(Field.Label, { children: o.name }) }), o.isError && (jsxRuntimeExports.jsx(Field.Message, { validation: "error", children: t("guide-requests-app.organizationSubscriptionCouldNotBeSaved", "Organization subscription could not be saved") }))] }, o.organizationId))), organizations.length > DEFAULT_SHOWING_AMOUNT &&
+                        amountShowing < organizations.length && (jsxRuntimeExports.jsx(Anchor, { onClick: onShowMore, children: t("guide-requests-app.showMore", "Show more") }))] }), jsxRuntimeExports.jsxs(Modal.Footer, { children: [jsxRuntimeExports.jsx(Modal.FooterItem, { children: jsxRuntimeExports.jsx(Button, { onClick: onClose, isBasic: true, children: t("guide-requests-app.cancel", "Cancel") }) }), jsxRuntimeExports.jsx(Modal.FooterItem, { children: jsxRuntimeExports.jsx(Button, { isPrimary: true, onClick: onSave, "data-test-id": `saveOrganizationButton`, children: isUpdating ? (jsxRuntimeExports.jsx(Dots, { size: 20, delayMS: 0 })) : (t("guide-requests-app.save", "Save")) }) })] }), jsxRuntimeExports.jsx(Modal.Close, { "aria-label": t("guide-requests-app.closeModal", "Close modal"), onClick: onClose })] }));
+}
+
+function OrganizationsManagement({ organizations, user, }) {
+    const { t } = useTranslation();
+    const [isOpen, setIsOpen] = reactExports.useState(false);
+    const onClick = () => {
+        setIsOpen(true);
+    };
+    return (jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [jsxRuntimeExports.jsx(Button, { onClick: onClick, "data-test-id": `followOrganizationButton`, children: t("guide-requests-app.followOrganization", "Follow organization") }), isOpen && (jsxRuntimeExports.jsx(FollowOrganizationsModal, { organizations: organizations, user: user, onClose: () => setIsOpen(false) }))] }));
+}
+
+const breakpoint = {
+    mobile: 768,
+    desktop: 1024,
+};
+const query = {
+    mobile: `(max-width: ${breakpoint.mobile}px)`,
+    desktop: `(min-width: ${breakpoint.mobile + 1}px)`,
+};
+const media = {
+    mobile: (template) => Ne `
+      @media screen and ${query.mobile} {
+        ${Ne(template)}
       }
-    `,Ne=e=>b`
-      @media screen and ${Oe.desktop} {
-        ${b(e)}
+    `,
+    desktop: (template) => Ne `
+      @media screen and ${query.desktop} {
+        ${Ne(template)}
       }
-    `,Le=i.div`
-  ${Ne`display: none;`}
-`,Ae=i.div`
-  ${Re`display: none;`}
-`,Me=()=>matchMedia(Oe.mobile).matches;function Pe(e,t){const s=v(e,t);return`>${q(s,{representation:"date"})}`}function Be(e,t){const s=y(e,t);return`>${q(s,{representation:"date"})}`}function He(e){const t=S(e,1);return`>${q(t,{representation:"date"})}`}function Ue(){const{t:e}=t();return{filterTypeDropdownI18N:{anyValue:e("guide-requests-app.anyValue","Any value"),range:e("guide-requests-app.range-filter-type","Range"),exactMatch:e("guide-requests-app.exactMatch","Exact match")},statusFilterValuesI18N:{":open :new :hold":e("guide-requests-app.statusOpen","Open"),":pending":e("guide-requests-app.statusPending","Awaiting reply"),":solved :closed":e("guide-requests-app.statusSolved","Solved")},checkboxFilterValuesI18N:{":checked":e("guide-requests-app.checkbox-filter.selected","Selected"),":unchecked":e("guide-requests-app.checkbox-filter.not-selected","Not selected")},createDefaultDateRangeI18N:function(){const t=new Date;return{[Pe(t,1)]:e("guide-requests-app.inThePastDay","In the past day"),[Pe(t,7)]:e("guide-requests-app.inThePastWeek","In the past week"),[Be(t,1)]:e("guide-requests-app.inThePastMonth","In the past month"),[Be(t,3)]:e("guide-requests-app.inThePast3Months","In the past 3 months"),[Be(t,6)]:e("guide-requests-app.inThePast6Months","In the past 6 months"),[He(t)]:e("guide-requests-app.inThePastYear","In the past year")}}}}function Xe({errors:e,field:r}){const{t:a}=t();return e[r]?s.jsx(n.Message,{validation:"error",validationLabel:a("guide-requests-app.error-icon-label","Error"),children:e[r]}):null}function Ge({label:n,onSelect:r,errors:a}){const{t:i}=t(),c=p(),d=e=>null===e?{state:"invalid",errors:{filterValue:i("guide-requests-app.filters-modal.select-value-error","Select a value")}}:{state:"valid",values:[e]},{checkboxFilterValuesI18N:h}=Ue(),[f,m]=e.useState(null);e.useEffect((()=>{r(d(null))}),[]);return s.jsxs(l,{children:[s.jsx(l.Label,{children:i("guide-requests-app.filters-modal.select-field-value","Select {{field_name}}",{field_name:n})}),s.jsxs(o,{isEditable:!1,selectionValue:f,onChange:e=>{var t;void 0!==e.selectionValue&&(t=e.selectionValue,m(t),r(d(t)))},validation:a.filterValue?"error":void 0,listboxAppendToNode:c,children:[s.jsx(u,{label:h[":checked"],value:":checked"}),s.jsx(u,{label:h[":unchecked"],value:":unchecked"})]}),s.jsx(Xe,{errors:a,field:"filterValue"})]})}const We=i(o)`
-  margin-top: ${e=>e.theme.space.xs};
-`,Ye=e=>{const{t:n}=t(),{onFilterTypeSelect:r,selectedFilter:a,errors:i}=e,{filterTypeDropdownI18N:o}=Ue(),c=p();return s.jsxs(l,{children:[s.jsx(l.Label,{children:n("guide-requests-app.filter-modal.filterTypeLabel","Filter type")}),s.jsxs(We,{isEditable:!1,selectionValue:a??null,onChange:e=>{void 0!==e.selectionValue&&r(e.selectionValue)},validation:i.filterType?"error":void 0,listboxAppendToNode:c,children:[s.jsx(u,{label:o.anyValue,value:"anyValue"}),s.jsx(u,{label:o.exactMatch,value:"exactMatch"})]}),s.jsx(Xe,{errors:i,field:"filterType"})]})},Qe=/^\d{4}$/,Je=i.div`
+    `,
+};
+const Mobile = styled.div `
+  ${media.desktop `display: none;`}
+`;
+const Desktop = styled.div `
+  ${media.mobile `display: none;`}
+`;
+const isMobile = () => matchMedia(query.mobile).matches;
+
+function daysAgo(currentDate, numberOfDays) {
+    const newDate = subDays(currentDate, numberOfDays);
+    const dateISOString = formatISO(newDate, { representation: "date" });
+    return `>${dateISOString}`;
+}
+function monthsAgo(currentDate, numberOfMoths) {
+    const newDate = subMonths(currentDate, numberOfMoths);
+    const dateISOString = formatISO(newDate, { representation: "date" });
+    return `>${dateISOString}`;
+}
+function yearAgo(currentDate) {
+    const newDate = subYears(currentDate, 1);
+    const dateISOString = formatISO(newDate, { representation: "date" });
+    return `>${dateISOString}`;
+}
+function useFilterTranslations() {
+    const { t } = useTranslation();
+    const filterTypeDropdownI18N = {
+        anyValue: t("guide-requests-app.anyValue", "Any value"),
+        range: t("guide-requests-app.range-filter-type", "Range"),
+        exactMatch: t("guide-requests-app.exactMatch", "Exact match"),
+    };
+    const statusFilterValuesI18N = {
+        ":open :new :hold": t("guide-requests-app.statusOpen", "Open"),
+        ":pending": t("guide-requests-app.statusPending", "Awaiting reply"),
+        ":solved :closed": t("guide-requests-app.statusSolved", "Solved"),
+    };
+    const checkboxFilterValuesI18N = {
+        ":checked": t("guide-requests-app.checkbox-filter.selected", "Selected"),
+        ":unchecked": t("guide-requests-app.checkbox-filter.not-selected", "Not selected"),
+    };
+    function createDefaultDateRangeI18N() {
+        const currentDate = new Date();
+        return {
+            [daysAgo(currentDate, 1)]: t("guide-requests-app.inThePastDay", "In the past day"),
+            [daysAgo(currentDate, 7)]: t("guide-requests-app.inThePastWeek", "In the past week"),
+            [monthsAgo(currentDate, 1)]: t("guide-requests-app.inThePastMonth", "In the past month"),
+            [monthsAgo(currentDate, 3)]: t("guide-requests-app.inThePast3Months", "In the past 3 months"),
+            [monthsAgo(currentDate, 6)]: t("guide-requests-app.inThePast6Months", "In the past 6 months"),
+            [yearAgo(currentDate)]: t("guide-requests-app.inThePastYear", "In the past year"),
+        };
+    }
+    return {
+        filterTypeDropdownI18N,
+        statusFilterValuesI18N,
+        checkboxFilterValuesI18N,
+        createDefaultDateRangeI18N,
+    };
+}
+
+function FieldError({ errors, field, }) {
+    const { t } = useTranslation();
+    return errors[field] ? (jsxRuntimeExports.jsx(Field.Message, { validation: "error", validationLabel: t("guide-requests-app.error-icon-label", "Error"), children: errors[field] })) : null;
+}
+
+function CheckboxFilter({ label, onSelect, errors, }) {
+    const { t } = useTranslation();
+    const modalContainer = useModalContainer();
+    const validateForm = (checkboxFilterValue) => {
+        if (checkboxFilterValue === null) {
+            return {
+                state: "invalid",
+                errors: {
+                    filterValue: t("guide-requests-app.filters-modal.select-value-error", "Select a value"),
+                },
+            };
+        }
+        return {
+            state: "valid",
+            values: [checkboxFilterValue],
+        };
+    };
+    const { checkboxFilterValuesI18N } = useFilterTranslations();
+    const [value, setValue] = reactExports.useState(null);
+    reactExports.useEffect(() => {
+        onSelect(validateForm(null));
+    }, []);
+    const handleSelect = (item) => {
+        setValue(item);
+        onSelect(validateForm(item));
+    };
+    return (jsxRuntimeExports.jsxs(Field$1, { children: [jsxRuntimeExports.jsx(Field$1.Label, { children: t("guide-requests-app.filters-modal.select-field-value", "Select {{field_name}}", {
+                    field_name: label,
+                }) }), jsxRuntimeExports.jsxs(Combobox, { isEditable: false, selectionValue: value, onChange: (changes) => {
+                    if (changes.selectionValue !== undefined) {
+                        handleSelect(changes.selectionValue);
+                    }
+                }, validation: errors.filterValue ? "error" : undefined, listboxAppendToNode: modalContainer, children: [jsxRuntimeExports.jsx(Option, { label: checkboxFilterValuesI18N[":checked"], value: ":checked" }), jsxRuntimeExports.jsx(Option, { label: checkboxFilterValuesI18N[":unchecked"], value: ":unchecked" })] }), jsxRuntimeExports.jsx(FieldError, { errors: errors, field: "filterValue" })] }));
+}
+
+const StyledCombobox = styled(Combobox) `
+  margin-top: ${(p) => p.theme.space.xs};
+`;
+const FilterTypeDropdown = (props) => {
+    const { t } = useTranslation();
+    const { onFilterTypeSelect, selectedFilter, errors } = props;
+    const { filterTypeDropdownI18N } = useFilterTranslations();
+    const modalContainer = useModalContainer();
+    return (jsxRuntimeExports.jsxs(Field$1, { children: [jsxRuntimeExports.jsx(Field$1.Label, { children: t("guide-requests-app.filter-modal.filterTypeLabel", "Filter type") }), jsxRuntimeExports.jsxs(StyledCombobox, { isEditable: false, selectionValue: selectedFilter ?? null, onChange: (changes) => {
+                    if (changes.selectionValue !== undefined) {
+                        onFilterTypeSelect(changes.selectionValue);
+                    }
+                }, validation: errors["filterType"] ? "error" : undefined, listboxAppendToNode: modalContainer, children: [jsxRuntimeExports.jsx(Option, { label: filterTypeDropdownI18N.anyValue, value: "anyValue" }), jsxRuntimeExports.jsx(Option, { label: filterTypeDropdownI18N.exactMatch, value: "exactMatch" })] }), jsxRuntimeExports.jsx(FieldError, { errors: errors, field: "filterType" })] }));
+};
+
+const CARD_NUMBER_REGEX = /^\d{4}$/;
+const Container$6 = styled.div `
   display: flex;
   flex-direction: column;
-  gap: ${e=>e.theme.space.md};
-`;function Ze({onSelect:r,errors:a}){const{t:i}=t(),[l,o]=e.useState(),[u,c]=e.useState(""),d=(e,t)=>{switch(e){case void 0:return{state:"invalid",errors:{filterType:i("guide-requests-app.filters-modal.select-value-error","Select a value")}};case"anyValue":return{state:"valid",values:[":*"]};case"exactMatch":return Qe.test(t)?{state:"valid",values:[`:*${t}`]}:{state:"invalid",errors:{cardNumber:i("guide-requests-app.filter-modal.credit-card-digits-format-error","Enter the last four digits of the credit card, using only numbers")}}}};e.useEffect((()=>{r(d(void 0,""))}),[]);return s.jsxs(Je,{children:[s.jsx(Ye,{selectedFilter:l,onFilterTypeSelect:e=>{o(e),r(d(e,u))},errors:a}),"exactMatch"===l&&s.jsxs(n,{children:[s.jsx(n.Label,{children:i("guide-requests-app.filter-modal.credit-card-digits-label","Enter the last four digits of the credit card")}),s.jsx(w,{type:"text",inputMode:"numeric",value:u,onChange:e=>{const t=e.target.value;c(t),r(d(l,t))},validation:a.cardNumber?"error":void 0,maxLength:4}),s.jsx(Xe,{errors:a,field:"cardNumber"})]})]})}const Ke=i.div`
+  gap: ${(p) => p.theme.space.md};
+`;
+function CreditCardFilter({ onSelect, errors, }) {
+    const { t } = useTranslation();
+    const [filterType, setFilterType] = reactExports.useState();
+    const [cardNumber, setCardNumber] = reactExports.useState("");
+    const validateForm = (filterType, cardNumber) => {
+        switch (filterType) {
+            case undefined: {
+                return {
+                    state: "invalid",
+                    errors: {
+                        filterType: t("guide-requests-app.filters-modal.select-value-error", "Select a value"),
+                    },
+                };
+            }
+            case "anyValue": {
+                return { state: "valid", values: [`:*`] };
+            }
+            case "exactMatch": {
+                if (CARD_NUMBER_REGEX.test(cardNumber)) {
+                    return { state: "valid", values: [`:*${cardNumber}`] };
+                }
+                else {
+                    return {
+                        state: "invalid",
+                        errors: {
+                            cardNumber: t("guide-requests-app.filter-modal.credit-card-digits-format-error", "Enter the last four digits of the credit card, using only numbers"),
+                        },
+                    };
+                }
+            }
+        }
+    };
+    reactExports.useEffect(() => {
+        onSelect(validateForm(undefined, ""));
+    }, []);
+    const handleFilterTypeSelect = (value) => {
+        setFilterType(value);
+        onSelect(validateForm(value, cardNumber));
+    };
+    const handleCardNumberChanged = (e) => {
+        const value = e.target.value;
+        setCardNumber(value);
+        onSelect(validateForm(filterType, value));
+    };
+    return (jsxRuntimeExports.jsxs(Container$6, { children: [jsxRuntimeExports.jsx(FilterTypeDropdown, { selectedFilter: filterType, onFilterTypeSelect: handleFilterTypeSelect, errors: errors }), filterType === "exactMatch" && (jsxRuntimeExports.jsxs(Field, { children: [jsxRuntimeExports.jsx(Field.Label, { children: t("guide-requests-app.filter-modal.credit-card-digits-label", "Enter the last four digits of the credit card") }), jsxRuntimeExports.jsx(Input, { type: "text", inputMode: "numeric", value: cardNumber, onChange: handleCardNumberChanged, validation: errors.cardNumber ? "error" : undefined, maxLength: 4 }), jsxRuntimeExports.jsx(FieldError, { errors: errors, field: "cardNumber" })] }))] }));
+}
+
+const Container$5 = styled.div `
   display: flex;
   flex-direction: column;
-  gap: ${e=>e.theme.space.sm};
-`;const et=i((function({initialValues:[r,a],onChange:i,errors:l,allowFutureDates:o,className:u}){const{t:c,i18n:d}=t(),p=d.language,[h,f]=e.useState(r),[m,j]=e.useState(a);return s.jsx("div",{className:u,children:Me()?s.jsxs(Ke,{children:[s.jsxs(n,{children:[s.jsx(n.Label,{children:c("guide-requests-app.startDate","Start")}),s.jsx(w,{type:"date",value:h?q(h,{representation:"date"}):"",max:o?void 0:q(new Date,{representation:"date"}),onChange:e=>{const t=e.target.value?new Date(e.target.value):void 0;f(t),i([t,m])},validation:l.startDate?"error":void 0,required:!0}),s.jsx(Xe,{errors:l,field:"startDate"})]}),s.jsxs(n,{children:[s.jsx(n.Label,{children:c("guide-requests-app.endDate","End")}),s.jsx(w,{type:"date",value:m?q(m,{representation:"date"}):"",max:o?void 0:q(new Date,{representation:"date"}),onChange:e=>{const t=e.target.value?new Date(e.target.value):void 0;j(t),i([h,t])},validation:l.endDate?"error":void 0,required:!0}),s.jsx(Xe,{errors:l,field:"endDate"})]})]}):s.jsx(_,{startValue:h,endValue:m,maxValue:o?void 0:new Date,onChange:e=>{e.startValue&&f(e.startValue),e.endValue&&j(e.endValue),i([e.startValue??h,e.endValue??m])},locale:p,isCompact:!0,children:s.jsxs(Ke,{children:[s.jsxs(C.Row,{children:[s.jsx(C.Col,{children:s.jsxs(n,{children:[s.jsx(n.Label,{children:c("guide-requests-app.startDate","Start")}),s.jsx(_.Start,{children:s.jsx(w,{validation:l.startDate?"error":void 0})}),s.jsx(Xe,{errors:l,field:"startDate"})]})}),s.jsx(C.Col,{children:s.jsxs(n,{children:[s.jsx(n.Label,{children:c("guide-requests-app.endDate","End")}),s.jsx(_.End,{children:s.jsx(w,{validation:l.endDate?"error":void 0})}),s.jsx(Xe,{errors:l,field:"endDate"})]})})]}),s.jsx(C.Row,{children:s.jsx(C.Col,{children:s.jsx(_.Calendar,{})})})]})})})}))`
-  margin-top: ${e=>e.theme.space.md};
-`;function tt({label:n,onSelect:r,errors:a,allowFutureDates:i}){const{t:c}=t(),d=p(),[h,f]=e.useState(null),{createDefaultDateRangeI18N:m}=Ue(),j=m(),g=[new Date,new Date],x=(e,t,s=[void 0,void 0])=>null===e?{state:"invalid",errors:{dateFilterItem:c("guide-requests-app.filters-modal.select-value-error","Select a value")}}:"custom"!==e?{state:"valid",values:[e]}:(({values:[e,t],allowFutureDates:s})=>{if(void 0===e||void 0===t){const s={};return void 0===e&&(s.startDate=c("guide-requests-app.no-start-date-error","Select a start date")),void 0===t&&(s.endDate=c("guide-requests-app.no-end-date-error","Select an end date")),{state:"invalid",errors:s}}if(e>t)return{state:"invalid",errors:{endDate:c("guide-requests-app.endDateAfterStartDate","End date must occur after the start date")}};{const n={},r=new Date;return!s&&e>r&&(n.startDate=c("guide-requests-app.date-lte-today","Select a date earlier than or equal to today")),!s&&t>r&&(n.endDate=c("guide-requests-app.date-lte-today","Select a date earlier than or equal to today")),Object.keys(n).length>0?{state:"invalid",errors:n}:{state:"valid",values:[`>=${k(e,"yyyy-MM-dd")}`,`<=${k(t,"yyyy-MM-dd")}`]}}})({values:s,allowFutureDates:t});return e.useEffect((()=>{r(x(null,i,g))}),[]),s.jsxs(s.Fragment,{children:[s.jsxs(l,{children:[s.jsx(l.Label,{children:n}),s.jsxs(o,{isEditable:!1,selectionValue:h,onChange:e=>{var t;void 0!==e.selectionValue&&(t=e.selectionValue,f(t),r(x(t,i,g)))},validation:a.dateFilterItem?"error":void 0,listboxAppendToNode:d,children:[Object.entries(j).map((([e,t])=>s.jsx(u,{label:t,value:e},e))),s.jsx(u,{label:c("guide-requests-app.custom","Custom"),value:"custom"})]}),s.jsx(Xe,{errors:a,field:"dateFilterItem"})]}),"custom"===h&&s.jsx(et,{initialValues:g,onChange:function(e){r(x(h,i,e))},errors:a,allowFutureDates:i})]})}function st({label:n,options:r,onSelect:a,errors:i}){const{t:c}=t(),d=p(),h=e=>{const t=r.filter((t=>e.includes(t.value)));return t.length>0?{state:"valid",values:t.map((e=>e.value))}:{state:"invalid",errors:{selectedOptions:c("guide-requests-app.filters-modal.multiselect-no-value-error","Select at least one value")}}},[f,m]=e.useState((()=>[]));e.useEffect((()=>{a(h([]))}),[]);const[j,g]=e.useState(""),x=""===j?r:r.filter((e=>f.includes(e.value)||e.label.trim().toLowerCase().includes(j.trim().toLowerCase())));return s.jsxs(l,{children:[s.jsx(l.Label,{children:n}),s.jsx(o,{isAutocomplete:!0,isMultiselectable:!0,selectionValue:f,inputValue:j,onChange:e=>{const{inputValue:t,selectionValue:s}=e;if(void 0!==t&&g(t),null!=s){const e=Array.isArray(s)?s:[s];m(e),a(h(e))}},validation:i.selectedOptions?"error":void 0,listboxAppendToNode:d,children:0===x.length?s.jsx(u,{isDisabled:!0,label:c("guide-requests-app.filters-modal.no-matches-found","No matches found"),value:""}):x.map((e=>s.jsx(u,{value:e.value,label:e.label},e.value)))}),s.jsx(Xe,{errors:i,field:"selectedOptions"})]})}const nt=i.div`
+  gap: ${(p) => p.theme.space.sm};
+`;
+function CustomDateFilter({ initialValues: [from, to], onChange, errors, allowFutureDates, className, }) {
+    const { t, i18n } = useTranslation();
+    const currentLocale = i18n.language;
+    const [startValue, setStartValue] = reactExports.useState(from);
+    const [endValue, setEndValue] = reactExports.useState(to);
+    const handleStartDateChange = (e) => {
+        const startDate = e.target.value ? new Date(e.target.value) : undefined;
+        setStartValue(startDate);
+        onChange([startDate, endValue]);
+    };
+    const handleEndDateChange = (e) => {
+        const endDate = e.target.value ? new Date(e.target.value) : undefined;
+        setEndValue(endDate);
+        onChange([startValue, endDate]);
+    };
+    const handleDatePickerChange = (changes) => {
+        changes.startValue && setStartValue(changes.startValue);
+        changes.endValue && setEndValue(changes.endValue);
+        onChange([changes.startValue ?? startValue, changes.endValue ?? endValue]);
+    };
+    return (jsxRuntimeExports.jsx("div", { className: className, children: isMobile() ? (jsxRuntimeExports.jsxs(Container$5, { children: [jsxRuntimeExports.jsxs(Field, { children: [jsxRuntimeExports.jsx(Field.Label, { children: t("guide-requests-app.startDate", "Start") }), jsxRuntimeExports.jsx(Input, { type: "date", value: startValue
+                                ? formatISO(startValue, { representation: "date" })
+                                : "", max: allowFutureDates
+                                ? undefined
+                                : formatISO(new Date(), { representation: "date" }), onChange: handleStartDateChange, validation: errors.startDate ? "error" : undefined, required: true }), jsxRuntimeExports.jsx(FieldError, { errors: errors, field: "startDate" })] }), jsxRuntimeExports.jsxs(Field, { children: [jsxRuntimeExports.jsx(Field.Label, { children: t("guide-requests-app.endDate", "End") }), jsxRuntimeExports.jsx(Input, { type: "date", value: endValue ? formatISO(endValue, { representation: "date" }) : "", max: allowFutureDates
+                                ? undefined
+                                : formatISO(new Date(), { representation: "date" }), onChange: handleEndDateChange, validation: errors.endDate ? "error" : undefined, required: true }), jsxRuntimeExports.jsx(FieldError, { errors: errors, field: "endDate" })] })] })) : (jsxRuntimeExports.jsx(DatePickerRange, { startValue: startValue, endValue: endValue, maxValue: allowFutureDates ? undefined : new Date(), onChange: handleDatePickerChange, locale: currentLocale, isCompact: true, children: jsxRuntimeExports.jsxs(Container$5, { children: [jsxRuntimeExports.jsxs(Grid.Row, { children: [jsxRuntimeExports.jsx(Grid.Col, { children: jsxRuntimeExports.jsxs(Field, { children: [jsxRuntimeExports.jsx(Field.Label, { children: t("guide-requests-app.startDate", "Start") }), jsxRuntimeExports.jsx(DatePickerRange.Start, { children: jsxRuntimeExports.jsx(Input, { validation: errors.startDate ? "error" : undefined }) }), jsxRuntimeExports.jsx(FieldError, { errors: errors, field: "startDate" })] }) }), jsxRuntimeExports.jsx(Grid.Col, { children: jsxRuntimeExports.jsxs(Field, { children: [jsxRuntimeExports.jsx(Field.Label, { children: t("guide-requests-app.endDate", "End") }), jsxRuntimeExports.jsx(DatePickerRange.End, { children: jsxRuntimeExports.jsx(Input, { validation: errors.endDate ? "error" : undefined }) }), jsxRuntimeExports.jsx(FieldError, { errors: errors, field: "endDate" })] }) })] }), jsxRuntimeExports.jsx(Grid.Row, { children: jsxRuntimeExports.jsx(Grid.Col, { children: jsxRuntimeExports.jsx(DatePickerRange.Calendar, {}) }) })] }) })) }));
+}
+
+const StyledCustomDateFilter = styled(CustomDateFilter) `
+  margin-top: ${(p) => p.theme.space.md};
+`;
+function DateFilter({ label, onSelect, errors, allowFutureDates, }) {
+    const { t } = useTranslation();
+    const modalContainer = useModalContainer();
+    const [selectedItem, setSelectedItem] = reactExports.useState(null);
+    const { createDefaultDateRangeI18N } = useFilterTranslations();
+    const dateRangeI18n = createDefaultDateRangeI18N();
+    const customDatesInitialValues = [new Date(), new Date()];
+    const validateCustomDates = ({ values: [startDate, endDate], allowFutureDates, }) => {
+        if (startDate === undefined || endDate === undefined) {
+            const errors = {};
+            if (startDate === undefined) {
+                errors.startDate = t("guide-requests-app.no-start-date-error", "Select a start date");
+            }
+            if (endDate === undefined) {
+                errors.endDate = t("guide-requests-app.no-end-date-error", "Select an end date");
+            }
+            return { state: "invalid", errors };
+        }
+        else if (startDate > endDate) {
+            return {
+                state: "invalid",
+                errors: {
+                    endDate: t("guide-requests-app.endDateAfterStartDate", "End date must occur after the start date"),
+                },
+            };
+        }
+        else {
+            const errors = {};
+            const today = new Date();
+            if (!allowFutureDates && startDate > today) {
+                errors.startDate = t("guide-requests-app.date-lte-today", "Select a date earlier than or equal to today");
+            }
+            if (!allowFutureDates && endDate > today) {
+                errors.endDate = t("guide-requests-app.date-lte-today", "Select a date earlier than or equal to today");
+            }
+            if (Object.keys(errors).length > 0) {
+                return { state: "invalid", errors };
+            }
+            else {
+                const values = [
+                    `>=${format(startDate, "yyyy-MM-dd")}`,
+                    `<=${format(endDate, "yyyy-MM-dd")}`,
+                ];
+                return { state: "valid", values };
+            }
+        }
+    };
+    const validateForm = (itemValue, allowFutureDates, customDateValues = [undefined, undefined]) => {
+        if (itemValue === null) {
+            return {
+                state: "invalid",
+                errors: {
+                    dateFilterItem: t("guide-requests-app.filters-modal.select-value-error", "Select a value"),
+                },
+            };
+        }
+        else if (itemValue !== "custom") {
+            return { state: "valid", values: [itemValue] };
+        }
+        else {
+            return validateCustomDates({
+                values: customDateValues,
+                allowFutureDates,
+            });
+        }
+    };
+    reactExports.useEffect(() => {
+        onSelect(validateForm(null, allowFutureDates, customDatesInitialValues));
+    }, []);
+    function handleItemSelected(item) {
+        setSelectedItem(item);
+        onSelect(validateForm(item, allowFutureDates, customDatesInitialValues));
+    }
+    function handleCustomDateSelected(values) {
+        onSelect(validateForm(selectedItem, allowFutureDates, values));
+    }
+    return (jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [jsxRuntimeExports.jsxs(Field$1, { children: [jsxRuntimeExports.jsx(Field$1.Label, { children: label }), jsxRuntimeExports.jsxs(Combobox, { isEditable: false, selectionValue: selectedItem, onChange: (changes) => {
+                            if (changes.selectionValue !== undefined) {
+                                handleItemSelected(changes.selectionValue);
+                            }
+                        }, validation: errors.dateFilterItem ? "error" : undefined, listboxAppendToNode: modalContainer, children: [Object.entries(dateRangeI18n).map(([value, label]) => (jsxRuntimeExports.jsx(Option, { label: label, value: value }, value))), jsxRuntimeExports.jsx(Option, { label: t("guide-requests-app.custom", "Custom"), value: "custom" })] }), jsxRuntimeExports.jsx(FieldError, { errors: errors, field: "dateFilterItem" })] }), selectedItem === "custom" && (jsxRuntimeExports.jsx(StyledCustomDateFilter, { initialValues: customDatesInitialValues, onChange: handleCustomDateSelected, errors: errors, allowFutureDates: allowFutureDates }))] }));
+}
+
+function Multiselect$1({ label, options, onSelect, errors, }) {
+    const { t } = useTranslation();
+    const modalContainer = useModalContainer();
+    const validateForm = (selectedValues) => {
+        const selectedOptions = options.filter((option) => selectedValues.includes(option.value));
+        if (selectedOptions.length > 0) {
+            return {
+                state: "valid",
+                values: selectedOptions.map((option) => option.value),
+            };
+        }
+        else {
+            return {
+                state: "invalid",
+                errors: {
+                    selectedOptions: t("guide-requests-app.filters-modal.multiselect-no-value-error", "Select at least one value"),
+                },
+            };
+        }
+    };
+    const [selectedValues, setSelectedValues] = reactExports.useState(() => {
+        return [];
+    });
+    reactExports.useEffect(() => {
+        onSelect(validateForm([]));
+    }, []);
+    const [inputValue, setInputValue] = reactExports.useState("");
+    const filteredOptions = inputValue === ""
+        ? options
+        : options.filter((option) => selectedValues.includes(option.value) ||
+            option.label
+                .trim()
+                .toLowerCase()
+                .includes(inputValue.trim().toLowerCase()));
+    const handleChange = (changes) => {
+        const { inputValue, selectionValue } = changes;
+        if (inputValue !== undefined) {
+            setInputValue(inputValue);
+        }
+        if (selectionValue !== undefined && selectionValue !== null) {
+            const selected = Array.isArray(selectionValue)
+                ? selectionValue
+                : [selectionValue];
+            setSelectedValues(selected);
+            onSelect(validateForm(selected));
+        }
+    };
+    return (jsxRuntimeExports.jsxs(Field$1, { children: [jsxRuntimeExports.jsx(Field$1.Label, { children: label }), jsxRuntimeExports.jsx(Combobox, { isAutocomplete: true, isMultiselectable: true, selectionValue: selectedValues, inputValue: inputValue, onChange: handleChange, validation: errors.selectedOptions ? "error" : undefined, listboxAppendToNode: modalContainer, children: filteredOptions.length === 0 ? (jsxRuntimeExports.jsx(Option, { isDisabled: true, label: t("guide-requests-app.filters-modal.no-matches-found", "No matches found"), value: "" })) : (filteredOptions.map((option) => (jsxRuntimeExports.jsx(Option, { value: option.value, label: option.label }, option.value)))) }), jsxRuntimeExports.jsx(FieldError, { errors: errors, field: "selectedOptions" })] }));
+}
+
+const Container$4 = styled.div `
   display: flex;
   flex-direction: column;
-  gap: ${e=>e.theme.space.sm};
-`;function rt({label:r,onSelect:a,errors:i,type:c}){const{t:d}=t(),h=p(),[f,m]=e.useState(null),j=(e,t)=>{if(null===e)return{state:"invalid",errors:{filterType:d("guide-requests-app.filters-modal.no-filter-type-error","Select a filter type")}};switch(e.type){case"anyValue":return{state:"valid",values:[":*"]};case"range":{const s=parseFloat(e.minValue),n=parseFloat(e.maxValue);return Number.isNaN(s)?{state:"invalid",errors:{minValue:d("guide-requests-app.filters-modal.no-text-value-error","Insert a value")}}:Number.isNaN(n)?{state:"invalid",errors:{maxValue:d("guide-requests-app.filters-modal.no-text-value-error","Insert a value")}}:"integer"!==t||Number.isInteger(s)?"integer"!==t||Number.isInteger(n)?s>=n?{state:"invalid",errors:{maxValue:d("guide-requests-app.filter-modal.minValue-greater-than-maxValue","Select a value greater than min value")}}:{state:"valid",values:[`>=${s}`,`<=${n}`]}:{state:"invalid",errors:{maxValue:d("guide-requests-app.filter-modal.integer-value-error","Insert an integer value")}}:{state:"invalid",errors:{minValue:d("guide-requests-app.filter-modal.integer-value-error","Insert an integer value")}}}case"exactMatch":{const{value:s}=e;return""===s?{state:"invalid",errors:{exactValue:d("guide-requests-app.filters-modal.no-text-value-error","Insert a value")}}:"integer"!==t||Number.isInteger(Number(s))?{state:"valid",values:[`:${s}`]}:{state:"invalid",errors:{exactValue:d("guide-requests-app.filter-modal.integer-value-error","Insert an integer value")}}}}};e.useEffect((()=>{a(j(null,c))}),[]);const{filterTypeDropdownI18N:g}=Ue();return s.jsxs(nt,{children:[s.jsxs(l,{children:[s.jsx(l.Label,{children:d("guide-requests-app.filter-modal.filterTypeLabel","Filter type")}),s.jsxs(o,{isEditable:!1,selectionValue:f?.type??null,onChange:e=>{void 0!==e.selectionValue&&(e=>{let t;switch(e){case"anyValue":t={type:"anyValue"};break;case"range":t={type:"range",minValue:"",maxValue:""};break;case"exactMatch":t={type:"exactMatch",value:""}}m(t),a(j(t,c))})(e.selectionValue)},validation:i.filterType?"error":void 0,listboxAppendToNode:h,children:[s.jsx(u,{label:g.anyValue,value:"anyValue"}),s.jsx(u,{label:g.range,value:"range"}),s.jsx(u,{label:g.exactMatch,value:"exactMatch"})]}),s.jsx(Xe,{errors:i,field:"filterType"})]}),"range"===f?.type&&s.jsxs(C.Row,{children:[s.jsx(C.Col,{children:s.jsxs(n,{children:[s.jsx(n.Label,{children:d("guide-requests-app.filter-modal.minValue","Min value")}),s.jsx(w,{type:"number",value:f.minValue,onChange:e=>{((e,t)=>{const s={...t,minValue:e};m(s),a(j(s,c))})(e.target.value,f)},validation:i.minValue?"error":void 0}),s.jsx(Xe,{errors:i,field:"minValue"})]})}),s.jsx(C.Col,{children:s.jsxs(n,{children:[s.jsx(n.Label,{children:d("guide-requests-app.filter-modal.maxValue","Max value")}),s.jsx(w,{type:"number",value:f.maxValue,onChange:e=>{((e,t)=>{const s={...t,maxValue:e};m(s),a(j(s,c))})(e.target.value,f)},validation:i.maxValue?"error":void 0}),s.jsx(Xe,{errors:i,field:"maxValue"})]})})]}),"exactMatch"===f?.type&&s.jsxs(n,{children:[s.jsx(n.Label,{children:d("guide-requests-app.filters-modal.enter-field-value","Enter {{field_name}}",{field_name:r})}),s.jsx(w,{type:"number",value:f.value,onChange:e=>{((e,t)=>{const s={...t,value:e};m(s),a(j(s,c))})(e.target.value,f)},validation:i.exactValue?"error":void 0}),s.jsx(Xe,{errors:i,field:"exactValue"})]})]})}const at=i.div`
-  height: ${e=>e.theme.space.md};
-`,it=({label:r,onSelect:a,errors:i})=>{const{t:l}=t(),[o,u]=e.useState(""),[c,d]=e.useState(),p=(e,t)=>{switch(e){case void 0:return{state:"invalid",errors:{filterType:l("guide-requests-app.filters-modal.no-filter-type-error","Select a filter type")}};case"anyValue":return{state:"valid",values:[":*"]};case"exactMatch":return""!==t?{state:"valid",values:[`:"${t}"`]}:{state:"invalid",errors:{textValue:l("guide-requests-app.filters-modal.no-text-value-error","Insert a value")}}}};e.useEffect((()=>{a(p(void 0,""))}),[]);return s.jsxs(s.Fragment,{children:[s.jsx(Ye,{onFilterTypeSelect:e=>{d(e),a(p(e,o))},selectedFilter:c,errors:i}),s.jsx(at,{}),"exactMatch"===c&&s.jsxs(n,{children:[s.jsx(n.Label,{children:l("guide-requests-app.filters-modal.enter-field-value","Enter {{field_name}}",{field_name:r})}),s.jsx(w,{value:o,onChange:e=>{const t=e.target.value;u(t),a(p(c,t))},validation:i.textValue?"error":void 0}),s.jsx(Xe,{errors:i,field:"textValue"})]})]})};function lt({selectedFilterProperty:e,ticketFields:n,organizations:r,customStatusOptions:a,onSelect:i,errors:l}){const{t:o}=t(),{statusFilterValuesI18N:u}=Ue();if("created_at"===e.identifier||"updated_at"===e.identifier)return s.jsx(tt,{label:e.label,onSelect:i,errors:l,allowFutureDates:!1});if("status"===e.identifier){const e=Object.entries(u).map((([e,t])=>({value:e,label:t})));return s.jsx(st,{label:o("guide-requests-app.status","Status"),onSelect:i,options:e,errors:l})}if("custom_status_id"===e.identifier)return s.jsx(st,{label:o("guide-requests-app.status","Status"),onSelect:i,options:a,errors:l});if("organization"===e.identifier){const e=r.map((e=>({label:e.name,value:`:${e.id}`})));return s.jsx(st,{label:o("guide-requests-app.organization","Organization"),onSelect:i,options:e,errors:l})}const c=n.find((t=>String(t.id)===e.identifier));if(null==c)return s.jsx(s.Fragment,{});const{type:d,title_in_portal:p}=c;switch(d){case"textarea":case"text":case"regexp":return s.jsx(it,{label:p,onSelect:i,errors:l});case"tagger":case"multiselect":{const e=c.custom_field_options?.map((e=>({value:`:${e.value}`,label:e.name})))??[];return s.jsx(st,{label:p,onSelect:i,options:e,errors:l})}case"date":return s.jsx(tt,{label:p,onSelect:i,errors:l,allowFutureDates:!0});case"integer":case"decimal":return s.jsx(rt,{label:p,onSelect:i,errors:l,type:d});case"checkbox":return s.jsx(Ge,{label:p,onSelect:i,errors:l});case"partialcreditcard":return s.jsx(Ze,{onSelect:i,errors:l});default:return s.jsx(s.Fragment,{})}}const ot=["description","group","assignee","custom_status","status","subject","priority","tickettype","lookup","multi_lookup","requester"];function ut({ticketFields:n,organizations:r,selectedProperty:a,hasCustomStatuses:i,onSelect:c,errors:d}){const{t:h}=t(),f=p(),m=e.useMemo((()=>[{identifier:"created_at",label:h("guide-requests-app.createdDate","Created date")},{identifier:"updated_at",label:h("guide-requests-app.updatedDate","Updated date")},i?{identifier:"custom_status_id",label:h("guide-requests-app.status","Status")}:{identifier:"status",label:h("guide-requests-app.status","Status")},...r.length>1?[{identifier:"organization",label:h("guide-requests-app.organization","Organization")}]:[],...n.filter((e=>!ot.includes(e.type))).map((({id:e,title_in_portal:t})=>({identifier:String(e),label:t})))]),[h,i,r,n]),[j,g]=e.useState([]);e.useEffect((()=>{g(m)}),[m]);const x=e.useCallback((e=>e.identifier),[]),b=e.useCallback((e=>{const{inputValue:t,selectionValue:s}=e;if(void 0!==t)if(""===t)g(m);else{const e=m.filter((e=>e.label.trim().toLowerCase().includes(t.trim().toLowerCase())));g(e)}if(s&&"string"==typeof s){const e=m.find((e=>e.identifier===s));e&&c(e)}}),[m,c]);return s.jsxs(l,{children:[s.jsx(l.Label,{children:h("guide-requests-app.filters-modal.select-filter","Select filter")}),s.jsx(o,{isAutocomplete:!0,onChange:b,selectionValue:a?x(a):null,validation:d.ticketField?"error":void 0,listboxAppendToNode:f,children:0===j.length?s.jsx(u,{isDisabled:!0,label:h("guide-requests-app.filters-modal.no-matches-found","No matches found"),value:""}):j.map((e=>s.jsx(u,{value:x(e),label:e.label},e.identifier)))}),s.jsx(Xe,{errors:d,field:"ticketField"})]})}const ct=i.div`
-  height: ${e=>e.theme.space.md};
-`,dt=["subject","description","status","custom_status","type","priority","basic_priority","assignee","group","tickettype","requester"];function pt({onClose:n,ticketFields:r,organizations:a,filterValuesMap:i,onFiltersChanged:l,customStatusesEnabled:o,customStatusOptions:u}){const{t:c}=t(),[d,f]=e.useState(),[m,g]=e.useState(),[x,b]=e.useState({}),v=p();return s.jsx(h,{appendToNode:v,onClose:n,children:s.jsxs("form",{onSubmit:e=>{var t;if(e.preventDefault(),d)if("valid"===m?.state){const e=(t=d.identifier,dt.includes(t)||"created_at"===d.identifier||"updated_at"===d.identifier||"organization"===d.identifier||"custom_status_id"===d.identifier?d.identifier:`custom_field_${d.identifier}`);l({...i,[e]:m.values}),n()}else"invalid"===m?.state&&b(m.errors);else b({ticketField:c("guide-requests-app.filters-modal.select-filter-required","Select a filter")})},noValidate:!0,children:[s.jsx(E,{children:c("guide-requests-app.filters-modal.title","Filters")}),s.jsxs(F,{children:[s.jsx(ut,{ticketFields:r,organizations:a,hasCustomStatuses:o,selectedProperty:d,onSelect:e=>{b({}),f(e),g(null)},errors:x}),s.jsx(ct,{}),d&&s.jsx(lt,{selectedFilterProperty:d,ticketFields:r,organizations:a,customStatusOptions:u,onSelect:g,errors:x},d.identifier)]}),s.jsxs(z,{children:[s.jsx($,{children:s.jsx(j,{type:"button",onClick:n,isBasic:!0,children:c("guide-requests-app.cancel","Cancel")})}),s.jsx($,{children:s.jsx(j,{type:"submit",isPrimary:!0,children:c("guide-requests-app.filters-modal.apply-filter-button","Apply filter")})})]}),s.jsx(I,{"aria-label":c("guide-requests-app.closeModal","Close modal")})]})})}function ht({field:e,onFilterRemoved:t,children:n}){return s.jsxs(T,{size:"large",isRegular:!0,tabIndex:0,onKeyDown:e=>function(e){"Delete"!==e.code&&"Backspace"!==e.code||(e.preventDefault(),t())}(e),children:[n,s.jsx(T.Close,{onClick:()=>t()})]},e)}function ft(e){const t=e[0]?.substring(1);return t&&"*"!==t?t.substring(1,t.length-1):""}function mt(e){const[t,s]=e;if(1===e.length&&t){const e=t.substring(1);return e&&"*"!==e?e:""}return 2===e.length&&t&&s?`${t.substring(2)} - ${s.substring(2)}`:""}function jt(e){const t=e[0]?.substring(2);return""===t?"":`XXXXXXXXXXXX${t}`}function gt({identifier:e,ticketFields:n,organizations:r,values:a,customStatusOptions:i,onFilterRemoved:l}){const{t:o,i18n:u}=t(),c=u.language,{checkboxFilterValuesI18N:d,statusFilterValuesI18N:p,createDefaultDateRangeI18N:h}=Ue(),f=e=>{const t=e[0];return 1===e.length&&void 0!==t?h()[t]||"":(([e,t])=>{const s=new Date(e.substring(2)),n=new Date(t.substring(2));return new Intl.DateTimeFormat(c,{dateStyle:"long"}).formatRange(s,n)})(e)};if("organization"===e){const t=r.find((e=>String(e.id)===a[0]?.substring(1)));return t?s.jsx(ht,{field:e,values:a,onFilterRemoved:()=>{l(a)},children:s.jsxs("span",{children:[s.jsx(D,{isBold:!0,children:o("guide-requests-app.organization","Organization")})," ",t.name]})}):s.jsx(s.Fragment,{})}if("created_at"===e)return s.jsx(ht,{field:e,values:a,onFilterRemoved:()=>{l(a)},children:s.jsxs("span",{children:[s.jsx(D,{isBold:!0,children:o("guide-requests-app.createdDate","Created date")})," ",f(a)]})});if("updated_at"===e)return s.jsx(ht,{field:e,values:a,onFilterRemoved:()=>{l(a)},children:s.jsxs("span",{children:[s.jsx(D,{isBold:!0,children:o("guide-requests-app.updatedDate","Updated date")})," ",f(a)]})});if("status"===e)return s.jsx(s.Fragment,{children:a.map((t=>s.jsx(ht,{field:e,values:a,onFilterRemoved:()=>{l([t])},children:s.jsxs("span",{children:[s.jsx(D,{isBold:!0,children:o("guide-requests-app.status","Status")})," ",p[t]]})},t)))});if("custom_status_id"===e)return s.jsx(s.Fragment,{children:a.map((t=>{const n=i.find((e=>e.value===t))?.label;return s.jsx(ht,{field:e,values:a,onFilterRemoved:()=>{l([t])},children:s.jsxs("span",{children:[s.jsx(D,{isBold:!0,children:o("guide-requests-app.status","Status")})," ",n]})},t)}))});const m=e.startsWith("custom_field_")?n.find((t=>String(t.id)===e.replace("custom_field_",""))):n.find((t=>t.type===e));if(null==m)return s.jsx(s.Fragment,{});switch(m.type){case"date":return s.jsx(ht,{field:e,values:a,onFilterRemoved:()=>{l(a)},children:s.jsxs("span",{children:[s.jsx(D,{isBold:!0,children:m.title_in_portal})," ",f(a)]})});case"tagger":case"multiselect":return s.jsx(s.Fragment,{children:a.map((t=>{const n=m.custom_field_options?.find((e=>e.value===t.substring(1)));return n&&s.jsx(ht,{field:e,values:[t],onFilterRemoved:()=>{l([t])},children:s.jsxs("span",{children:[s.jsx(D,{isBold:!0,children:m.title_in_portal})," ",n.name]})},n.id)}))});case"text":case"textarea":case"regexp":return s.jsx(s.Fragment,{children:s.jsx(ht,{field:e,values:a,onFilterRemoved:()=>{l(a)},children:s.jsxs("span",{children:[s.jsx(D,{isBold:!0,children:m.title_in_portal})," ",ft(a)]})})});case"integer":case"decimal":return s.jsx(ht,{field:e,values:a,onFilterRemoved:()=>{l(a)},children:s.jsxs("span",{children:[s.jsx(D,{isBold:!0,children:m.title_in_portal})," ",mt(a)]})});case"checkbox":return s.jsx(ht,{field:e,values:a,onFilterRemoved:()=>{l(a)},children:s.jsxs("span",{children:[s.jsx(D,{isBold:!0,children:m.title_in_portal})," ",d[a[0]]]})});case"partialcreditcard":return s.jsx(ht,{field:e,values:a,onFilterRemoved:()=>{l(a)},children:s.jsxs("span",{children:[s.jsx(D,{isBold:!0,children:m.title_in_portal})," ",jt(a)]})});default:return s.jsx(s.Fragment,{})}}const xt=i.div`
+  gap: ${(p) => p.theme.space.sm};
+`;
+function NumberFilter({ label, onSelect, errors, type, }) {
+    const { t } = useTranslation();
+    const modalContainer = useModalContainer();
+    const [filter, setFilter] = reactExports.useState(null);
+    const validateForm = (filter, type) => {
+        if (filter === null) {
+            return {
+                state: "invalid",
+                errors: {
+                    filterType: t("guide-requests-app.filters-modal.no-filter-type-error", "Select a filter type"),
+                },
+            };
+        }
+        switch (filter.type) {
+            case "anyValue": {
+                return {
+                    state: "valid",
+                    values: [":*"],
+                };
+            }
+            case "range": {
+                const minValue = parseFloat(filter.minValue);
+                const maxValue = parseFloat(filter.maxValue);
+                if (Number.isNaN(minValue)) {
+                    return {
+                        state: "invalid",
+                        errors: {
+                            minValue: t("guide-requests-app.filters-modal.no-text-value-error", "Insert a value"),
+                        },
+                    };
+                }
+                if (Number.isNaN(maxValue)) {
+                    return {
+                        state: "invalid",
+                        errors: {
+                            maxValue: t("guide-requests-app.filters-modal.no-text-value-error", "Insert a value"),
+                        },
+                    };
+                }
+                if (type === "integer" && !Number.isInteger(minValue)) {
+                    return {
+                        state: "invalid",
+                        errors: {
+                            minValue: t("guide-requests-app.filter-modal.integer-value-error", "Insert an integer value"),
+                        },
+                    };
+                }
+                if (type === "integer" && !Number.isInteger(maxValue)) {
+                    return {
+                        state: "invalid",
+                        errors: {
+                            maxValue: t("guide-requests-app.filter-modal.integer-value-error", "Insert an integer value"),
+                        },
+                    };
+                }
+                if (minValue >= maxValue) {
+                    return {
+                        state: "invalid",
+                        errors: {
+                            maxValue: t("guide-requests-app.filter-modal.minValue-greater-than-maxValue", "Select a value greater than min value"),
+                        },
+                    };
+                }
+                return { state: "valid", values: [`>=${minValue}`, `<=${maxValue}`] };
+            }
+            case "exactMatch": {
+                const { value } = filter;
+                if (value === "") {
+                    return {
+                        state: "invalid",
+                        errors: {
+                            exactValue: t("guide-requests-app.filters-modal.no-text-value-error", "Insert a value"),
+                        },
+                    };
+                }
+                else if (type === "integer" && !Number.isInteger(Number(value))) {
+                    return {
+                        state: "invalid",
+                        errors: {
+                            exactValue: t("guide-requests-app.filter-modal.integer-value-error", "Insert an integer value"),
+                        },
+                    };
+                }
+                else {
+                    return { state: "valid", values: [`:${value}`] };
+                }
+            }
+        }
+    };
+    reactExports.useEffect(() => {
+        onSelect(validateForm(null, type));
+    }, []);
+    const handleFilterTypeSelect = (value) => {
+        let newFilter;
+        switch (value) {
+            case "anyValue": {
+                newFilter = { type: "anyValue" };
+                break;
+            }
+            case "range": {
+                newFilter = { type: "range", minValue: "", maxValue: "" };
+                break;
+            }
+            case "exactMatch": {
+                newFilter = { type: "exactMatch", value: "" };
+                break;
+            }
+        }
+        setFilter(newFilter);
+        onSelect(validateForm(newFilter, type));
+    };
+    const handleMinValueChanged = (newValue, filter) => {
+        const newFilter = { ...filter, minValue: newValue };
+        setFilter(newFilter);
+        onSelect(validateForm(newFilter, type));
+    };
+    const handleMaxValueChanged = (newValue, filter) => {
+        const newFilter = { ...filter, maxValue: newValue };
+        setFilter(newFilter);
+        onSelect(validateForm(newFilter, type));
+    };
+    const handleExactValueChanged = (newValue, filter) => {
+        const newFilter = { ...filter, value: newValue };
+        setFilter(newFilter);
+        onSelect(validateForm(newFilter, type));
+    };
+    const { filterTypeDropdownI18N } = useFilterTranslations();
+    return (jsxRuntimeExports.jsxs(Container$4, { children: [jsxRuntimeExports.jsxs(Field$1, { children: [jsxRuntimeExports.jsx(Field$1.Label, { children: t("guide-requests-app.filter-modal.filterTypeLabel", "Filter type") }), jsxRuntimeExports.jsxs(Combobox, { isEditable: false, selectionValue: filter?.type ?? null, onChange: (changes) => {
+                            if (changes.selectionValue !== undefined) {
+                                handleFilterTypeSelect(changes.selectionValue);
+                            }
+                        }, validation: errors.filterType ? "error" : undefined, listboxAppendToNode: modalContainer, children: [jsxRuntimeExports.jsx(Option, { label: filterTypeDropdownI18N.anyValue, value: "anyValue" }), jsxRuntimeExports.jsx(Option, { label: filterTypeDropdownI18N.range, value: "range" }), jsxRuntimeExports.jsx(Option, { label: filterTypeDropdownI18N.exactMatch, value: "exactMatch" })] }), jsxRuntimeExports.jsx(FieldError, { errors: errors, field: "filterType" })] }), filter?.type === "range" && (jsxRuntimeExports.jsxs(Grid.Row, { children: [jsxRuntimeExports.jsx(Grid.Col, { children: jsxRuntimeExports.jsxs(Field, { children: [jsxRuntimeExports.jsx(Field.Label, { children: t("guide-requests-app.filter-modal.minValue", "Min value") }), jsxRuntimeExports.jsx(Input, { type: "number", value: filter.minValue, onChange: (e) => {
+                                        handleMinValueChanged(e.target.value, filter);
+                                    }, validation: errors.minValue ? "error" : undefined }), jsxRuntimeExports.jsx(FieldError, { errors: errors, field: "minValue" })] }) }), jsxRuntimeExports.jsx(Grid.Col, { children: jsxRuntimeExports.jsxs(Field, { children: [jsxRuntimeExports.jsx(Field.Label, { children: t("guide-requests-app.filter-modal.maxValue", "Max value") }), jsxRuntimeExports.jsx(Input, { type: "number", value: filter.maxValue, onChange: (e) => {
+                                        handleMaxValueChanged(e.target.value, filter);
+                                    }, validation: errors.maxValue ? "error" : undefined }), jsxRuntimeExports.jsx(FieldError, { errors: errors, field: "maxValue" })] }) })] })), filter?.type === "exactMatch" && (jsxRuntimeExports.jsxs(Field, { children: [jsxRuntimeExports.jsx(Field.Label, { children: t("guide-requests-app.filters-modal.enter-field-value", "Enter {{field_name}}", {
+                            field_name: label,
+                        }) }), jsxRuntimeExports.jsx(Input, { type: "number", value: filter.value, onChange: (e) => {
+                            handleExactValueChanged(e.target.value, filter);
+                        }, validation: errors.exactValue ? "error" : undefined }), jsxRuntimeExports.jsx(FieldError, { errors: errors, field: "exactValue" })] }))] }));
+}
+
+const Gap$1 = styled.div `
+  height: ${(p) => p.theme.space.md};
+`;
+const TextField = ({ label, onSelect, errors, }) => {
+    const { t } = useTranslation();
+    const [value, setValue] = reactExports.useState("");
+    const [selectedFilter, setSelectedFilter] = reactExports.useState();
+    const validateForm = (filterType, value) => {
+        switch (filterType) {
+            case undefined: {
+                return {
+                    state: "invalid",
+                    errors: {
+                        filterType: t("guide-requests-app.filters-modal.no-filter-type-error", "Select a filter type"),
+                    },
+                };
+            }
+            case "anyValue": {
+                return { state: "valid", values: [":*"] };
+            }
+            case "exactMatch": {
+                if (value !== "") {
+                    return { state: "valid", values: [`:"${value}"`] };
+                }
+                else {
+                    return {
+                        state: "invalid",
+                        errors: {
+                            textValue: t("guide-requests-app.filters-modal.no-text-value-error", "Insert a value"),
+                        },
+                    };
+                }
+            }
+        }
+    };
+    reactExports.useEffect(() => {
+        onSelect(validateForm(undefined, ""));
+    }, []);
+    const handleFilterTypeSelect = (filterType) => {
+        setSelectedFilter(filterType);
+        onSelect(validateForm(filterType, value));
+    };
+    const handleChange = (event) => {
+        const inputValue = event.target.value;
+        setValue(inputValue);
+        onSelect(validateForm(selectedFilter, inputValue));
+    };
+    return (jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [jsxRuntimeExports.jsx(FilterTypeDropdown, { onFilterTypeSelect: handleFilterTypeSelect, selectedFilter: selectedFilter, errors: errors }), jsxRuntimeExports.jsx(Gap$1, {}), selectedFilter === "exactMatch" && (jsxRuntimeExports.jsxs(Field, { children: [jsxRuntimeExports.jsx(Field.Label, { children: t("guide-requests-app.filters-modal.enter-field-value", "Enter {{field_name}}", {
+                            field_name: label,
+                        }) }), jsxRuntimeExports.jsx(Input, { value: value, onChange: handleChange, validation: errors["textValue"] ? "error" : undefined }), jsxRuntimeExports.jsx(FieldError, { errors: errors, field: "textValue" })] }))] }));
+};
+
+function FilterValueField({ selectedFilterProperty, ticketFields, organizations, customStatusOptions, onSelect, errors, }) {
+    const { t } = useTranslation();
+    const { statusFilterValuesI18N } = useFilterTranslations();
+    if (selectedFilterProperty.identifier === "created_at" ||
+        selectedFilterProperty.identifier === "updated_at") {
+        return (jsxRuntimeExports.jsx(DateFilter, { label: selectedFilterProperty.label, onSelect: onSelect, errors: errors, allowFutureDates: false }));
+    }
+    if (selectedFilterProperty.identifier === "status") {
+        const options = Object.entries(statusFilterValuesI18N).map(([value, label]) => ({
+            value: value,
+            label,
+        }));
+        return (jsxRuntimeExports.jsx(Multiselect$1, { label: t("guide-requests-app.status", "Status"), onSelect: onSelect, options: options, errors: errors }));
+    }
+    if (selectedFilterProperty.identifier === "custom_status_id") {
+        return (jsxRuntimeExports.jsx(Multiselect$1, { label: t("guide-requests-app.status", "Status"), onSelect: onSelect, options: customStatusOptions, errors: errors }));
+    }
+    if (selectedFilterProperty.identifier === "organization") {
+        const options = organizations.map((organization) => ({
+            label: organization.name,
+            value: `:${organization.id}`,
+        }));
+        return (jsxRuntimeExports.jsx(Multiselect$1, { label: t("guide-requests-app.organization", "Organization"), onSelect: onSelect, options: options, errors: errors }));
+    }
+    const ticketField = ticketFields.find((field) => String(field.id) === selectedFilterProperty.identifier);
+    if (ticketField == null) {
+        return jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, {});
+    }
+    const { type, title_in_portal } = ticketField;
+    switch (type) {
+        case "textarea":
+        case "text":
+        case "regexp": {
+            return (jsxRuntimeExports.jsx(TextField, { label: title_in_portal, onSelect: onSelect, errors: errors }));
+        }
+        case "tagger":
+        case "multiselect": {
+            const options = ticketField.custom_field_options?.map((option) => ({
+                value: `:${option.value}`,
+                label: option.name,
+            })) ?? [];
+            return (jsxRuntimeExports.jsx(Multiselect$1, { label: title_in_portal, onSelect: onSelect, options: options, errors: errors }));
+        }
+        case "date": {
+            return (jsxRuntimeExports.jsx(DateFilter, { label: title_in_portal, onSelect: onSelect, errors: errors, allowFutureDates: true }));
+        }
+        case "integer":
+        case "decimal": {
+            return (jsxRuntimeExports.jsx(NumberFilter, { label: title_in_portal, onSelect: onSelect, errors: errors, type: type }));
+        }
+        case "checkbox": {
+            return (jsxRuntimeExports.jsx(CheckboxFilter, { label: title_in_portal, onSelect: onSelect, errors: errors }));
+        }
+        case "partialcreditcard": {
+            return jsxRuntimeExports.jsx(CreditCardFilter, { onSelect: onSelect, errors: errors });
+        }
+        default:
+            return jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, {});
+    }
+}
+
+const HIDDEN_FIELDS$1 = [
+    "description",
+    "group",
+    "assignee",
+    "custom_status",
+    "status",
+    "subject",
+    "priority",
+    "tickettype",
+    "lookup",
+    "multi_lookup",
+    "requester",
+];
+function FilterPropertyDropdown({ ticketFields, organizations, selectedProperty, hasCustomStatuses, onSelect, errors, }) {
+    const { t } = useTranslation();
+    const modalContainer = useModalContainer();
+    const filterProperties = reactExports.useMemo(() => [
+        {
+            identifier: "created_at",
+            label: t("guide-requests-app.createdDate", "Created date"),
+        },
+        {
+            identifier: "updated_at",
+            label: t("guide-requests-app.updatedDate", "Updated date"),
+        },
+        hasCustomStatuses
+            ? {
+                identifier: "custom_status_id",
+                label: t("guide-requests-app.status", "Status"),
+            }
+            : {
+                identifier: "status",
+                label: t("guide-requests-app.status", "Status"),
+            },
+        ...(organizations.length > 1
+            ? [
+                {
+                    identifier: "organization",
+                    label: t("guide-requests-app.organization", "Organization"),
+                },
+            ]
+            : []),
+        ...ticketFields
+            .filter((field) => !HIDDEN_FIELDS$1.includes(field.type))
+            .map(({ id, title_in_portal }) => ({
+            identifier: String(id),
+            label: title_in_portal,
+        })),
+    ], [t, hasCustomStatuses, organizations, ticketFields]);
+    const [options, setOptions] = reactExports.useState([]);
+    reactExports.useEffect(() => {
+        setOptions(filterProperties);
+    }, [filterProperties]);
+    const getOptionValue = reactExports.useCallback((property) => property.identifier, []);
+    const handleChange = reactExports.useCallback((changes) => {
+        const { inputValue, selectionValue } = changes;
+        if (inputValue !== undefined) {
+            if (inputValue === "") {
+                setOptions(filterProperties);
+            }
+            else {
+                const matchedOptions = filterProperties.filter((option) => {
+                    return option.label
+                        .trim()
+                        .toLowerCase()
+                        .includes(inputValue.trim().toLowerCase());
+                });
+                setOptions(matchedOptions);
+            }
+        }
+        if (selectionValue && typeof selectionValue === "string") {
+            const selectedFilterProperty = filterProperties.find((property) => property.identifier === selectionValue);
+            if (selectedFilterProperty) {
+                onSelect(selectedFilterProperty);
+            }
+        }
+    }, [filterProperties, onSelect]);
+    return (jsxRuntimeExports.jsxs(Field$1, { children: [jsxRuntimeExports.jsx(Field$1.Label, { children: t("guide-requests-app.filters-modal.select-filter", "Select filter") }), jsxRuntimeExports.jsx(Combobox, { isAutocomplete: true, onChange: handleChange, selectionValue: selectedProperty ? getOptionValue(selectedProperty) : null, validation: errors.ticketField ? "error" : undefined, listboxAppendToNode: modalContainer, children: options.length === 0 ? (jsxRuntimeExports.jsx(Option, { isDisabled: true, label: t("guide-requests-app.filters-modal.no-matches-found", "No matches found"), value: "" })) : (options.map((property) => (jsxRuntimeExports.jsx(Option, { value: getOptionValue(property), label: property.label }, property.identifier)))) }), jsxRuntimeExports.jsx(FieldError, { errors: errors, field: "ticketField" })] }));
+}
+
+const Gap = styled.div `
+  height: ${(p) => p.theme.space.md};
+`;
+const systemType = [
+    "subject",
+    "description",
+    "status",
+    "custom_status",
+    "type",
+    "priority",
+    "basic_priority",
+    "assignee",
+    "group",
+    "tickettype",
+    "requester",
+];
+function isSystemFieldType(type) {
+    return systemType.includes(type);
+}
+function FilterModal({ onClose, ticketFields, organizations, filterValuesMap, onFiltersChanged, customStatusesEnabled, customStatusOptions, }) {
+    const { t } = useTranslation();
+    const [selectedFilterProperty, setSelectedFilterProperty] = reactExports.useState();
+    const [formState, setFormState] = reactExports.useState();
+    const [errors, setErrors] = reactExports.useState({});
+    const modalContainer = useModalContainer();
+    const handleSelectFilterProperty = (property) => {
+        setErrors({});
+        setSelectedFilterProperty(property);
+        setFormState(null);
+    };
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!selectedFilterProperty) {
+            setErrors({
+                ticketField: t("guide-requests-app.filters-modal.select-filter-required", "Select a filter"),
+            });
+            return;
+        }
+        if (formState?.state === "valid") {
+            const filterKey = isSystemFieldType(selectedFilterProperty.identifier) ||
+                selectedFilterProperty.identifier === "created_at" ||
+                selectedFilterProperty.identifier === "updated_at" ||
+                selectedFilterProperty.identifier === "organization" ||
+                selectedFilterProperty.identifier === "custom_status_id"
+                ? selectedFilterProperty.identifier
+                : `custom_field_${selectedFilterProperty.identifier}`;
+            onFiltersChanged({
+                ...filterValuesMap,
+                [filterKey]: formState.values,
+            });
+            onClose();
+        }
+        else if (formState?.state === "invalid") {
+            setErrors(formState.errors);
+        }
+    };
+    return (jsxRuntimeExports.jsx(Modal, { appendToNode: modalContainer, onClose: onClose, children: jsxRuntimeExports.jsxs("form", { onSubmit: handleSubmit, noValidate: true, children: [jsxRuntimeExports.jsx(Header$1, { children: t("guide-requests-app.filters-modal.title", "Filters") }), jsxRuntimeExports.jsxs(Body$2, { children: [jsxRuntimeExports.jsx(FilterPropertyDropdown, { ticketFields: ticketFields, organizations: organizations, hasCustomStatuses: customStatusesEnabled, selectedProperty: selectedFilterProperty, onSelect: handleSelectFilterProperty, errors: errors }), jsxRuntimeExports.jsx(Gap, {}), selectedFilterProperty && (jsxRuntimeExports.jsx(FilterValueField, { selectedFilterProperty: selectedFilterProperty, ticketFields: ticketFields, organizations: organizations, customStatusOptions: customStatusOptions, onSelect: setFormState, errors: errors }, selectedFilterProperty.identifier))] }), jsxRuntimeExports.jsxs(Footer$2, { children: [jsxRuntimeExports.jsx(FooterItem$2, { children: jsxRuntimeExports.jsx(Button, { type: "button", onClick: onClose, isBasic: true, children: t("guide-requests-app.cancel", "Cancel") }) }), jsxRuntimeExports.jsx(FooterItem$2, { children: jsxRuntimeExports.jsx(Button, { type: "submit", isPrimary: true, children: t("guide-requests-app.filters-modal.apply-filter-button", "Apply filter") }) })] }), jsxRuntimeExports.jsx(Close$2, { "aria-label": t("guide-requests-app.closeModal", "Close modal") })] }) }));
+}
+
+function FilterTagWrapper({ field, onFilterRemoved, children, }) {
+    function handleFilterKeyDown(e) {
+        if (e.code === "Delete" || e.code === "Backspace") {
+            e.preventDefault();
+            onFilterRemoved();
+        }
+    }
+    return (jsxRuntimeExports.jsxs(Tag, { size: "large", isRegular: true, tabIndex: 0, onKeyDown: (e) => handleFilterKeyDown(e), children: [children, jsxRuntimeExports.jsx(Tag.Close, { onClick: () => onFilterRemoved() })] }, field));
+}
+
+function getTextLabel(values) {
+    const value = values[0]?.substring(1);
+    if (!value || value === "*") {
+        return "";
+    }
+    return value.substring(1, value.length - 1);
+}
+function getNumberLabel(values) {
+    const [first, second] = values;
+    if (values.length === 1 && first) {
+        const trimmed = first.substring(1);
+        if (!trimmed || trimmed === "*") {
+            return "";
+        }
+        return trimmed;
+    }
+    if (values.length === 2 && first && second) {
+        return `${first.substring(2)} - ${second.substring(2)}`;
+    }
+    return "";
+}
+function getCreditCardLabel(values) {
+    const value = values[0]?.substring(2);
+    return value === "" ? "" : `XXXXXXXXXXXX${value}`;
+}
+function FieldTags({ identifier, ticketFields, organizations, values, customStatusOptions, onFilterRemoved, }) {
+    const { t, i18n } = useTranslation();
+    const currentLocale = i18n.language;
+    const { checkboxFilterValuesI18N, statusFilterValuesI18N, createDefaultDateRangeI18N, } = useFilterTranslations();
+    const getDateRangeLabel = ([from, to]) => {
+        const startDate = new Date(from.substring(2));
+        const endDate = new Date(to.substring(2));
+        const longDate = new Intl.DateTimeFormat(currentLocale, {
+            dateStyle: "long",
+        });
+        return longDate.formatRange(startDate, endDate);
+    };
+    const getDateLabel = (values) => {
+        const firstValue = values[0];
+        if (values.length === 1 && firstValue !== undefined) {
+            return createDefaultDateRangeI18N()[firstValue] || "";
+        }
+        else {
+            return getDateRangeLabel(values);
+        }
+    };
+    if (identifier === "organization") {
+        const organization = organizations.find((o) => String(o.id) === values[0]?.substring(1));
+        return organization ? (jsxRuntimeExports.jsx(FilterTagWrapper, { field: identifier, values: values, onFilterRemoved: () => {
+                onFilterRemoved(values);
+            }, children: jsxRuntimeExports.jsxs("span", { children: [jsxRuntimeExports.jsx(Span, { isBold: true, children: t("guide-requests-app.organization", "Organization") }), " ", organization.name] }) })) : (jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, {}));
+    }
+    if (identifier === "created_at") {
+        return (jsxRuntimeExports.jsx(FilterTagWrapper, { field: identifier, values: values, onFilterRemoved: () => {
+                onFilterRemoved(values);
+            }, children: jsxRuntimeExports.jsxs("span", { children: [jsxRuntimeExports.jsx(Span, { isBold: true, children: t("guide-requests-app.createdDate", "Created date") }), " ", getDateLabel(values)] }) }));
+    }
+    if (identifier === "updated_at") {
+        return (jsxRuntimeExports.jsx(FilterTagWrapper, { field: identifier, values: values, onFilterRemoved: () => {
+                onFilterRemoved(values);
+            }, children: jsxRuntimeExports.jsxs("span", { children: [jsxRuntimeExports.jsx(Span, { isBold: true, children: t("guide-requests-app.updatedDate", "Updated date") }), " ", getDateLabel(values)] }) }));
+    }
+    if (identifier === "status") {
+        return (jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: values.map((value) => (jsxRuntimeExports.jsx(FilterTagWrapper, { field: identifier, values: values, onFilterRemoved: () => {
+                    onFilterRemoved([value]);
+                }, children: jsxRuntimeExports.jsxs("span", { children: [jsxRuntimeExports.jsx(Span, { isBold: true, children: t("guide-requests-app.status", "Status") }), " ", statusFilterValuesI18N[value]] }) }, value))) }));
+    }
+    if (identifier === "custom_status_id") {
+        return (jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: values.map((value) => {
+                const label = customStatusOptions.find((option) => option.value === value)?.label;
+                return (jsxRuntimeExports.jsx(FilterTagWrapper, { field: identifier, values: values, onFilterRemoved: () => {
+                        onFilterRemoved([value]);
+                    }, children: jsxRuntimeExports.jsxs("span", { children: [jsxRuntimeExports.jsx(Span, { isBold: true, children: t("guide-requests-app.status", "Status") }), " ", label] }) }, value));
+            }) }));
+    }
+    const ticketField = identifier.startsWith("custom_field_")
+        ? ticketFields.find((f) => String(f.id) === identifier.replace("custom_field_", ""))
+        : ticketFields.find((f) => f.type === identifier);
+    if (ticketField == null) {
+        return jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, {});
+    }
+    switch (ticketField.type) {
+        case "date": {
+            return (jsxRuntimeExports.jsx(FilterTagWrapper, { field: identifier, values: values, onFilterRemoved: () => {
+                    onFilterRemoved(values);
+                }, children: jsxRuntimeExports.jsxs("span", { children: [jsxRuntimeExports.jsx(Span, { isBold: true, children: ticketField.title_in_portal }), " ", getDateLabel(values)] }) }));
+        }
+        case "tagger":
+        case "multiselect": {
+            return (jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: values.map((value) => {
+                    const item = ticketField.custom_field_options?.find((option) => option.value === value.substring(1));
+                    return (item && (jsxRuntimeExports.jsx(FilterTagWrapper, { field: identifier, values: [value], onFilterRemoved: () => {
+                            onFilterRemoved([value]);
+                        }, children: jsxRuntimeExports.jsxs("span", { children: [jsxRuntimeExports.jsx(Span, { isBold: true, children: ticketField.title_in_portal }), " ", item.name] }) }, item.id)));
+                }) }));
+        }
+        case "text":
+        case "textarea":
+        case "regexp": {
+            return (jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: jsxRuntimeExports.jsx(FilterTagWrapper, { field: identifier, values: values, onFilterRemoved: () => {
+                        onFilterRemoved(values);
+                    }, children: jsxRuntimeExports.jsxs("span", { children: [jsxRuntimeExports.jsx(Span, { isBold: true, children: ticketField.title_in_portal }), " ", getTextLabel(values)] }) }) }));
+        }
+        case "integer":
+        case "decimal": {
+            return (jsxRuntimeExports.jsx(FilterTagWrapper, { field: identifier, values: values, onFilterRemoved: () => {
+                    onFilterRemoved(values);
+                }, children: jsxRuntimeExports.jsxs("span", { children: [jsxRuntimeExports.jsx(Span, { isBold: true, children: ticketField.title_in_portal }), " ", getNumberLabel(values)] }) }));
+        }
+        case "checkbox": {
+            return (jsxRuntimeExports.jsx(FilterTagWrapper, { field: identifier, values: values, onFilterRemoved: () => {
+                    onFilterRemoved(values);
+                }, children: jsxRuntimeExports.jsxs("span", { children: [jsxRuntimeExports.jsx(Span, { isBold: true, children: ticketField.title_in_portal }), " ", checkboxFilterValuesI18N[values[0]]] }) }));
+        }
+        case "partialcreditcard": {
+            return (jsxRuntimeExports.jsx(FilterTagWrapper, { field: identifier, values: values, onFilterRemoved: () => {
+                    onFilterRemoved(values);
+                }, children: jsxRuntimeExports.jsxs("span", { children: [jsxRuntimeExports.jsx(Span, { isBold: true, children: ticketField.title_in_portal }), " ", getCreditCardLabel(values)] }) }));
+        }
+        default: {
+            return jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, {});
+        }
+    }
+}
+
+function removeFilterValuesFromMap(filterValuesMap, field, valuesToRemove) {
+    const prevValues = filterValuesMap[field];
+    if (prevValues == null) {
+        return filterValuesMap;
+    }
+    const newValues = prevValues.filter((v) => !valuesToRemove.includes(v));
+    if (newValues.length === 0) {
+        const res = { ...filterValuesMap };
+        delete res[field];
+        return res;
+    }
+    else {
+        return { ...filterValuesMap, [field]: newValues };
+    }
+}
+
+const Container$3 = styled.div `
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
   min-height: 32px;
   margin-bottom: 28px;
-`;function bt({filters:e,ticketFields:n,organizations:r,customStatusOptions:a,onFiltersChanged:i}){const{t:l}=t();return s.jsxs(xt,{children:[Object.entries(e).map((([t,l])=>s.jsx(gt,{ticketFields:n,organizations:r,customStatusOptions:a,values:l,identifier:t,onFilterRemoved:s=>function(t,s){i(function(e,t,s){const n=e[t];if(null==n)return e;const r=n.filter((e=>!s.includes(e)));if(0===r.length){const s={...e};return delete s[t],s}return{...e,[t]:r}}(e,t,s))}(t,s)},t))),Object.keys(e).length>0&&s.jsx(j,{isBasic:!0,size:"small",onClick:()=>i({}),children:l("guide-requests-app.clearFilters","Clear filters")})]})}const vt=i.div`
+`;
+function FilterTags({ filters, ticketFields, organizations, customStatusOptions, onFiltersChanged, }) {
+    const { t } = useTranslation();
+    function removeFilter(field, values) {
+        onFiltersChanged(removeFilterValuesFromMap(filters, field, values));
+    }
+    return (jsxRuntimeExports.jsxs(Container$3, { children: [Object.entries(filters).map(([field, values]) => {
+                return (jsxRuntimeExports.jsx(FieldTags, { ticketFields: ticketFields, organizations: organizations, customStatusOptions: customStatusOptions, values: values, identifier: field, onFilterRemoved: (values) => removeFilter(field, values) }, field));
+            }), Object.keys(filters).length > 0 && (jsxRuntimeExports.jsx(Button, { isBasic: true, size: "small", onClick: () => onFiltersChanged({}), children: t("guide-requests-app.clearFilters", "Clear filters") }))] }));
+}
+
+const Container$2 = styled.div `
   align-items: flex-end;
   display: flex;
   gap: 12px;
-  margin: ${e=>e.theme.space.sm} 0 ${e=>e.theme.space.xs};
-  ${Re`
+  margin: ${(p) => p.theme.space.sm} 0 ${(p) => p.theme.space.xs};
+  ${media.mobile `
     align-items: flex-start;
     flex-direction: column;
   `}
-`,qt=i.div`
+`;
+const Block = styled.div `
   display: flex;
   flex-direction: column;
-`,yt=i(qt)`
+`;
+const SearchBlock = styled(Block) `
   width: 400px;
-  ${Re`
+  ${media.mobile `
     flex-direction: column;
     width: 100%;
   `};
-`,St=qt,wt=i(qt)`
-  ${Re`
+`;
+const RequestsFilterMenuBlock = Block;
+const OrganizationBlock = styled(Block) `
+  ${media.mobile `
     align-items: flex-end;
     flex-direction: row;
     gap: 12px;
   `};
-`,_t=i(qt)`
+`;
+const OrganizationsManagementBlock = styled(Block) `
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
   flex-grow: 1;
-`,Ct=i(D)`
-  margin-bottom: ${e=>e.theme.space.xs};
-`;function kt({hasPagination:n,page:r,requestsCount:a,requestsPerPage:i,query:l,onSearchSubmit:o,filters:u,onFiltersChanged:c,organizations:d,selectedTab:p,onOrganizationSelected:h,user:f,ticketFields:m,customStatuses:g,customStatusesEnabled:x}){const{t:b}=t(),[v,q]=e.useState(!1),y=e.useMemo((()=>function(e){const t=[];for(const s of e){const e=s.label??s.end_user_label,n=t.find((t=>t.label===e));n?n.value+=` :${s.id}`:t.push({label:e,value:`:${s.id}`})}return t}(g)),[g]),S=(r-1)*i+1;let w=S+i-1;w>a&&(w=a);const _=p.name===ae,C=d.length>0;return s.jsxs(s.Fragment,{children:[s.jsx(D,{role:"status",hidden:!0,children:n?b("guide-requests-app.requestCount.screenreader.range","{{from}} to {{to}} of {{total}} requests",{from:S,to:w,total:a}):b("guide-requests-app.requestCount","{{count}} requests",{count:a})}),s.jsxs(vt,{children:[s.jsxs(yt,{children:[s.jsx(Ct,{children:n?b("guide-requests-app.requestCount.range","{{from}} - {{to}} of {{total}} requests",{from:S,to:w,total:a}):b("guide-requests-app.requestCount","{{count}} requests",{count:a})}),s.jsx(_e,{query:l,onSearchSubmit:o})]}),_&&s.jsxs(wt,{children:[s.jsx(ke,{organizations:d,currentOrganizationId:p.organizationId,onOrganizationSelected:h}),C&&f&&s.jsx(Le,{children:s.jsx(De,{organizations:d,user:f})})]}),s.jsx(St,{children:s.jsx(j,{onClick:()=>{q(!0)},children:b("guide-requests-app.filter","Filter")})}),s.jsx(_t,{children:s.jsx(Ae,{children:_&&C&&f&&s.jsx(De,{organizations:d,user:f})})})]}),s.jsx(bt,{filters:u,ticketFields:m,organizations:d,customStatusOptions:y,onFiltersChanged:c}),v&&s.jsx(pt,{onClose:()=>q(!1),ticketFields:m,filterValuesMap:u,onFiltersChanged:c,organizations:_?[]:d,customStatusesEnabled:x,customStatusOptions:y})]})}var Et={assign:e=>window.location.assign(e)};const Ft=6e4,zt=60*Ft;function $t({date:t,locale:n}){const r=e.useMemo((()=>new Intl.RelativeTimeFormat(n,{numeric:"auto"})),[n]),a=e.useMemo((()=>new Intl.DateTimeFormat(n,{dateStyle:"medium",timeStyle:"short"})),[n]),i=e.useMemo((()=>new Intl.DateTimeFormat(n,{timeStyle:"short"})),[n]),[l,o]=e.useState("");return e.useEffect((()=>{const e=()=>{o(function(e,t,s,n){const r=(new Date).valueOf()-e.valueOf();if(r<0)return s.format(e);if(r<zt){const e=Math.floor(r/Ft);return V(t.format(-e,"minutes"))}if(O(e)){const s=`${t.format(0,"day")}, ${n.format(e)}`;return V(s)}if(R(e)){const s=`${t.format(-1,"day")}, ${n.format(e)}`;return V(s)}return s.format(e)}(t,r,a,i))},s=setInterval((()=>{e()}),Ft);return e(),()=>{clearInterval(s)}}),[t,r,a,i]),s.jsx(s.Fragment,{children:l})}function It({children:e,tooltip:t}){return s.jsx(N,{content:t||e,size:"medium",children:s.jsx(L,{title:"",children:e})})}const Tt=i(T)`
+`;
+const StyledSpan = styled(Span) `
+  margin-bottom: ${(p) => p.theme.space.xs};
+`;
+/**
+ * This function creates an array of `MultiSelectOption`, grouping options
+ * with the same label together.
+ *
+ * For example, from this array of custom statuses
+ * ```
+ * [
+ *  { id: 1, label: "Open", ...},
+ *  { id: 2, label: "Open", ... },
+ *  { id: 3, label: "Solved", ... },
+ *  { id: 4, label: "Closed", ... },
+ * ]
+ * ```
+ *
+ * It will return
+ * ```
+ * [
+ *  { label: "Open", value: ":1 :2" },
+ *  { label: "Solved", value: ":3" },
+ *  { label: "Open", value: ":4" },
+ * ]
+ * ```
+ * @param customStatuses Array of custom statuses
+ * @returns A array of multiselect option
+ */
+function createCustomStatusOptions(customStatuses) {
+    const res = [];
+    for (const customStatus of customStatuses) {
+        const label = (customStatus.label ?? customStatus.end_user_label);
+        const existingOption = res.find((option) => option.label === label);
+        if (existingOption) {
+            existingOption.value += ` :${customStatus.id}`;
+        }
+        else {
+            res.push({ label, value: `:${customStatus.id}` });
+        }
+    }
+    return res;
+}
+function RequestsToolbar({ hasPagination, page, requestsCount, requestsPerPage, query, onSearchSubmit, filters, onFiltersChanged, organizations, selectedTab, onOrganizationSelected, user, ticketFields, customStatuses, customStatusesEnabled, }) {
+    const { t } = useTranslation();
+    const [isFilterModalOpen, setIsFilterModalOpen] = reactExports.useState(false);
+    const customStatusOptions = reactExports.useMemo(() => createCustomStatusOptions(customStatuses), [customStatuses]);
+    const from = (page - 1) * requestsPerPage + 1;
+    let to = from + requestsPerPage - 1;
+    if (to > requestsCount)
+        to = requestsCount;
+    const isOrganizationTab = selectedTab.name === ORG_REQUESTS_TAB_NAME;
+    const hasOrganizations = organizations.length > 0;
+    return (jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [jsxRuntimeExports.jsx(Span, { role: "status", hidden: true, children: hasPagination
+                    ? t("guide-requests-app.requestCount.screenreader.range", "{{from}} to {{to}} of {{total}} requests", {
+                        from,
+                        to,
+                        total: requestsCount,
+                    })
+                    : t("guide-requests-app.requestCount", "{{count}} requests", {
+                        count: requestsCount,
+                    }) }), jsxRuntimeExports.jsxs(Container$2, { children: [jsxRuntimeExports.jsxs(SearchBlock, { children: [jsxRuntimeExports.jsx(StyledSpan, { children: hasPagination
+                                    ? t("guide-requests-app.requestCount.range", "{{from}} - {{to}} of {{total}} requests", {
+                                        from,
+                                        to,
+                                        total: requestsCount,
+                                    })
+                                    : t("guide-requests-app.requestCount", "{{count}} requests", {
+                                        count: requestsCount,
+                                    }) }), jsxRuntimeExports.jsx(RequestsSearch, { query: query, onSearchSubmit: onSearchSubmit })] }), isOrganizationTab && (jsxRuntimeExports.jsxs(OrganizationBlock, { children: [jsxRuntimeExports.jsx(OrganizationsDropdown, { organizations: organizations, currentOrganizationId: selectedTab.organizationId, onOrganizationSelected: onOrganizationSelected }), hasOrganizations && user && (jsxRuntimeExports.jsx(Mobile, { children: jsxRuntimeExports.jsx(OrganizationsManagement, { organizations: organizations, user: user }) }))] })), jsxRuntimeExports.jsx(RequestsFilterMenuBlock, { children: jsxRuntimeExports.jsx(Button, { onClick: () => {
+                                setIsFilterModalOpen(true);
+                            }, children: t("guide-requests-app.filter", "Filter") }) }), jsxRuntimeExports.jsx(OrganizationsManagementBlock, { children: jsxRuntimeExports.jsx(Desktop, { children: isOrganizationTab && hasOrganizations && user && (jsxRuntimeExports.jsx(OrganizationsManagement, { organizations: organizations, user: user })) }) })] }), jsxRuntimeExports.jsx(FilterTags, { filters: filters, ticketFields: ticketFields, organizations: organizations, customStatusOptions: customStatusOptions, onFiltersChanged: onFiltersChanged }), isFilterModalOpen && (jsxRuntimeExports.jsx(FilterModal, { onClose: () => setIsFilterModalOpen(false), ticketFields: ticketFields, filterValuesMap: filters, onFiltersChanged: onFiltersChanged, organizations: isOrganizationTab ? [] : organizations, customStatusesEnabled: customStatusesEnabled, customStatusOptions: customStatusOptions }))] }));
+}
+
+var location = {
+    assign(url) {
+        return window.location.assign(url);
+    },
+};
+
+const ONE_MINUTE = 1000 * 60;
+const ONE_HOUR = ONE_MINUTE * 60;
+function RelativeTime({ date, locale, }) {
+    const relativeTimeFormat = reactExports.useMemo(() => new Intl.RelativeTimeFormat(locale, { numeric: "auto" }), [locale]);
+    const dateTimeFormat = reactExports.useMemo(() => new Intl.DateTimeFormat(locale, {
+        dateStyle: "medium",
+        timeStyle: "short",
+    }), [locale]);
+    const timeFormat = reactExports.useMemo(() => new Intl.DateTimeFormat(locale, {
+        timeStyle: "short",
+    }), [locale]);
+    const [value, setValue] = reactExports.useState("");
+    reactExports.useEffect(() => {
+        const update = () => {
+            setValue(getRelativeTime(date, relativeTimeFormat, dateTimeFormat, timeFormat));
+        };
+        const intervalId = setInterval(() => {
+            update();
+        }, ONE_MINUTE);
+        update();
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, [date, relativeTimeFormat, dateTimeFormat, timeFormat]);
+    return jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: value });
+}
+function getRelativeTime(date, relativeTimeFormat, dateTimeFormat, timeFormat) {
+    const now = new Date();
+    const elapsed = now.valueOf() - date.valueOf();
+    if (elapsed < 0) {
+        return dateTimeFormat.format(date);
+    }
+    if (elapsed < ONE_HOUR) {
+        const minutes = Math.floor(elapsed / ONE_MINUTE);
+        return upperFirst(relativeTimeFormat.format(-minutes, "minutes"));
+    }
+    if (isToday(date)) {
+        const value = `${relativeTimeFormat.format(0, "day")}, ${timeFormat.format(date)}`;
+        return upperFirst(value);
+    }
+    if (isYesterday(date)) {
+        const value = `${relativeTimeFormat.format(-1, "day")}, ${timeFormat.format(date)}`;
+        return upperFirst(value);
+    }
+    return dateTimeFormat.format(date);
+}
+
+function TruncatedText({ children, tooltip, }) {
+    return (jsxRuntimeExports.jsx(Tooltip, { content: tooltip ? tooltip : children, size: "medium", children: jsxRuntimeExports.jsx(Ellipsis, { title: "", children: children }) }));
+}
+
+const StyledTag = styled(Tag) `
   margin: 2px;
-`,Dt=i(m)`
+`;
+const SeeMore = styled(Anchor) `
   display: block;
   margin: 5px;
-`;function Vt({tags:t}){const[n,r]=e.useState(!1),a=e=>s.jsx(Tt,{isPill:!0,children:s.jsx(It,{children:e})},e);return s.jsxs(s.Fragment,{children:[0===t.length&&"-",t.slice(0,3).map(a),t.length>3&&!n&&s.jsx(Dt,{onClick:()=>r(!0),children:`+ ${t.length-3} more`}),n&&t.slice(3).map(a)]})}const Ot=i(m)`
+`;
+function Multiselect({ tags }) {
+    const [isExpanded, setIsExpanded] = reactExports.useState(false);
+    const createTag = (tag) => (jsxRuntimeExports.jsx(StyledTag, { isPill: true, children: jsxRuntimeExports.jsx(TruncatedText, { children: tag }) }, tag));
+    return (jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [tags.length === 0 && "-", tags.slice(0, 3).map(createTag), tags.length > 3 && !isExpanded && (jsxRuntimeExports.jsx(SeeMore, { onClick: () => setIsExpanded(true), children: `+ ${tags.length - 3} more` })), isExpanded && tags.slice(3).map(createTag)] }));
+}
+
+const Subject = styled(Anchor) `
   word-break: break-word;
-`,Rt=({children:e,identifier:t})=>s.jsx(A.Cell,{"data-test-id":`table-cell-${t}`,children:e?s.jsx(It,{children:e}):"-"});function Nt({ticketFields:e,identifier:n,request:r,customStatuses:a,customStatusesEnabled:i,user:l}){const{id:o,created_at:u,updated_at:c,subject:d,description:p,status:h,priority:f,type:m}=r,{t:j,i18n:g}=t(),x=g.language,b=new Intl.DateTimeFormat(x,{dateStyle:"medium"}),v={color:"red",label:j("guide-requests-app.statusOpen","Open")},q={color:"#038153",label:j("guide-requests-app.statusPending","Awaiting reply")},y={color:"#68737d",label:j("guide-requests-app.statusSolved","Solved")},S={new:v,open:v,hold:v,pending:q,solved:y,closed:y},w=e=>r.custom_fields.find((t=>t.id.toString()===e))?.value,_=e=>{switch(w(e)){case!0:return j("guide-requests-app.checkbox-filter.selected","Selected");case!1:return j("guide-requests-app.checkbox-filter.not-selected","Not selected");default:return}};if("id"===n)return s.jsx(Rt,{identifier:n,children:`#${o}`});if("created_at"===n)return s.jsx(Rt,{identifier:n,children:b.format(new Date(u))});if("updated_at"===n)return s.jsx(Rt,{identifier:n,children:s.jsx($t,{date:new Date(c),locale:x})});if("status"===n){const{label:e,tooltip:t}=(()=>{if(!i)return{label:S[h].label,tooltip:void 0};const e=a.find((e=>e.id===r.custom_status_id)),t=e?.label||e?.end_user_label||S[h].label,s=e?.description||e?.end_user_description;return{label:t,tooltip:s?`${t} - ${s}`:t}})();return s.jsx(A.Cell,{"data-test-id":`table-cell-${n}`,children:s.jsx(T,{hue:S[h].color,children:s.jsx(It,{tooltip:t,children:e||""})})})}if("requester"===n){const e=l?.alias||l?.name;return s.jsx(Rt,{identifier:n,children:e})}if("subject"===n){const e=`/hc/requests/${o}`,t=t=>{t.preventDefault(),Et.assign(e)};return s.jsx(A.Cell,{role:"rowheader","data-test-id":`table-cell-${n}`,children:s.jsx(Ot,{href:e,onClick:t,children:s.jsx(It,{children:d||p})})})}const C=e.find((e=>String(e.id)===n||e.type===n));if(void 0===C)return null;switch(C.type){case"priority":return s.jsx(Rt,{identifier:n,children:f});case"tickettype":return s.jsx(Rt,{identifier:n,children:m});case"checkbox":return s.jsx(Rt,{identifier:n,children:_(n)});case"regexp":case"partialcreditcard":case"text":case"textarea":case"integer":case"decimal":{const e=w(n);return s.jsx(Rt,{identifier:n,children:e?e.toString():void 0})}case"date":{const e=w(n);return s.jsx(Rt,{identifier:n,children:e?s.jsx($t,{date:new Date(e),locale:x}):s.jsx("span",{children:"-"})})}case"tagger":{const e=w(n),t=C.custom_field_options?.find((t=>t.value===e))?.name;return s.jsx(Rt,{identifier:n,children:t})}case"multiselect":{const e=(w(n)||[]).map((e=>C.custom_field_options?.find((t=>t.value===e))?.name));return s.jsx(A.Cell,{"data-test-id":`table-cell-${n}`,children:s.jsx(Vt,{tags:e})})}default:return s.jsx(A.Cell,{})}}function Lt({request:e,ticketFields:t,selectedAttributes:n,customStatuses:r,customStatusesEnabled:a,user:i}){return s.jsxs(A.Row,{children:[n.map((({identifier:n})=>s.jsx(Nt,{request:e,ticketFields:t,identifier:n,customStatuses:r,customStatusesEnabled:a,user:i},`request-${e.id}-field-${n}`))),s.jsx(A.Cell,{})]},e.id)}const At=i(h.Body)`
+`;
+const TruncatedTableCell = ({ children, identifier, }) => (jsxRuntimeExports.jsx(Table.Cell, { "data-test-id": `table-cell-${identifier}`, children: children ? jsxRuntimeExports.jsx(TruncatedText, { children: children }) : "-" }));
+function RequestsTableCell({ ticketFields, identifier, request, customStatuses, customStatusesEnabled, user, }) {
+    const { id, created_at, updated_at, subject, description, status, priority, type, } = request;
+    const { t, i18n } = useTranslation();
+    const currentLocale = i18n.language;
+    const mediumDate = new Intl.DateTimeFormat(currentLocale, {
+        dateStyle: "medium",
+    });
+    const open = {
+        color: "red",
+        label: t("guide-requests-app.statusOpen", "Open"),
+    };
+    const pending = {
+        color: "#038153",
+        label: t("guide-requests-app.statusPending", "Awaiting reply"),
+    };
+    const solved = {
+        color: "#68737d",
+        label: t("guide-requests-app.statusSolved", "Solved"),
+    };
+    const STATUS_MAPPING = {
+        new: open,
+        open: open,
+        hold: open,
+        pending: pending,
+        solved: solved,
+        closed: solved,
+    };
+    const getCustomFieldValue = (identifier) => request.custom_fields.find((field) => field.id.toString() === identifier)
+        ?.value;
+    const getCheckboxLabel = (identifier) => {
+        const value = getCustomFieldValue(identifier);
+        switch (value) {
+            case true:
+                return t("guide-requests-app.checkbox-filter.selected", "Selected");
+            case false:
+                return t("guide-requests-app.checkbox-filter.not-selected", "Not selected");
+            default:
+                return undefined;
+        }
+    };
+    const getStatusLabel = () => {
+        if (!customStatusesEnabled) {
+            return {
+                label: STATUS_MAPPING[status].label,
+                tooltip: undefined,
+            };
+        }
+        const customStatus = customStatuses.find((customStatus) => customStatus.id === request.custom_status_id);
+        /* We want to always show the end-user label.
+    This is exposed in the API as `label` for end-users and `end_user_label` for agents/admins.
+    The same applies for the description. */
+        const label = customStatus?.label ||
+            customStatus?.end_user_label ||
+            STATUS_MAPPING[status].label;
+        const description = customStatus?.description || customStatus?.end_user_description;
+        return {
+            label,
+            tooltip: description ? `${label} - ${description}` : label,
+        };
+    };
+    if (identifier === "id") {
+        return (jsxRuntimeExports.jsx(TruncatedTableCell, { identifier: identifier, children: `#${id}` }));
+    }
+    if (identifier === "created_at") {
+        return (jsxRuntimeExports.jsx(TruncatedTableCell, { identifier: identifier, children: mediumDate.format(new Date(created_at)) }));
+    }
+    if (identifier === "updated_at") {
+        return (jsxRuntimeExports.jsx(TruncatedTableCell, { identifier: identifier, children: jsxRuntimeExports.jsx(RelativeTime, { date: new Date(updated_at), locale: currentLocale }) }));
+    }
+    if (identifier === "status") {
+        const { label, tooltip } = getStatusLabel();
+        return (jsxRuntimeExports.jsx(Table.Cell, { "data-test-id": `table-cell-${identifier}`, children: jsxRuntimeExports.jsx(Tag, { hue: STATUS_MAPPING[status].color, children: jsxRuntimeExports.jsx(TruncatedText, { tooltip: tooltip, children: label || "" }) }) }));
+    }
+    if (identifier === "requester") {
+        const nameOrAlias = user?.alias || user?.name;
+        return (jsxRuntimeExports.jsx(TruncatedTableCell, { identifier: identifier, children: nameOrAlias }));
+    }
+    if (identifier === "subject") {
+        const requestUrl = `/hc/requests/${id}`;
+        const navigateToRequestPage = (e) => {
+            e.preventDefault();
+            location.assign(requestUrl);
+        };
+        return (jsxRuntimeExports.jsx(Table.Cell, { role: "rowheader", "data-test-id": `table-cell-${identifier}`, children: jsxRuntimeExports.jsx(Subject, { href: requestUrl, onClick: navigateToRequestPage, children: jsxRuntimeExports.jsx(TruncatedText, { children: subject || description }) }) }));
+    }
+    const ticketField = ticketFields.find((field) => String(field.id) === identifier || field.type === identifier);
+    if (ticketField === undefined) {
+        return null;
+    }
+    switch (ticketField.type) {
+        case "priority":
+            return (jsxRuntimeExports.jsx(TruncatedTableCell, { identifier: identifier, children: priority }));
+        case "tickettype":
+            return (jsxRuntimeExports.jsx(TruncatedTableCell, { identifier: identifier, children: type }));
+        case "checkbox": {
+            return (jsxRuntimeExports.jsx(TruncatedTableCell, { identifier: identifier, children: getCheckboxLabel(identifier) }));
+        }
+        case "regexp":
+        case "partialcreditcard":
+        case "text":
+        case "textarea":
+        case "integer":
+        case "decimal": {
+            const value = getCustomFieldValue(identifier);
+            return (jsxRuntimeExports.jsx(TruncatedTableCell, { identifier: identifier, children: value ? value.toString() : undefined }));
+        }
+        case "date": {
+            const value = getCustomFieldValue(identifier);
+            return (jsxRuntimeExports.jsx(TruncatedTableCell, { identifier: identifier, children: value ? (jsxRuntimeExports.jsx(RelativeTime, { date: new Date(value), locale: currentLocale })) : (jsxRuntimeExports.jsx("span", { children: "-" })) }));
+        }
+        case "tagger": {
+            const value = getCustomFieldValue(identifier);
+            const name = ticketField.custom_field_options?.find((field) => field.value === value)?.name;
+            return (jsxRuntimeExports.jsx(TruncatedTableCell, { identifier: identifier, children: name }));
+        }
+        case "multiselect": {
+            const value = getCustomFieldValue(identifier) || [];
+            const tags = value.map((value) => ticketField.custom_field_options?.find((field) => field.value === value)?.name);
+            return (jsxRuntimeExports.jsx(Table.Cell, { "data-test-id": `table-cell-${identifier}`, children: jsxRuntimeExports.jsx(Multiselect, { tags: tags }) }));
+        }
+        default:
+            return jsxRuntimeExports.jsx(Table.Cell, {});
+    }
+}
+
+function RequestsTableRow({ request, ticketFields, selectedAttributes, customStatuses, customStatusesEnabled, user, }) {
+    return (jsxRuntimeExports.jsxs(Table.Row, { children: [selectedAttributes.map(({ identifier }) => {
+                return (jsxRuntimeExports.jsx(RequestsTableCell, { request: request, ticketFields: ticketFields, identifier: identifier, customStatuses: customStatuses, customStatusesEnabled: customStatusesEnabled, user: user }, `request-${request.id}-field-${identifier}`));
+            }), jsxRuntimeExports.jsx(Table.Cell, {})] }, request.id));
+}
+
+const StyledBody = styled(Modal.Body) `
   display: flex;
   flex-direction: column;
-  gap: ${e=>e.theme.space.md};
-`;function Mt({onClose:i,selectedColumns:l,onSelectedColumnsChanged:o,requestAttributes:u}){const{t:c}=t(),[d,m]=e.useState(l),[g,x]=e.useState(""),b=p(),v=g?u.filter((e=>e.label.trim().toLocaleLowerCase().includes(g.trim().toLocaleLowerCase()))):u,q=v.every((e=>d.includes(e.identifier))),y=v.some((e=>d.includes(e.identifier)));return s.jsxs(h,{appendToNode:b,onClose:i,children:[s.jsx(h.Header,{children:c("guide-requests-app.column-selection.show-hide-columns","Show and hide columns")}),s.jsxs(At,{children:[s.jsxs(n,{children:[s.jsx(n.Label,{hidden:!0,children:c("guide-requests-app.column-selection.search-columns","Search for columns")}),s.jsx(r,{start:s.jsx(a,{}),type:"search",value:g,onChange:e=>{x(e.target.value)}})]}),s.jsxs(A,{"aria-live":"polite",children:[s.jsx(A.Head,{children:s.jsxs(A.HeaderRow,{children:[s.jsx(A.HeaderCell,{isMinimum:!0,children:s.jsx(n,{children:s.jsx(f,{checked:q,indeterminate:!q&&y,onChange:e=>{if(e.target.checked){const e=new Set([...l,...v.map((e=>e.identifier))]);m([...e])}else m(d.filter((e=>void 0===v.find((t=>t.identifier===e)))))},children:s.jsx(n.Label,{hidden:!0,children:q?c("guide-requests-app.column-selection.hide-all","Hide all columns"):c("guide-requests-app.column-selection.show-all","Show all columns")})})})}),s.jsx(A.HeaderCell,{children:c("guide-requests-app.column-selection.column","Column")})]})}),s.jsx(A.Body,{children:v.map((({identifier:e,label:t})=>{const r=d.includes(e);return s.jsxs(A.Row,{isSelected:r,children:[s.jsx(A.Cell,{isMinimum:!0,children:s.jsx(n,{children:s.jsx(f,{checked:r,onChange:t=>{const s=t.target.checked;m(s?t=>[...t,e]:t=>t.filter((t=>t!==e)))},children:s.jsx(n.Label,{hidden:!0,children:r?c("guide-requests-app.column-selection.hide-column","Hide {{column_name}} column",{column_name:t}):c("guide-requests-app.column-selection.show-column","Show {{column_name}} column",{column_name:t})})})})}),s.jsx(A.Cell,{children:t})]},e)}))})]})]}),s.jsxs(h.Footer,{children:[s.jsx(h.FooterItem,{children:s.jsx(j,{onClick:i,isBasic:!0,children:c("guide-requests-app.cancel","Cancel")})}),s.jsx(h.FooterItem,{children:s.jsx(j,{onClick:()=>{o(d),i()},isPrimary:!0,children:c("guide-requests-app.save","Save")})})]}),s.jsx(h.Close,{"aria-label":c("guide-requests-app.closeModal","Close modal")})]})}const Pt="__openModal__",Bt=i(M)`
-  color: ${e=>e.theme.colors.variables.light.background.primaryEmphasis};
-`;function Ht({onSelectedColumnsChanged:n,selectedColumns:r,requestAttributes:a,defaultDesktopColumns:i}){const{t:l}=t(),[o,u]=e.useState(!1),[c,d]=e.useState(!1),[p,h]=e.useState(r),f=a.length>i.length,m=e.useMemo((()=>r.map((e=>({value:e})))),[r]),j=l("guide-requests-app.column-selection.show-hide-columns","Show and hide columns");return s.jsxs(s.Fragment,{children:[s.jsxs(P,{isExpanded:o,selectedItems:m,onChange:e=>{if(!0===e.isExpanded&&h(r),e.value===Pt)return u(!1),void d(!0);if(e.selectedItems){const t=e.selectedItems.map((e=>e.value)).filter((e=>e!==Pt));n(t)}else void 0!==e.isExpanded&&u(e.isExpanded)},placement:"bottom-end",restoreFocus:!1,button:e=>s.jsx(N,{content:j,placement:"start",children:s.jsx(A.OverflowButton,{...e,"aria-label":j})}),children:[s.jsx(B,{legend:j,type:"checkbox",children:a.map((({identifier:e,label:t})=>i.includes(e)||p.includes(e)?s.jsx(M,{value:e,"data-test-id":`column-filter-menu-${e}`,children:t},e):null))}),f&&s.jsxs(s.Fragment,{children:[s.jsx(H,{}),s.jsx(Bt,{value:Pt,children:l("guide-requests-app.column-selection.see-more-columns","See more columns")})]})]}),c&&s.jsx(Mt,{onClose:()=>{d(!1)},selectedColumns:r,onSelectedColumnsChanged:n,requestAttributes:a})]})}const Ut=i.div`
+  gap: ${(p) => p.theme.space.md};
+`;
+function RequestsColumnModal({ onClose, selectedColumns, onSelectedColumnsChanged, requestAttributes, }) {
+    const { t } = useTranslation();
+    const [selectedIdentifiers, setSelectedIdentifiers] = reactExports.useState(selectedColumns);
+    const [searchValue, setSearchValue] = reactExports.useState("");
+    const modalContainer = useModalContainer();
+    const filteredAttributes = searchValue
+        ? requestAttributes.filter((attribute) => attribute.label
+            .trim()
+            .toLocaleLowerCase()
+            .includes(searchValue.trim().toLocaleLowerCase()))
+        : requestAttributes;
+    const handleToggleAllChanged = (e) => {
+        const checked = e.target.checked;
+        if (checked) {
+            const res = new Set([
+                ...selectedColumns,
+                ...filteredAttributes.map((f) => f.identifier),
+            ]);
+            setSelectedIdentifiers([...res]);
+        }
+        else {
+            setSelectedIdentifiers(selectedIdentifiers.filter((identifier) => filteredAttributes.find((f) => f.identifier === identifier) ===
+                undefined));
+        }
+    };
+    const handleSave = () => {
+        onSelectedColumnsChanged(selectedIdentifiers);
+        onClose();
+    };
+    const areAllSelected = filteredAttributes.every((f) => selectedIdentifiers.includes(f.identifier));
+    const isSomeSelected = filteredAttributes.some((f) => selectedIdentifiers.includes(f.identifier));
+    return (jsxRuntimeExports.jsxs(Modal, { appendToNode: modalContainer, onClose: onClose, children: [jsxRuntimeExports.jsx(Modal.Header, { children: t("guide-requests-app.column-selection.show-hide-columns", "Show and hide columns") }), jsxRuntimeExports.jsxs(StyledBody, { children: [jsxRuntimeExports.jsxs(Field, { children: [jsxRuntimeExports.jsx(Field.Label, { hidden: true, children: t("guide-requests-app.column-selection.search-columns", "Search for columns") }), jsxRuntimeExports.jsx(MediaInput, { start: jsxRuntimeExports.jsx(SvgSearchStroke, {}), type: "search", value: searchValue, onChange: (e) => {
+                                    setSearchValue(e.target.value);
+                                } })] }), jsxRuntimeExports.jsxs(Table, { "aria-live": "polite", children: [jsxRuntimeExports.jsx(Table.Head, { children: jsxRuntimeExports.jsxs(Table.HeaderRow, { children: [jsxRuntimeExports.jsx(Table.HeaderCell, { isMinimum: true, children: jsxRuntimeExports.jsx(Field, { children: jsxRuntimeExports.jsx(Checkbox, { checked: areAllSelected, indeterminate: !areAllSelected && isSomeSelected, onChange: handleToggleAllChanged, children: jsxRuntimeExports.jsx(Field.Label, { hidden: true, children: areAllSelected
+                                                            ? t("guide-requests-app.column-selection.hide-all", "Hide all columns")
+                                                            : t("guide-requests-app.column-selection.show-all", "Show all columns") }) }) }) }), jsxRuntimeExports.jsx(Table.HeaderCell, { children: t("guide-requests-app.column-selection.column", "Column") })] }) }), jsxRuntimeExports.jsx(Table.Body, { children: filteredAttributes.map(({ identifier, label }) => {
+                                    const isSelected = selectedIdentifiers.includes(identifier);
+                                    return (jsxRuntimeExports.jsxs(Table.Row, { isSelected: isSelected, children: [jsxRuntimeExports.jsx(Table.Cell, { isMinimum: true, children: jsxRuntimeExports.jsx(Field, { children: jsxRuntimeExports.jsx(Checkbox, { checked: isSelected, onChange: (e) => {
+                                                            const checked = e.target.checked;
+                                                            if (checked) {
+                                                                setSelectedIdentifiers((current) => [
+                                                                    ...current,
+                                                                    identifier,
+                                                                ]);
+                                                            }
+                                                            else {
+                                                                setSelectedIdentifiers((current) => current.filter((c) => c !== identifier));
+                                                            }
+                                                        }, children: jsxRuntimeExports.jsx(Field.Label, { hidden: true, children: isSelected
+                                                                ? t("guide-requests-app.column-selection.hide-column", "Hide {{column_name}} column", { column_name: label })
+                                                                : t("guide-requests-app.column-selection.show-column", "Show {{column_name}} column", { column_name: label }) }) }) }) }), jsxRuntimeExports.jsx(Table.Cell, { children: label })] }, identifier));
+                                }) })] })] }), jsxRuntimeExports.jsxs(Modal.Footer, { children: [jsxRuntimeExports.jsx(Modal.FooterItem, { children: jsxRuntimeExports.jsx(Button, { onClick: onClose, isBasic: true, children: t("guide-requests-app.cancel", "Cancel") }) }), jsxRuntimeExports.jsx(Modal.FooterItem, { children: jsxRuntimeExports.jsx(Button, { onClick: handleSave, isPrimary: true, children: t("guide-requests-app.save", "Save") }) })] }), jsxRuntimeExports.jsx(Modal.Close, { "aria-label": t("guide-requests-app.closeModal", "Close modal") })] }));
+}
+
+const OPEN_MODAL_VALUE = "__openModal__";
+// primaryEmphasis is the color used for links https://garden.zendesk.com/design/color#hierarchy
+const SeeMoreColumnsItem = styled(Item) `
+  color: ${(p) => p.theme.colors.variables.light.background.primaryEmphasis};
+`;
+function RequestsColumnFilter({ onSelectedColumnsChanged, selectedColumns, requestAttributes, defaultDesktopColumns, }) {
+    const { t } = useTranslation();
+    const [isDropdownOpen, setIsDropdownOpen] = reactExports.useState(false);
+    const [isModalOpen, setIsModalOpen] = reactExports.useState(false);
+    const [lastSelectedColumns, setLastSelectedColumns] = reactExports.useState(selectedColumns);
+    const hasSeeMoreColumns = requestAttributes.length > defaultDesktopColumns.length;
+    const controlledSelectedItems = reactExports.useMemo(() => selectedColumns.map((col) => ({ value: col })), [selectedColumns]);
+    const handleChange = (changes) => {
+        if (changes.isExpanded === true) {
+            // Cache the last selected columns when dropdown is opened
+            setLastSelectedColumns(selectedColumns);
+        }
+        if (changes.value === OPEN_MODAL_VALUE) {
+            setIsDropdownOpen(false);
+            setIsModalOpen(true);
+            return;
+        }
+        // Handle checkbox item
+        if (changes.selectedItems) {
+            const selectedValues = changes.selectedItems
+                .map((item) => item.value)
+                .filter((v) => v !== OPEN_MODAL_VALUE);
+            onSelectedColumnsChanged(selectedValues);
+            return;
+        }
+        if (changes.isExpanded !== undefined) {
+            setIsDropdownOpen(changes.isExpanded);
+        }
+    };
+    const showAndHideColumnsLabel = t("guide-requests-app.column-selection.show-hide-columns", "Show and hide columns");
+    /*
+      There is a bug in garden v9 which makes the menu close after each selection.
+      The current fix is setting restoreFocus={false}, then managing focus manually
+    */
+    return (jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [jsxRuntimeExports.jsxs(Menu, { isExpanded: isDropdownOpen, selectedItems: controlledSelectedItems, onChange: handleChange, placement: "bottom-end", restoreFocus: false, button: (props) => (jsxRuntimeExports.jsx(Tooltip, { content: showAndHideColumnsLabel, placement: "start", children: jsxRuntimeExports.jsx(Table.OverflowButton, { ...props, "aria-label": showAndHideColumnsLabel }) })), children: [jsxRuntimeExports.jsx(ItemGroup, { legend: showAndHideColumnsLabel, type: "checkbox", children: requestAttributes.map(({ identifier, label }) => {
+                            if (!defaultDesktopColumns.includes(identifier) &&
+                                !lastSelectedColumns.includes(identifier)) {
+                                return null;
+                            }
+                            return (jsxRuntimeExports.jsx(Item, { value: identifier, "data-test-id": `column-filter-menu-${identifier}`, children: label }, identifier));
+                        }) }), hasSeeMoreColumns && (jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [jsxRuntimeExports.jsx(Separator, {}), jsxRuntimeExports.jsx(SeeMoreColumnsItem, { value: OPEN_MODAL_VALUE, children: t("guide-requests-app.column-selection.see-more-columns", "See more columns") })] }))] }), isModalOpen && (jsxRuntimeExports.jsx(RequestsColumnModal, { onClose: () => {
+                    setIsModalOpen(false);
+                }, selectedColumns: selectedColumns, onSelectedColumnsChanged: onSelectedColumnsChanged, requestAttributes: requestAttributes }))] }));
+}
+
+function useLocalStorage(key, initialValue, version = "v1") {
+    const readValue = reactExports.useCallback(() => {
+        try {
+            const item = localStorage.getItem(key);
+            if (!item)
+                return initialValue;
+            const data = JSON.parse(item);
+            return data[0] === version ? data[1] : initialValue;
+        }
+        catch (error) {
+            return initialValue;
+        }
+    }, [initialValue, key]);
+    const [storedValue, setStoredValue] = reactExports.useState(readValue);
+    const setValue = (value) => {
+        try {
+            setStoredValue(value);
+            localStorage.setItem(key, JSON.stringify([version, value]));
+        }
+        catch (error) {
+            // ignore
+        }
+    };
+    return [storedValue, setValue];
+}
+
+const Container$1 = styled.div `
   margin-bottom: 24px;
-`,Xt=i(A.SortableCell)`
+`;
+const StyledSortableCell = styled(Table.SortableCell) `
   display: grid; // Without it Ellipsis won't work
-`,Gt=["created_at","updated_at","status"],Wt=["description","group","assignee","custom_status","lookup","multi_lookup"],Yt=["subject"],Qt=["subject","id","created_at","updated_at","status"],Jt=["subject","updated_at","status"],Zt="GUIDE_REQUESTS_APP_COLUMN_CONFIG";function Kt({onSort:n,sort:r,requests:a,users:i,ticketFields:l,customStatuses:o,customStatusesEnabled:u}){const{t:c}=t(),d={id:c("guide-requests-app.id","ID"),created_at:c("guide-requests-app.createdDate","Created date"),updated_at:c("guide-requests-app.updatedDate","Updated date"),status:c("guide-requests-app.status","Status"),requester:c("guide-requests-app.requester","Requester")},p=Me()?Jt:Qt,[h,f]=function(t,s,n="v1"){const r=e.useCallback((()=>{try{const e=ie.getItem(t);if(!e)return s;const r=JSON.parse(e);return r[0]===n?r[1]:s}catch(e){return s}}),[s,t]),[a,i]=e.useState(r);return[a,e=>{try{i(e),ie.setItem(t,JSON.stringify([n,e]))}catch(e){}}]}(Zt,p,"v4"),m=[...Qt,"requester"],j=e.useMemo((()=>l&&0!==l.length?[...m.map((e=>{const t=d[e]??l.find((t=>t.type===e))?.title_in_portal??e;return{identifier:e,label:t}})),...l.filter((e=>!m.includes(e.type))).filter((e=>!Wt.includes(e.type))).map((({id:e,title_in_portal:t})=>({identifier:String(e),label:t})))]:Qt.map((e=>({identifier:e,label:d[e]??e})))),[l]),g=j.filter((e=>h.includes(e.identifier))),x=h.filter((e=>!Yt.includes(e))),b=j.filter((({identifier:e})=>!Yt.includes(e)));function v(e){const t=h.length;return Me()?"auto":"subject"===e?1===t?"auto":t<=2?"80%":t<=3?"60%":t<=6?"40%":t<=8?"30%":"20%":"auto"}return s.jsx(Ut,{"aria-live":"polite",children:0===a.length?c("guide-requests-app.requests-empty-state","No requests found"):s.jsxs(A,{isReadOnly:!0,children:[s.jsx(A.Head,{children:s.jsxs(A.HeaderRow,{children:[g.map((({identifier:e,label:t})=>Gt.includes(e)?s.jsx(Xt,{"data-test-id":`sortable-cell-${e}`,sort:r?.by===e?r?.order:void 0,onClick:()=>n(e),width:Me()?"auto":"",children:s.jsx(It,{children:t})},e):s.jsx(A.HeaderCell,{"data-test-id":`header-cell-${e}`,width:v(e),children:s.jsx(It,{children:t})},e))),s.jsx(A.HeaderCell,{hasOverflow:!0,children:s.jsx(Ht,{selectedColumns:x,onSelectedColumnsChanged:function(e){f([...Yt,...e])},requestAttributes:b,defaultDesktopColumns:Qt})})]})}),s.jsx(A.Body,{children:a.map((e=>{return s.jsx(Lt,{request:e,ticketFields:l,selectedAttributes:g,customStatuses:o,customStatusesEnabled:u,user:(t=e.requester_id,i.find((e=>e.id===t)))},e.id);var t}))})]})})}const es=i.div`
-  margin-bottom: ${e=>e.theme.space.xxs};
+`;
+const SORTABLE_FIELDS = ["created_at", "updated_at", "status"];
+const HIDDEN_FIELDS = [
+    "description",
+    "group",
+    "assignee",
+    "custom_status",
+    "lookup",
+    "multi_lookup",
+];
+const NON_REMOVABLE_FIELDS = ["subject"];
+const DEFAULT_DESKTOP_COLUMNS = [
+    "subject",
+    "id",
+    "created_at",
+    "updated_at",
+    "status",
+];
+const DEFAULT_MOBILE_COLUMNS = ["subject", "updated_at", "status"];
+const LOCAL_STORAGE_KEY = "GUIDE_REQUESTS_APP_COLUMN_CONFIG";
+function RequestsTable({ onSort, sort, requests, users, ticketFields, customStatuses, customStatusesEnabled, }) {
+    const { t } = useTranslation();
+    const requestAttributesLabels = {
+        id: t("guide-requests-app.id", "ID"),
+        created_at: t("guide-requests-app.createdDate", "Created date"),
+        updated_at: t("guide-requests-app.updatedDate", "Updated date"),
+        status: t("guide-requests-app.status", "Status"),
+        requester: t("guide-requests-app.requester", "Requester"),
+    };
+    const defaultColumns = isMobile()
+        ? DEFAULT_MOBILE_COLUMNS
+        : DEFAULT_DESKTOP_COLUMNS;
+    const [selectedColumns, setSelectedColumns] = useLocalStorage(LOCAL_STORAGE_KEY, defaultColumns, "v4");
+    const SELECTABLE_COLUMNS = [...DEFAULT_DESKTOP_COLUMNS, "requester"];
+    const requestAttributes = reactExports.useMemo(() => {
+        if (!ticketFields || ticketFields.length === 0) {
+            return DEFAULT_DESKTOP_COLUMNS.map((identifier) => {
+                const label = requestAttributesLabels[identifier] ?? identifier;
+                return { identifier, label };
+            });
+        }
+        return [
+            ...SELECTABLE_COLUMNS.map((identifier) => {
+                const label = requestAttributesLabels[identifier] ??
+                    ticketFields.find((field) => field.type === identifier)
+                        ?.title_in_portal ??
+                    identifier;
+                return { identifier, label };
+            }),
+            ...ticketFields
+                .filter((field) => !SELECTABLE_COLUMNS.includes(field.type))
+                .filter((field) => !HIDDEN_FIELDS.includes(field.type))
+                .map(({ id, title_in_portal }) => ({
+                identifier: String(id),
+                label: title_in_portal,
+            })),
+        ];
+    }, [ticketFields]);
+    const selectedAttributes = requestAttributes.filter((attribute) => selectedColumns.includes(attribute.identifier));
+    const selectedRemovableColumns = selectedColumns.filter((identifier) => !NON_REMOVABLE_FIELDS.includes(identifier));
+    const selectableAttributes = requestAttributes.filter(({ identifier }) => !NON_REMOVABLE_FIELDS.includes(identifier));
+    function handleSelectedColumnsChanged(columns) {
+        setSelectedColumns([...NON_REMOVABLE_FIELDS, ...columns]);
+    }
+    function getHeaderCellWidth(identifier) {
+        const columns = selectedColumns.length;
+        if (isMobile())
+            return "auto";
+        if (identifier === "subject") {
+            if (columns === 1)
+                return "auto";
+            if (columns <= 2)
+                return "80%";
+            if (columns <= 3)
+                return "60%";
+            if (columns <= 6)
+                return "40%";
+            if (columns <= 8)
+                return "30%";
+            return "20%";
+        }
+        else
+            return "auto";
+    }
+    const requestUser = (userId) => {
+        return users.find((user) => user.id === userId);
+    };
+    return (jsxRuntimeExports.jsx(Container$1, { "aria-live": "polite", children: requests.length === 0 ? (t("guide-requests-app.requests-empty-state", "No requests found")) : (jsxRuntimeExports.jsxs(Table, { isReadOnly: true, children: [jsxRuntimeExports.jsx(Table.Head, { children: jsxRuntimeExports.jsxs(Table.HeaderRow, { children: [selectedAttributes.map(({ identifier, label }) => {
+                                return SORTABLE_FIELDS.includes(identifier) ? (jsxRuntimeExports.jsx(StyledSortableCell, { "data-test-id": `sortable-cell-${identifier}`, sort: sort?.by === identifier ? sort?.order : undefined, onClick: () => onSort(identifier), width: isMobile() ? "auto" : "", children: jsxRuntimeExports.jsx(TruncatedText, { children: label }) }, identifier)) : (jsxRuntimeExports.jsx(Table.HeaderCell, { "data-test-id": `header-cell-${identifier}`, width: getHeaderCellWidth(identifier), children: jsxRuntimeExports.jsx(TruncatedText, { children: label }) }, identifier));
+                            }), jsxRuntimeExports.jsx(Table.HeaderCell, { hasOverflow: true, children: jsxRuntimeExports.jsx(RequestsColumnFilter, { selectedColumns: selectedRemovableColumns, onSelectedColumnsChanged: handleSelectedColumnsChanged, requestAttributes: selectableAttributes, defaultDesktopColumns: DEFAULT_DESKTOP_COLUMNS }) })] }) }), jsxRuntimeExports.jsx(Table.Body, { children: requests.map((request) => (jsxRuntimeExports.jsx(RequestsTableRow, { request: request, ticketFields: ticketFields, selectedAttributes: selectedAttributes, customStatuses: customStatuses, customStatusesEnabled: customStatusesEnabled, user: requestUser(request.requester_id) }, request.id))) })] })) }));
+}
+
+const Container = styled.div `
+  margin-bottom: ${(p) => p.theme.space.xxs};
   position: relative;
-`,ts=i(j)`
+`;
+const StyledButton = styled(Button) `
   background: none !important;
   border: 0;
   border-bottom: 3px solid;
@@ -104,8 +1900,583 @@ import{r as e,u as t,j as s,F as n,M as r,a4 as a,s as i,b as l,c as o,O as u,E 
   line-height: 40px;
   margin-bottom: 20px;
   &:hover {
-    color: ${e=>e.theme.colors.primaryHue};
+    color: ${(p) => p.theme.colors.primaryHue};
   }
-`;function ss({selectedTab:n,organizations:r,onTabSelected:a}){const{t:i}=t(),[l,o]=e.useState(!1),u=e=>{switch(e){case ae:return i("guide-requests-app.organizationalRequests","Organizational requests");case ne:return i("guide-requests-app.myRequests","My requests");case re:return i("guide-requests-app.ccdRequests","Requests I am CC'd on")}},c=[ne,re];function d(e){if(e===ae){const e=function(e){return e.find((e=>e.default))||e[0]}(r);e&&a({name:ae,organizationId:e.id})}else a({name:e})}return r.length>0&&c.push(ae),s.jsxs(es,{children:[s.jsx(Le,{children:s.jsx(P,{button:e=>s.jsxs(ts,{...e,isBasic:!0,isStretched:!0,children:[u(n.name),s.jsx(j.EndIcon,{isRotated:l,children:s.jsx(U,{})})]}),onChange:e=>{e.value&&d(e.value),void 0!==e.isExpanded&&o(e.isExpanded)},children:c.map((e=>s.jsx(M,{value:e,children:u(e)},e)))})}),s.jsx(Ae,{children:s.jsx(X,{onChange:d,selectedItem:n.name,children:s.jsx(X.TabList,{children:c.map((e=>s.jsx(X.Tab,{"data-test-id":`tab-${e}`,item:e,children:u(e)},e)))})})})]})}function ns(){const[t,s]=e.useState(),[n,r]=e.useState(),[a,i]=e.useState(!0);return e.useEffect((()=>{!async function(){try{i(!0);const e=await fetch("/api/v2/users/me");if(!e.ok)throw Error(e.statusText);const{user:t}=await e.json();s(t)}catch(e){r(e)}finally{i(!1)}}()}),[]),{user:t,error:n,isLoading:a}}async function rs(e,t,s){const n=await e();let r=[...n[t]],a=n.meta.has_more,i=n.links.next;for(;a;){const e=await fetch(i,s);if(!e.ok)throw new Error(e.statusText);const n=await e.json();r=r.concat(n[t]),a=n.meta.has_more,i=n.links.next}return r}function as(t){const[s,n]=e.useState([]),[r,a]=e.useState();async function i(){const e=await fetch(`/api/v2/users/${t?.id}/organization_memberships?page[size]=100`);if(!e.ok)throw new Error(e.statusText);return await e.json()}return e.useEffect((()=>{t&&async function(){try{const e=(await rs(i,"organization_memberships")).filter((e=>e.view_tickets));n(e.map((e=>({id:e.organization_id,name:e.organization_name,default:e.default}))))}catch(e){a(e)}}()}),[t]),{organizations:s,error:r}}function is(e){const t=new AbortController;return e(t.signal),()=>t.abort()}function ls(e){return Object.entries(e).map((([e,t])=>function(e,t){return"status"===e||"custom_status_id"===e?t.map((t=>t.split(" ").map((t=>`${e}${t}`)))).flat():t.map((t=>`${e}${function(e){const t=/^:".*"$/.test(e);return t?`:"${e.substring(2,e.length-1).replace(/"/g,"")}"`:e}(t)}`)).flat()}(e,t))).flat()}const os=15,us=1e3;async function cs(e,t=100){const s=await fetch(`/api/v2/ticket_fields.json?locale=${e}&page[size]=${t}`);if(!s.ok)throw new Error(s.statusText);return await s.json()}function ds({locale:t,viewRequestsAcrossBrandsEnabled:s,filterByBrand:n}){const[r,a]=e.useState([]),[i,l]=e.useState(),[o,u]=e.useState(!0);async function c(){try{if(n&&!s){const[e,s]=await Promise.all([rs((()=>cs(t)),"ticket_fields"),rs((()=>async function(e,t=100){const s=await fetch(`/api/v2/ticket_forms?locale=${e}&associated_to_brand=true&active=true&form_type=all&page[size]=${t}`);if(!s.ok)throw new Error(s.statusText);return await s.json()}(t)),"ticket_forms")]),n=new Set(s.flatMap((e=>e.ticket_field_ids??[])));a(e.filter((e=>e.active&&n.has(e.id))))}else{const e=await rs((()=>cs(t)),"ticket_fields");a(e.filter((e=>e.active)))}u(!1)}catch(e){l(e)}finally{u(!1)}}return e.useEffect((()=>{c()}),[]),{ticketFields:r,error:i,isLoading:o}}function ps(t,s){const[n,r]=e.useState([]),[a,i]=e.useState();return e.useEffect((()=>{!async function(){if(t)try{const e=await fetch(`/api/v2/custom_statuses?active=true&locale=${s}`);if(!e.ok)throw new Error(e.statusText);const{custom_statuses:t}=await e.json();r(t)}catch(e){i(e)}}()}),[]),{customStatuses:n,error:a}}const hs=()=>s.jsxs(A.Row,{children:[s.jsx(A.Cell,{children:s.jsx(G,{})}),s.jsx(A.Cell,{children:s.jsx(G,{})}),s.jsx(A.Cell,{children:s.jsx(G,{})})]}),fs=i(C.Col)`
+`;
+function getDefaultOrganization(organizations) {
+    const defaultOrganization = organizations.find((organization) => organization.default);
+    return defaultOrganization || organizations[0];
+}
+function RequestsTabs({ selectedTab, organizations, onTabSelected, customTabLabels, }) {
+    const { t } = useTranslation();
+    const [iconIsRotated, setIconIsRotated] = reactExports.useState(false);
+    const getTabLabel = (tab) => {
+        switch (tab) {
+            case ORG_REQUESTS_TAB_NAME:
+                return (customTabLabels?.organizationalRequests ||
+                    t("guide-requests-app.organizationalRequests", "Organizational requests"));
+            case MY_REQUESTS_TAB_NAME:
+                return (customTabLabels?.myRequests ||
+                    t("guide-requests-app.myRequests", "My requests"));
+            case CCD_REQUESTS_TAB_NAME:
+                return (customTabLabels?.ccdRequests ||
+                    t("guide-requests-app.ccdRequests", "Requests I am CC'd on"));
+        }
+    };
+    const availableTabs = [
+        MY_REQUESTS_TAB_NAME,
+        CCD_REQUESTS_TAB_NAME,
+    ];
+    if (organizations.length > 0) {
+        availableTabs.push(ORG_REQUESTS_TAB_NAME);
+    }
+    function handleTabSelect(name) {
+        if (name === ORG_REQUESTS_TAB_NAME) {
+            const defaultOrg = getDefaultOrganization(organizations);
+            if (defaultOrg) {
+                onTabSelected({
+                    name: ORG_REQUESTS_TAB_NAME,
+                    organizationId: defaultOrg.id,
+                });
+            }
+        }
+        else {
+            onTabSelected({ name });
+        }
+    }
+    return (jsxRuntimeExports.jsxs(Container, { children: [jsxRuntimeExports.jsx(Mobile, { children: jsxRuntimeExports.jsx(Menu, { button: (props) => (jsxRuntimeExports.jsxs(StyledButton, { ...props, isBasic: true, isStretched: true, children: [getTabLabel(selectedTab.name), jsxRuntimeExports.jsx(Button.EndIcon, { isRotated: iconIsRotated, children: jsxRuntimeExports.jsx(SvgChevronDownStroke, {}) })] })), onChange: (changes) => {
+                        if (changes.value) {
+                            handleTabSelect(changes.value);
+                        }
+                        if (changes.isExpanded !== undefined) {
+                            setIconIsRotated(changes.isExpanded);
+                        }
+                    }, children: availableTabs.map((tabName) => (jsxRuntimeExports.jsx(Item, { value: tabName, children: getTabLabel(tabName) }, tabName))) }) }), jsxRuntimeExports.jsx(Desktop, { children: jsxRuntimeExports.jsx(Tabs, { onChange: handleTabSelect, selectedItem: selectedTab.name, children: jsxRuntimeExports.jsx(Tabs.TabList, { children: availableTabs.map((tabName) => (jsxRuntimeExports.jsx(Tabs.Tab, { "data-test-id": `tab-${tabName}`, item: tabName, children: getTabLabel(tabName) }, tabName))) }) }) })] }));
+}
+
+function useUser() {
+    const [user, setUser] = reactExports.useState();
+    const [error, setError] = reactExports.useState();
+    const [isLoading, setIsLoading] = reactExports.useState(true);
+    async function fetchUser() {
+        try {
+            setIsLoading(true);
+            const response = await fetch("/api/v2/users/me");
+            if (!response.ok)
+                throw Error(response.statusText);
+            const { user } = await response.json();
+            setUser(user);
+        }
+        catch (error) {
+            setError(error);
+        }
+        finally {
+            setIsLoading(false);
+        }
+    }
+    reactExports.useEffect(() => {
+        fetchUser();
+    }, []);
+    return { user, error, isLoading };
+}
+
+async function fetchAllCursorPages(firstPagePromise, field, init) {
+    const firstPageResponse = await firstPagePromise();
+    let res = [...firstPageResponse[field]];
+    let hasMore = firstPageResponse.meta.has_more;
+    let nextPageUrl = firstPageResponse.links.next;
+    while (hasMore) {
+        const response = await fetch(nextPageUrl, init);
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+        const decodedResponse = (await response.json());
+        res = res.concat(decodedResponse[field]);
+        hasMore = decodedResponse.meta.has_more;
+        nextPageUrl = decodedResponse.links.next;
+    }
+    return res;
+}
+
+function useOrganizations(user) {
+    const [organizations, setOrganizations] = reactExports.useState([]);
+    const [error, setError] = reactExports.useState();
+    async function fetchOrganizationsPage() {
+        const response = await fetch(`/api/v2/users/${user?.id}/organization_memberships?page[size]=100`);
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+        return await response.json();
+    }
+    async function fetchOrganizations() {
+        try {
+            const memberships = await fetchAllCursorPages(fetchOrganizationsPage, "organization_memberships");
+            const membershipsWithTicketPermissions = memberships.filter((organization) => organization.view_tickets);
+            setOrganizations(membershipsWithTicketPermissions.map((organization) => ({
+                id: organization.organization_id,
+                name: organization.organization_name,
+                default: organization.default,
+            })));
+        }
+        catch (error) {
+            setError(error);
+        }
+    }
+    reactExports.useEffect(() => {
+        if (user) {
+            fetchOrganizations();
+        }
+    }, [user]);
+    return { organizations, error };
+}
+
+// Returns method used to abort the request inside the wrapped function
+function withAbort(wrappedFn) {
+    const requestController = new AbortController();
+    const signal = requestController.signal;
+    wrappedFn(signal);
+    return () => requestController.abort();
+}
+
+/**
+ * Map each field with an array of filter values.
+ *
+ * For example:
+ * {
+ *   created_at: [">=2021-08-08", "<=2022-08-08"],
+ *   organization: [":1", ":2"],
+ * }
+ *
+ * Represents two filters set on the created_at field (that should be greater than 2021-08-08 and less than 2022-08-08)
+ * and two filters on the organization field (that should be equal 1 or equal 2)
+ */
+function filterValuesMapToQueryFilters(filterValuesMap) {
+    return Object.entries(filterValuesMap)
+        .map(([field, values]) => fieldValuesToQueryFilters(field, values))
+        .flat();
+}
+function fieldValuesToQueryFilters(field, values) {
+    if (field === "status" || field === "custom_status_id") {
+        /* Handling special case for status, where for example
+           status: [":open :new :hold"] should be mapped to
+           "status:open", "status:new", "status:hold"
+         */
+        return values
+            .map((value) => value.split(" ").map((v) => `${field}${v}`))
+            .flat();
+    }
+    else {
+        return values.map((value) => `${field}${sanitizeValue(value)}`).flat();
+    }
+}
+function sanitizeValue(value) {
+    const isPhraseValue = /^:".*"$/.test(value);
+    if (isPhraseValue) {
+        return `:"${value.substring(2, value.length - 1).replace(/"/g, "")}"`;
+    }
+    else {
+        return value;
+    }
+}
+
+const PER_PAGE = 15;
+const MAX_RESULTS = 1000;
+function useRequests(params, push) {
+    const { t } = useTranslation();
+    const { query, page, sort, selectedTab, filters } = params;
+    const [error, setError] = reactExports.useState();
+    const [{ requests, users, hasNextPage, hasPreviousPage, count: requestsCount, isLoading, }, setRequestState,] = reactExports.useState({
+        count: 0,
+        hasNextPage: false,
+        hasPreviousPage: false,
+        requests: [],
+        users: [],
+        isLoading: true,
+    });
+    async function fetchRequests(signal) {
+        const searchParams = new URLSearchParams();
+        const searchQuery = query.length ? query : "*";
+        const queryFilters = filterValuesMapToQueryFilters(filters);
+        searchParams.set("include", "users");
+        if (sort) {
+            queryFilters.push(`order_by:${sort.by}`, `sort:${sort.order}`);
+        }
+        if (selectedTab.name === MY_REQUESTS_TAB_NAME) {
+            queryFilters.push("requester:me");
+        }
+        else if (selectedTab.name === CCD_REQUESTS_TAB_NAME) {
+            searchParams.set("cc_id", "true");
+        }
+        else if (selectedTab.name === ORG_REQUESTS_TAB_NAME) {
+            searchParams.set("organization_id", selectedTab.organizationId.toString());
+        }
+        if (PER_PAGE * page > MAX_RESULTS) {
+            searchParams.set("page", Math.floor(MAX_RESULTS / PER_PAGE).toString());
+        }
+        else {
+            searchParams.set("page", page.toString());
+        }
+        searchParams.set("per_page", PER_PAGE.toString());
+        searchParams.set("query", `${searchQuery} ${queryFilters.join(" ")}`);
+        try {
+            const response = await fetch(`/api/v2/requests/search.json?${searchParams.toString()}`, {
+                signal: signal,
+            });
+            if (response.status === 406) {
+                const { error } = await response.json();
+                if (error.includes("Number of search words exceeds the limit")) {
+                    notify({
+                        type: "error",
+                        message: t("guide-requests-app.SearchPhraseIsTooLong", "Search phrase is too long. Try something shorter."),
+                    });
+                    push({ page: 1, query: "" });
+                }
+            }
+            else {
+                const { requests, users, next_page, previous_page, count, } = await response.json();
+                setRequestState({
+                    count: Math.min(count ?? 0, MAX_RESULTS),
+                    hasNextPage: !!next_page && !(PER_PAGE * page >= MAX_RESULTS),
+                    hasPreviousPage: !!previous_page,
+                    requests: requests ?? [],
+                    users: users ?? [],
+                    isLoading: false,
+                });
+            }
+        }
+        catch (error) {
+            if (error instanceof Error && error.name === "AbortError") {
+                // Do nothing, request was cancelled, because another one was started;
+                return;
+            }
+            else
+                setError(error);
+        }
+    }
+    reactExports.useEffect(() => {
+        return withAbort(fetchRequests);
+    }, [params]);
+    return {
+        requests,
+        users,
+        hasNextPage,
+        hasPreviousPage,
+        requestsCount,
+        requestsPerPage: PER_PAGE,
+        error,
+        isLoading,
+    };
+}
+
+async function listTicketFields(locale, pageSize = 100) {
+    const response = await fetch(`/api/v2/ticket_fields.json?locale=${locale}&page[size]=${pageSize}`);
+    if (!response.ok) {
+        throw new Error(response.statusText);
+    }
+    return await response.json();
+}
+async function listTicketForms(locale, pageSize = 100) {
+    const response = await fetch(`/api/v2/ticket_forms?locale=${locale}&associated_to_brand=true&active=true&form_type=all&page[size]=${pageSize}`);
+    if (!response.ok) {
+        throw new Error(response.statusText);
+    }
+    return await response.json();
+}
+function useTicketFields({ locale, viewRequestsAcrossBrandsEnabled, filterByBrand, }) {
+    const [ticketFields, setTicketFields] = reactExports.useState([]);
+    const [error, setError] = reactExports.useState();
+    const [isLoading, setIsLoading] = reactExports.useState(true);
+    async function fetchTicketFields() {
+        try {
+            if (filterByBrand && !viewRequestsAcrossBrandsEnabled) {
+                const [ticketFields, ticketForms] = await Promise.all([
+                    fetchAllCursorPages(() => listTicketFields(locale), "ticket_fields"),
+                    fetchAllCursorPages(() => listTicketForms(locale), "ticket_forms"),
+                ]);
+                const activeTicketFieldIds = new Set(ticketForms.flatMap((ticketForm) => ticketForm.ticket_field_ids ?? []));
+                setTicketFields(ticketFields.filter((ticketField) => ticketField.active && activeTicketFieldIds.has(ticketField.id)));
+            }
+            else {
+                const ticketFields = await fetchAllCursorPages(() => listTicketFields(locale), "ticket_fields");
+                setTicketFields(ticketFields.filter((ticketField) => ticketField.active));
+            }
+            setIsLoading(false);
+        }
+        catch (error) {
+            setError(error);
+        }
+        finally {
+            setIsLoading(false);
+        }
+    }
+    reactExports.useEffect(() => {
+        fetchTicketFields();
+    }, []);
+    return { ticketFields, error, isLoading };
+}
+
+function useCustomStatuses(customStatusesEnabled, locale) {
+    const [customStatuses, setCustomStatuses] = reactExports.useState([]);
+    const [error, setError] = reactExports.useState();
+    async function fetchCustomStatuses() {
+        if (!customStatusesEnabled) {
+            return;
+        }
+        try {
+            const response = await fetch(`/api/v2/custom_statuses?active=true&locale=${locale}`);
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+            const { custom_statuses } = await response.json();
+            setCustomStatuses(custom_statuses);
+        }
+        catch (error) {
+            setError(error);
+        }
+    }
+    reactExports.useEffect(() => {
+        fetchCustomStatuses();
+    }, []);
+    return { customStatuses, error };
+}
+
+const SkeletonCells = () => (jsxRuntimeExports.jsxs(Table.Row, { children: [jsxRuntimeExports.jsx(Table.Cell, { children: jsxRuntimeExports.jsx(Skeleton, {}) }), jsxRuntimeExports.jsx(Table.Cell, { children: jsxRuntimeExports.jsx(Skeleton, {}) }), jsxRuntimeExports.jsx(Table.Cell, { children: jsxRuntimeExports.jsx(Skeleton, {}) })] }));
+const NoLeftPaddingCol = styled(Grid.Col) `
   padding-left: 0;
-`,ms=()=>s.jsxs(s.Fragment,{children:[s.jsxs(C,{children:[s.jsx(fs,{children:s.jsx(G,{width:"50%"})}),s.jsx(fs,{children:s.jsx(G,{width:"30%"})}),s.jsx(fs,{children:s.jsx(G,{width:"40%"})}),s.jsx(fs,{children:s.jsx(G,{width:"50%"})})]}),s.jsxs(A,{style:{minWidth:400},children:[s.jsx(A.Head,{children:s.jsxs(A.HeaderRow,{children:[s.jsx(A.HeaderCell,{children:s.jsx(G,{width:"40%"})}),s.jsx(A.HeaderCell,{children:s.jsx(G,{width:"40%"})}),s.jsx(A.HeaderCell,{children:s.jsx(G,{width:"40%"})})]})}),s.jsxs(A.Body,{children:[s.jsx(hs,{}),s.jsx(hs,{}),s.jsx(hs,{})]})]})]});function js({locale:n,customStatusesEnabled:r,viewRequestsAcrossBrandsEnabled:a,filterTicketFieldsByBrand:i}){const{t:l}=t(),{params:o,push:u}=function(){const[t,s]=e.useState(we),n=e.useRef(t);n.current=t;const r=e.useCallback((e=>{const t={...n.current,...e};n.current=t,s(t),Se(ue(t),!1),ye(t.filters)}),[]);return e.useEffect((()=>{function e(){const e=we();n.current=e,s(e)}return Se(ue(n.current),!0),window.addEventListener("popstate",e),()=>window.removeEventListener("popstate",e)}),[]),{params:t,push:r}}(),{query:c,page:d,sort:p,selectedTab:h,filters:f}=o,{user:m,isLoading:j,error:g}=ns(),{organizations:b}=as(m),{requests:v,users:q,hasNextPage:y,hasPreviousPage:S,requestsCount:w,requestsPerPage:_,isLoading:C,error:k}=function(s,n){const{t:r}=t(),{query:a,page:i,sort:l,selectedTab:o,filters:u}=s,[c,d]=e.useState(),[{requests:p,users:h,hasNextPage:f,hasPreviousPage:m,count:j,isLoading:g},b]=e.useState({count:0,hasNextPage:!1,hasPreviousPage:!1,requests:[],users:[],isLoading:!0});async function v(e){const t=new URLSearchParams,s=a.length?a:"*",c=ls(u);t.set("include","users"),l&&c.push(`order_by:${l.by}`,`sort:${l.order}`),o.name===ne?c.push("requester:me"):o.name===re?t.set("cc_id","true"):o.name===ae&&t.set("organization_id",o.organizationId.toString()),os*i>us?t.set("page",Math.floor(us/os).toString()):t.set("page",i.toString()),t.set("per_page",os.toString()),t.set("query",`${s} ${c.join(" ")}`);try{const s=await fetch(`/api/v2/requests/search.json?${t.toString()}`,{signal:e});if(406===s.status){const{error:e}=await s.json();e.includes("Number of search words exceeds the limit")&&(x({type:"error",message:r("guide-requests-app.SearchPhraseIsTooLong","Search phrase is too long. Try something shorter.")}),n({page:1,query:""}))}else{const{requests:e,users:t,next_page:n,previous_page:r,count:a}=await s.json();b({count:Math.min(a??0,us),hasNextPage:!(!n||os*i>=us),hasPreviousPage:!!r,requests:e??[],users:t??[],isLoading:!1})}}catch(e){if(e instanceof Error&&"AbortError"===e.name)return;d(e)}}return e.useEffect((()=>is(v)),[s]),{requests:p,users:h,hasNextPage:f,hasPreviousPage:m,requestsCount:j,requestsPerPage:os,error:c,isLoading:g}}(o,u),{ticketFields:E,isLoading:F,error:z}=ds({locale:n,viewRequestsAcrossBrandsEnabled:a,filterByBrand:i}),$=k||z||g,I=C||!j&&"end-user"===m?.role?[]:v.map((e=>e.requester_id)),{users:T,isLoading:D}=function(t){const[s,n]=e.useState(),[{users:r,isLoading:a},i]=e.useState({users:[],isLoading:!0}),l=t.join(",");async function o(e){try{const t=await fetch(`/api/v2/users/show_many.json?ids=${l}`,{signal:e}),{users:s}=await t.json();i({users:s,isLoading:!1})}catch(e){if(e instanceof Error&&"AbortError"===e.name)return;n(e)}}return e.useEffect((()=>is(o)),[l]),{users:r,error:s,isLoading:a}}(I),V=C||F||j||D;if($)throw $;const{customStatuses:O}=ps(r,n);return s.jsxs(s.Fragment,{children:[V?s.jsx(ms,{}):s.jsxs(s.Fragment,{children:[s.jsx(ss,{organizations:b,selectedTab:h,onTabSelected:e=>{u({page:1,selectedTab:e})}}),s.jsx(kt,{hasPagination:y||S,page:d,requestsCount:w,requestsPerPage:_,query:c,onSearchSubmit:e=>u({page:1,query:e}),filters:f,ticketFields:E,onFiltersChanged:e=>{u({page:1,filters:e})},organizations:b,selectedTab:h,onOrganizationSelected:e=>{h.name===ae&&u({page:1,selectedTab:{name:ae,organizationId:e}})},user:m,customStatusesEnabled:r,customStatuses:O}),s.jsx(Kt,{onSort:e=>{p?.by===e?"asc"===p.order?u({page:1,sort:{by:p.by,order:"desc"}}):u({page:1,sort:null}):u({page:1,sort:{by:e,order:"asc"}})},requests:v,users:T||q,sort:p,ticketFields:E,customStatuses:O,customStatusesEnabled:r})]}),!V&&(S||y)&&s.jsxs(W,{children:[s.jsx(W.Previous,{onClick:()=>u({page:d-1}),disabled:!S,children:l("guide-requests-app.previous","Previous")}),s.jsx(W.Next,{onClick:()=>u({page:d+1}),disabled:!y,children:l("guide-requests-app.next","Next")})]})]})}async function gs(e,t,n){const{locale:r,baseLocale:a,customStatusesEnabled:i,viewRequestsAcrossBrandsEnabled:l,filterTicketFieldsByBrand:o}=t;Y(a),await Q(r,a,[te("request-list",(e=>function(e){switch(e){case"./translations/locales/af.json":return import("request-list-translations").then((function(e){return e.a}));case"./translations/locales/ar-x-pseudo.json":return import("request-list-translations").then((function(e){return e.b}));case"./translations/locales/ar.json":return import("request-list-translations").then((function(e){return e.c}));case"./translations/locales/az.json":return import("request-list-translations").then((function(e){return e.d}));case"./translations/locales/be.json":return import("request-list-translations").then((function(e){return e.e}));case"./translations/locales/bg.json":return import("request-list-translations").then((function(e){return e.f}));case"./translations/locales/bn.json":return import("request-list-translations").then((function(e){return e.g}));case"./translations/locales/bs.json":return import("request-list-translations").then((function(e){return e.h}));case"./translations/locales/ca.json":return import("request-list-translations").then((function(e){return e.i}));case"./translations/locales/cs.json":return import("request-list-translations").then((function(e){return e.j}));case"./translations/locales/cy.json":return import("request-list-translations").then((function(e){return e.k}));case"./translations/locales/da.json":return import("request-list-translations").then((function(e){return e.l}));case"./translations/locales/de-de.json":return import("request-list-translations").then((function(e){return e.m}));case"./translations/locales/de-x-informal.json":return import("request-list-translations").then((function(e){return e.n}));case"./translations/locales/de.json":return import("request-list-translations").then((function(e){return e.o}));case"./translations/locales/el.json":return import("request-list-translations").then((function(e){return e.p}));case"./translations/locales/en-001.json":return import("request-list-translations").then((function(e){return e.q}));case"./translations/locales/en-150.json":return import("request-list-translations").then((function(e){return e.r}));case"./translations/locales/en-au.json":return import("request-list-translations").then((function(e){return e.s}));case"./translations/locales/en-ca.json":return import("request-list-translations").then((function(e){return e.t}));case"./translations/locales/en-gb.json":return import("request-list-translations").then((function(e){return e.u}));case"./translations/locales/en-my.json":return import("request-list-translations").then((function(e){return e.v}));case"./translations/locales/en-ph.json":return import("request-list-translations").then((function(e){return e.w}));case"./translations/locales/en-se.json":return import("request-list-translations").then((function(e){return e.x}));case"./translations/locales/en-us.json":return import("request-list-translations").then((function(e){return e.y}));case"./translations/locales/en-x-dev.json":return import("request-list-translations").then((function(e){return e.z}));case"./translations/locales/en-x-keys.json":return import("request-list-translations").then((function(e){return e.A}));case"./translations/locales/en-x-obsolete.json":return import("request-list-translations").then((function(e){return e.B}));case"./translations/locales/en-x-pseudo.json":return import("request-list-translations").then((function(e){return e.C}));case"./translations/locales/en-x-test.json":return import("request-list-translations").then((function(e){return e.D}));case"./translations/locales/es-419.json":return import("request-list-translations").then((function(e){return e.E}));case"./translations/locales/es-ar.json":return import("request-list-translations").then((function(e){return e.F}));case"./translations/locales/es-cl.json":return import("request-list-translations").then((function(e){return e.G}));case"./translations/locales/es-es.json":return import("request-list-translations").then((function(e){return e.H}));case"./translations/locales/es-mx.json":return import("request-list-translations").then((function(e){return e.I}));case"./translations/locales/es-pe.json":return import("request-list-translations").then((function(e){return e.J}));case"./translations/locales/es.json":return import("request-list-translations").then((function(e){return e.K}));case"./translations/locales/et.json":return import("request-list-translations").then((function(e){return e.L}));case"./translations/locales/eu.json":return import("request-list-translations").then((function(e){return e.M}));case"./translations/locales/fa-af.json":return import("request-list-translations").then((function(e){return e.N}));case"./translations/locales/fa.json":return import("request-list-translations").then((function(e){return e.O}));case"./translations/locales/fi.json":return import("request-list-translations").then((function(e){return e.P}));case"./translations/locales/fil.json":return import("request-list-translations").then((function(e){return e.Q}));case"./translations/locales/fo.json":return import("request-list-translations").then((function(e){return e.R}));case"./translations/locales/fr-ca.json":return import("request-list-translations").then((function(e){return e.S}));case"./translations/locales/fr-dz.json":return import("request-list-translations").then((function(e){return e.T}));case"./translations/locales/fr-mu.json":return import("request-list-translations").then((function(e){return e.U}));case"./translations/locales/fr.json":return import("request-list-translations").then((function(e){return e.V}));case"./translations/locales/ga.json":return import("request-list-translations").then((function(e){return e.W}));case"./translations/locales/gl.json":return import("request-list-translations").then((function(e){return e.X}));case"./translations/locales/he.json":return import("request-list-translations").then((function(e){return e.Y}));case"./translations/locales/hi.json":return import("request-list-translations").then((function(e){return e.Z}));case"./translations/locales/hr.json":return import("request-list-translations").then((function(e){return e._}));case"./translations/locales/hu.json":return import("request-list-translations").then((function(e){return e.$}));case"./translations/locales/hy.json":return import("request-list-translations").then((function(e){return e.a0}));case"./translations/locales/id.json":return import("request-list-translations").then((function(e){return e.a1}));case"./translations/locales/is.json":return import("request-list-translations").then((function(e){return e.a2}));case"./translations/locales/it-ch.json":return import("request-list-translations").then((function(e){return e.a3}));case"./translations/locales/it.json":return import("request-list-translations").then((function(e){return e.a4}));case"./translations/locales/ja.json":return import("request-list-translations").then((function(e){return e.a5}));case"./translations/locales/ka.json":return import("request-list-translations").then((function(e){return e.a6}));case"./translations/locales/kk.json":return import("request-list-translations").then((function(e){return e.a7}));case"./translations/locales/kl-dk.json":return import("request-list-translations").then((function(e){return e.a8}));case"./translations/locales/km.json":return import("request-list-translations").then((function(e){return e.a9}));case"./translations/locales/ko.json":return import("request-list-translations").then((function(e){return e.aa}));case"./translations/locales/ku.json":return import("request-list-translations").then((function(e){return e.ab}));case"./translations/locales/ky.json":return import("request-list-translations").then((function(e){return e.ac}));case"./translations/locales/lt.json":return import("request-list-translations").then((function(e){return e.ad}));case"./translations/locales/lv.json":return import("request-list-translations").then((function(e){return e.ae}));case"./translations/locales/mk.json":return import("request-list-translations").then((function(e){return e.af}));case"./translations/locales/mn.json":return import("request-list-translations").then((function(e){return e.ag}));case"./translations/locales/ms.json":return import("request-list-translations").then((function(e){return e.ah}));case"./translations/locales/mt.json":return import("request-list-translations").then((function(e){return e.ai}));case"./translations/locales/my.json":return import("request-list-translations").then((function(e){return e.aj}));case"./translations/locales/ne.json":return import("request-list-translations").then((function(e){return e.ak}));case"./translations/locales/nl-be.json":return import("request-list-translations").then((function(e){return e.al}));case"./translations/locales/nl.json":return import("request-list-translations").then((function(e){return e.am}));case"./translations/locales/no.json":return import("request-list-translations").then((function(e){return e.an}));case"./translations/locales/oc-es.json":return import("request-list-translations").then((function(e){return e.ao}));case"./translations/locales/oc.json":return import("request-list-translations").then((function(e){return e.ap}));case"./translations/locales/pl.json":return import("request-list-translations").then((function(e){return e.aq}));case"./translations/locales/pt-br.json":return import("request-list-translations").then((function(e){return e.ar}));case"./translations/locales/pt.json":return import("request-list-translations").then((function(e){return e.as}));case"./translations/locales/ro-md.json":return import("request-list-translations").then((function(e){return e.at}));case"./translations/locales/ro.json":return import("request-list-translations").then((function(e){return e.au}));case"./translations/locales/ru.json":return import("request-list-translations").then((function(e){return e.av}));case"./translations/locales/si.json":return import("request-list-translations").then((function(e){return e.aw}));case"./translations/locales/sk.json":return import("request-list-translations").then((function(e){return e.ax}));case"./translations/locales/sl.json":return import("request-list-translations").then((function(e){return e.ay}));case"./translations/locales/sq.json":return import("request-list-translations").then((function(e){return e.az}));case"./translations/locales/sr-me.json":return import("request-list-translations").then((function(e){return e.aA}));case"./translations/locales/sr.json":return import("request-list-translations").then((function(e){return e.aB}));case"./translations/locales/sv.json":return import("request-list-translations").then((function(e){return e.aC}));case"./translations/locales/sw-ke.json":return import("request-list-translations").then((function(e){return e.aD}));case"./translations/locales/ta.json":return import("request-list-translations").then((function(e){return e.aE}));case"./translations/locales/th.json":return import("request-list-translations").then((function(e){return e.aF}));case"./translations/locales/tr.json":return import("request-list-translations").then((function(e){return e.aG}));case"./translations/locales/uk.json":return import("request-list-translations").then((function(e){return e.aH}));case"./translations/locales/ur-pk.json":return import("request-list-translations").then((function(e){return e.aI}));case"./translations/locales/ur.json":return import("request-list-translations").then((function(e){return e.aJ}));case"./translations/locales/uz.json":return import("request-list-translations").then((function(e){return e.aK}));case"./translations/locales/vi.json":return import("request-list-translations").then((function(e){return e.aL}));case"./translations/locales/zh-cn.json":return import("request-list-translations").then((function(e){return e.aM}));case"./translations/locales/zh-tw.json":return import("request-list-translations").then((function(e){return e.aN}));default:return new Promise((function(t,s){("function"==typeof queueMicrotask?queueMicrotask:setTimeout)(s.bind(null,new Error("Unknown variable dynamic import: "+e)))}))}}(`./translations/locales/${e}.json`))),se]);const u=`/hc/${r}`;J.render(s.jsx(Z,{theme:K(e),children:s.jsx(ee,{helpCenterPath:u,children:s.jsx(js,{locale:a,customStatusesEnabled:i,viewRequestsAcrossBrandsEnabled:l,filterTicketFieldsByBrand:o})})}),n)}export{gs as renderRequestList};
+`;
+const RequestLoadingState = () => {
+    return (jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [jsxRuntimeExports.jsxs(Grid, { children: [jsxRuntimeExports.jsx(NoLeftPaddingCol, { children: jsxRuntimeExports.jsx(Skeleton, { width: "50%" }) }), jsxRuntimeExports.jsx(NoLeftPaddingCol, { children: jsxRuntimeExports.jsx(Skeleton, { width: "30%" }) }), jsxRuntimeExports.jsx(NoLeftPaddingCol, { children: jsxRuntimeExports.jsx(Skeleton, { width: "40%" }) }), jsxRuntimeExports.jsx(NoLeftPaddingCol, { children: jsxRuntimeExports.jsx(Skeleton, { width: "50%" }) })] }), jsxRuntimeExports.jsxs(Table, { style: { minWidth: 400 }, children: [jsxRuntimeExports.jsx(Table.Head, { children: jsxRuntimeExports.jsxs(Table.HeaderRow, { children: [jsxRuntimeExports.jsx(Table.HeaderCell, { children: jsxRuntimeExports.jsx(Skeleton, { width: "40%" }) }), jsxRuntimeExports.jsx(Table.HeaderCell, { children: jsxRuntimeExports.jsx(Skeleton, { width: "40%" }) }), jsxRuntimeExports.jsx(Table.HeaderCell, { children: jsxRuntimeExports.jsx(Skeleton, { width: "40%" }) })] }) }), jsxRuntimeExports.jsxs(Table.Body, { children: [jsxRuntimeExports.jsx(SkeletonCells, {}), jsxRuntimeExports.jsx(SkeletonCells, {}), jsxRuntimeExports.jsx(SkeletonCells, {})] })] })] }));
+};
+
+function useShowManyUsers(ids) {
+    const [error, setError] = reactExports.useState();
+    const [{ users, isLoading }, setRequestState] = reactExports.useState({
+        users: [],
+        isLoading: true,
+    });
+    const userIds = ids.join(",");
+    async function fetchUsers(signal) {
+        try {
+            const response = await fetch(`/api/v2/users/show_many.json?ids=${userIds}`, { signal });
+            const { users } = await response.json();
+            setRequestState({ users, isLoading: false });
+        }
+        catch (error) {
+            if (error instanceof Error && error.name === "AbortError") {
+                // Do nothing, request was cancelled, because another one was started;
+                return;
+            }
+            else
+                setError(error);
+        }
+    }
+    reactExports.useEffect(() => {
+        return withAbort(fetchUsers);
+    }, [userIds]);
+    return {
+        users,
+        error,
+        isLoading,
+    };
+}
+
+function RequestsList({ locale, customStatusesEnabled, viewRequestsAcrossBrandsEnabled, filterTicketFieldsByBrand, customTabLabels, }) {
+    const { t } = useTranslation();
+    const { params, push } = useParams();
+    const { query, page, sort, selectedTab, filters } = params;
+    const { user, isLoading: isLoadingUser, error: userError } = useUser();
+    const { organizations } = useOrganizations(user);
+    const { requests, users, hasNextPage, hasPreviousPage, requestsCount, requestsPerPage, isLoading: isLoadingRequests, error: requestsError, } = useRequests(params, push);
+    const { ticketFields, isLoading: isLoadingTicketFields, error: ticketFieldsError, } = useTicketFields({
+        locale,
+        viewRequestsAcrossBrandsEnabled,
+        filterByBrand: filterTicketFieldsByBrand,
+    });
+    const loadingError = requestsError || ticketFieldsError || userError;
+    const isEndUser = !isLoadingUser && user?.role === "end-user";
+    const userIds = !isLoadingRequests && !isEndUser
+        ? requests.map((request) => request.requester_id)
+        : [];
+    const { users: usersWithAliases, isLoading: usersLoading } = useShowManyUsers(userIds);
+    const isLoading = isLoadingRequests || isLoadingTicketFields || isLoadingUser || usersLoading;
+    if (loadingError) {
+        throw loadingError;
+    }
+    const { customStatuses } = useCustomStatuses(customStatusesEnabled, locale);
+    const handleTabSelected = (newSelectedTab) => {
+        push({
+            page: 1,
+            selectedTab: newSelectedTab,
+        });
+    };
+    const handleOrganizationSelected = (selectedOrgId) => {
+        if (selectedTab.name === ORG_REQUESTS_TAB_NAME) {
+            push({
+                page: 1,
+                selectedTab: {
+                    name: ORG_REQUESTS_TAB_NAME,
+                    organizationId: selectedOrgId,
+                },
+            });
+        }
+    };
+    const handleFiltersChanged = (newFilters) => {
+        push({ page: 1, filters: newFilters });
+    };
+    const onSort = (name) => {
+        if (sort?.by === name) {
+            if (sort.order === "asc") {
+                push({
+                    page: 1,
+                    sort: {
+                        by: sort.by,
+                        order: "desc",
+                    },
+                });
+            }
+            else {
+                push({
+                    page: 1,
+                    sort: null,
+                });
+            }
+        }
+        else {
+            push({
+                page: 1,
+                sort: {
+                    by: name,
+                    order: "asc",
+                },
+            });
+        }
+    };
+    return (jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [isLoading ? (jsxRuntimeExports.jsx(RequestLoadingState, {})) : (jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [jsxRuntimeExports.jsx(RequestsTabs, { organizations: organizations, selectedTab: selectedTab, onTabSelected: handleTabSelected, customTabLabels: customTabLabels }), jsxRuntimeExports.jsx(RequestsToolbar, { hasPagination: hasNextPage || hasPreviousPage, page: page, requestsCount: requestsCount, requestsPerPage: requestsPerPage, query: query, onSearchSubmit: (value) => push({ page: 1, query: value }), filters: filters, ticketFields: ticketFields, onFiltersChanged: handleFiltersChanged, organizations: organizations, selectedTab: selectedTab, onOrganizationSelected: handleOrganizationSelected, user: user, customStatusesEnabled: customStatusesEnabled, customStatuses: customStatuses }), jsxRuntimeExports.jsx(RequestsTable, { onSort: onSort, requests: requests, users: usersWithAliases || users, sort: sort, ticketFields: ticketFields, customStatuses: customStatuses, customStatusesEnabled: customStatusesEnabled })] })), !isLoading && (hasPreviousPage || hasNextPage) && (jsxRuntimeExports.jsxs(CursorPagination, { children: [jsxRuntimeExports.jsx(CursorPagination.Previous, { onClick: () => push({ page: page - 1 }), disabled: !hasPreviousPage, children: t("guide-requests-app.previous", "Previous") }), jsxRuntimeExports.jsx(CursorPagination.Next, { onClick: () => push({ page: page + 1 }), disabled: !hasNextPage, children: t("guide-requests-app.next", "Next") })] }))] }));
+}
+
+function __variableDynamicImportRuntime0__(path) {
+  switch (path) {
+    case './translations/locales/af.json': return import('af');
+    case './translations/locales/ar-x-pseudo.json': return import('ar-x-pseudo');
+    case './translations/locales/ar.json': return import('ar');
+    case './translations/locales/az.json': return import('az');
+    case './translations/locales/be.json': return import('be');
+    case './translations/locales/bg.json': return import('bg');
+    case './translations/locales/bn.json': return import('bn');
+    case './translations/locales/bs.json': return import('bs');
+    case './translations/locales/ca.json': return import('ca');
+    case './translations/locales/cs.json': return import('cs');
+    case './translations/locales/cy.json': return import('cy');
+    case './translations/locales/da.json': return import('da');
+    case './translations/locales/de-de.json': return import('de-de');
+    case './translations/locales/de-x-informal.json': return import('de-x-informal');
+    case './translations/locales/de.json': return import('de');
+    case './translations/locales/el.json': return import('el');
+    case './translations/locales/en-001.json': return import('en-001');
+    case './translations/locales/en-150.json': return import('en-150');
+    case './translations/locales/en-au.json': return import('en-au');
+    case './translations/locales/en-ca.json': return import('en-ca');
+    case './translations/locales/en-gb.json': return import('en-gb');
+    case './translations/locales/en-my.json': return import('en-my');
+    case './translations/locales/en-ph.json': return import('en-ph');
+    case './translations/locales/en-se.json': return import('en-se');
+    case './translations/locales/en-us.json': return import('en-us');
+    case './translations/locales/en-x-dev.json': return import('en-x-dev');
+    case './translations/locales/en-x-keys.json': return import('en-x-keys');
+    case './translations/locales/en-x-obsolete.json': return import('en-x-obsolete');
+    case './translations/locales/en-x-pseudo.json': return import('en-x-pseudo');
+    case './translations/locales/en-x-test.json': return import('en-x-test');
+    case './translations/locales/es-419.json': return import('es-419');
+    case './translations/locales/es-ar.json': return import('es-ar');
+    case './translations/locales/es-cl.json': return import('es-cl');
+    case './translations/locales/es-es.json': return import('es-es');
+    case './translations/locales/es-mx.json': return import('es-mx');
+    case './translations/locales/es-pe.json': return import('es-pe');
+    case './translations/locales/es.json': return import('es');
+    case './translations/locales/et.json': return import('et');
+    case './translations/locales/eu.json': return import('eu');
+    case './translations/locales/fa-af.json': return import('fa-af');
+    case './translations/locales/fa.json': return import('fa');
+    case './translations/locales/fi.json': return import('fi');
+    case './translations/locales/fil.json': return import('fil');
+    case './translations/locales/fo.json': return import('fo');
+    case './translations/locales/fr-ca.json': return import('fr-ca');
+    case './translations/locales/fr-dz.json': return import('fr-dz');
+    case './translations/locales/fr-mu.json': return import('fr-mu');
+    case './translations/locales/fr.json': return import('fr');
+    case './translations/locales/ga.json': return import('ga');
+    case './translations/locales/gl.json': return import('gl');
+    case './translations/locales/he.json': return import('he');
+    case './translations/locales/hi.json': return import('hi');
+    case './translations/locales/hr.json': return import('hr');
+    case './translations/locales/hu.json': return import('hu');
+    case './translations/locales/hy.json': return import('hy');
+    case './translations/locales/id.json': return import('id');
+    case './translations/locales/is.json': return import('is');
+    case './translations/locales/it-ch.json': return import('it-ch');
+    case './translations/locales/it.json': return import('it');
+    case './translations/locales/ja.json': return import('ja');
+    case './translations/locales/ka.json': return import('ka');
+    case './translations/locales/kk.json': return import('kk');
+    case './translations/locales/kl-dk.json': return import('kl-dk');
+    case './translations/locales/km.json': return import('km');
+    case './translations/locales/ko.json': return import('ko');
+    case './translations/locales/ku.json': return import('ku');
+    case './translations/locales/ky.json': return import('ky');
+    case './translations/locales/lt.json': return import('lt');
+    case './translations/locales/lv.json': return import('lv');
+    case './translations/locales/mk.json': return import('mk');
+    case './translations/locales/mn.json': return import('mn');
+    case './translations/locales/ms.json': return import('ms');
+    case './translations/locales/mt.json': return import('mt');
+    case './translations/locales/my.json': return import('my');
+    case './translations/locales/ne.json': return import('ne');
+    case './translations/locales/nl-be.json': return import('nl-be');
+    case './translations/locales/nl.json': return import('nl');
+    case './translations/locales/no.json': return import('no');
+    case './translations/locales/oc-es.json': return import('oc-es');
+    case './translations/locales/oc.json': return import('oc');
+    case './translations/locales/pl.json': return import('pl');
+    case './translations/locales/pt-br.json': return import('pt-br');
+    case './translations/locales/pt.json': return import('pt');
+    case './translations/locales/ro-md.json': return import('ro-md');
+    case './translations/locales/ro.json': return import('ro');
+    case './translations/locales/ru.json': return import('ru');
+    case './translations/locales/si.json': return import('si');
+    case './translations/locales/sk.json': return import('sk');
+    case './translations/locales/sl.json': return import('sl');
+    case './translations/locales/sq.json': return import('sq');
+    case './translations/locales/sr-me.json': return import('sr-me');
+    case './translations/locales/sr.json': return import('sr');
+    case './translations/locales/sv.json': return import('sv');
+    case './translations/locales/sw-ke.json': return import('sw-ke');
+    case './translations/locales/ta.json': return import('ta');
+    case './translations/locales/th.json': return import('th');
+    case './translations/locales/tr.json': return import('tr');
+    case './translations/locales/uk.json': return import('uk');
+    case './translations/locales/ur-pk.json': return import('ur-pk');
+    case './translations/locales/ur.json': return import('ur');
+    case './translations/locales/uz.json': return import('uz');
+    case './translations/locales/vi.json': return import('vi');
+    case './translations/locales/zh-cn.json': return import('zh-cn');
+    case './translations/locales/zh-tw.json': return import('zh-tw');
+    default: return new Promise(function(resolve, reject) {
+      (typeof queueMicrotask === 'function' ? queueMicrotask : setTimeout)(
+        reject.bind(null, new Error("Unknown variable dynamic import: " + path))
+      );
+    })
+   }
+ }
+async function renderRequestList(themeSettings, props, container) {
+    const { locale, baseLocale, customStatusesEnabled, viewRequestsAcrossBrandsEnabled, filterTicketFieldsByBrand, customTabLabels, // NEW: Receive custom labels
+     } = props;
+    initI18next(baseLocale);
+    await loadTranslations(locale, baseLocale, [
+        createTranslationLoader("request-list", (locale) => __variableDynamicImportRuntime0__(`./translations/locales/${locale}.json`)),
+        sharedTranslations,
+    ]);
+    const helpCenterPath = `/hc/${locale}`;
+    reactDomExports.render(jsxRuntimeExports.jsx(ThemeProviders, { theme: createTheme(themeSettings), children: jsxRuntimeExports.jsx(ErrorBoundary, { helpCenterPath: helpCenterPath, children: jsxRuntimeExports.jsx(RequestsList, { locale: baseLocale, customStatusesEnabled: customStatusesEnabled, viewRequestsAcrossBrandsEnabled: viewRequestsAcrossBrandsEnabled, filterTicketFieldsByBrand: filterTicketFieldsByBrand, customTabLabels: customTabLabels }) }) }), container);
+}
+
+export { renderRequestList };
