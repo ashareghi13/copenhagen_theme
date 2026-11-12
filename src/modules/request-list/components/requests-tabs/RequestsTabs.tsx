@@ -48,12 +48,19 @@ interface Props {
   selectedTab: SelectedTab;
   organizations: Organization[];
   onTabSelected: (clickedTab: SelectedTab) => void;
+
+  customTabLabels?: {
+    myRequests: string;
+    ccdRequests: string;
+    organizationalRequests: string;
+  };
 }
 
 export default function RequestsTabs({
   selectedTab,
   organizations,
   onTabSelected,
+  customTabLabels,
 }: Props): JSX.Element {
   const { t } = useTranslation();
 
