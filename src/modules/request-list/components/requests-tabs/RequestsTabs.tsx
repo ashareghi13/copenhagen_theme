@@ -69,24 +69,18 @@ export default function RequestsTabs({
 const getTabLabel = (tab: SelectedTabName) => {
   switch (tab) {
     case ORG_REQUESTS_TAB_NAME:
-      return (
-        customTabLabels?.organizationalRequests ||
-        t(
-          "guide-requests-app.organizationalRequests",
-          "Organizational requests"
-        )
+      return t(
+        "guide-requests-app.organizationalRequests",
+        "Organizational requests"
       );
 
     case MY_REQUESTS_TAB_NAME:
-      return (
-        customTabLabels?.myRequests ||
-        t("guide-requests-app.myRequests", "My requests")
-      );
+      return t("guide-requests-app.myRequests", "My requests");
 
     case CCD_REQUESTS_TAB_NAME:
-      return (
-        customTabLabels?.ccdRequests ||
-        t("guide-requests-app.ccdRequests", "Requests I am CC'd on")
+      return t(
+        "guide-requests-app.ccdRequests",
+        "Requests I am CC'd on"
       );
   }
 };
