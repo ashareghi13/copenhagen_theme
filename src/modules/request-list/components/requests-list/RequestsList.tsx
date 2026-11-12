@@ -21,6 +21,11 @@ export interface RequestsListProps {
   customStatusesEnabled: boolean;
   viewRequestsAcrossBrandsEnabled: boolean;
   filterTicketFieldsByBrand: boolean;
+   customTabLabels?: {
+    myRequests: string;
+    ccdRequests: string;
+    organizationalRequests: string;
+     };
 }
 
 export function RequestsList({
