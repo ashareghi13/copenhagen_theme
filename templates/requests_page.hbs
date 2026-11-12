@@ -19,7 +19,13 @@
     baseLocale: {{json help_center.base_locale}},
     customStatusesEnabled: {{json help_center.custom_statuses_enabled}},
     viewRequestsAcrossBrandsEnabled: {{json help_center.view_requests_across_brands_enabled}},
-    filterTicketFieldsByBrand: settings.filter_ticket_fields_by_brand ?? true
+    filterTicketFieldsByBrand: settings.filter_ticket_fields_by_brand ?? true,
+    
+   customTabLabels: {
+    myRequests: {{json (dc 'requests_tab_my')}},
+    ccdRequests: {{json (dc 'requests_tab_ccd')}},
+    organizationalRequests: {{json (dc 'requests_tab_org')}}
+  }
   }; 
   
   renderRequestList(settings, props, container);
