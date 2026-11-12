@@ -144,6 +144,7 @@ export function RequestsList({
             organizations={organizations}
             selectedTab={selectedTab}
             onTabSelected={handleTabSelected}
+            customTabLabels={customTabLabels}
           />
           <RequestsToolbar
             hasPagination={hasNextPage || hasPreviousPage}
